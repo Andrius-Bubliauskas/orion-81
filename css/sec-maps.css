@@ -1,0 +1,127 @@
+/* orion-81.io mock: css/sec-maps.css (maps task, ORI-1306). Every selector is prefixed .maps- ; tokens come from base.css. */
+
+/* ---------- layout ---------- */
+#maps .maps-chips { margin-bottom: var(--s-4); }
+.maps-split { margin-top: var(--s-6); }
+.maps-side { display: grid; gap: var(--s-4); align-content: start; min-width: 0; }
+.maps-stage { min-width: 0; }
+
+/* progressive enhancement: the static list shows until the script has built the explorer */
+#maps .maps-split { display: none; }
+#maps.maps-ready .maps-split { display: grid; }
+#maps.maps-ready .maps-static { display: none; }
+.maps-static { margin-top: var(--s-6); }
+.maps-static__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: var(--s-5); }
+.maps-static__item { display: grid; gap: var(--s-3); align-content: start; }
+.maps-static__item img { width: 100%; border-radius: var(--radius); border: 1px solid var(--line); background: var(--space-2); }
+.maps-static__item h3 { margin-bottom: var(--s-2); }
+
+/* ---------- bar above the viewer ---------- */
+.maps-bar { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); min-height: 44px; margin-bottom: var(--s-2); }
+.maps-crumb { margin: 0; font-size: .8125rem; letter-spacing: .08em; text-transform: uppercase; color: var(--text-2); }
+.maps-crumb b { color: var(--star); font-weight: 600; }
+.maps-back[hidden] { display: none !important; }
+
+/* ---------- viewer chrome ---------- */
+@media (min-width: 900px) { .maps-viewer { aspect-ratio: 4 / 3; } }
+.maps-viewer { background: #02040a; }
+.maps-viewer[data-view="glasgow"] .viewer__toolbar,
+.maps-viewer[data-view="glasgow"] .viewer__hint { display: none; }
+.maps-hud { position: absolute; inset: 0; pointer-events: none; }
+.maps-hud > * { pointer-events: auto; }
+.maps-badge {
+  position: absolute; top: 12px; right: 14px; max-width: calc(100% - 28px); margin: 0; padding: .2rem .7rem; border-radius: var(--radius-pill);
+  background: rgba(5, 7, 11, .78); border: 1px solid var(--line-strong); color: var(--text-2);
+  font-family: var(--font-mono); font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; pointer-events: none;
+}
+.maps-readout {
+  position: absolute; left: 14px; top: 12px; max-width: min(18rem, calc(100% - 200px)); margin: 0; padding: .4rem .75rem; border-radius: 10px;
+  background: rgba(5, 7, 11, .8); border: 1px solid var(--amber-dim); color: var(--text);
+  font-family: var(--font-mono); font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; line-height: 1.45; pointer-events: none;
+}
+.maps-readout b { color: var(--amber); font-weight: 600; }
+.maps-loading { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); margin: 0; padding: .4rem 1rem; border-radius: var(--radius-pill); background: rgba(5, 7, 11, .85); border: 1px solid var(--line-strong); color: var(--text-2); font-family: var(--font-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; pointer-events: none; }
+
+/* ---------- chart markers (HTML buttons positioned by kit.projector) ---------- */
+.maps-marker {
+  position: absolute; left: 0; top: 0; width: 28px; height: 28px; margin: -14px 0 0 -14px; padding: 0;
+  display: grid; place-items: center; border: 0; background: transparent; color: var(--star); cursor: pointer; will-change: transform;
+}
+.maps-marker[data-visible="false"] { visibility: hidden; }
+.maps-marker[data-facing="back"] { opacity: .45; }
+.maps-marker[data-facing="back"]:focus-visible, .maps-marker[data-facing="back"]:hover { opacity: 1; }
+.maps-marker__dot {
+  width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--glow); background: rgba(5, 7, 11, .75);
+  box-shadow: 0 0 0 3px rgba(140, 200, 255, .18), 0 0 14px rgba(140, 200, 255, .6); transition: transform var(--t-ui) var(--ease), background var(--t-ui) var(--ease);
+}
+.maps-marker__label {
+  position: absolute; left: 24px; top: 50%; transform: translateY(-50%); padding: .1rem .5rem; border-radius: 6px; white-space: nowrap;
+  background: rgba(5, 7, 11, .82); border: 1px solid var(--line-strong); font-family: var(--font-mono); font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; color: var(--text);
+}
+.maps-marker:hover .maps-marker__dot, .maps-marker:focus-visible .maps-marker__dot, .maps-marker.is-hot .maps-marker__dot { transform: scale(1.35); background: var(--glow); }
+.maps-marker:hover .maps-marker__label, .maps-marker:focus-visible .maps-marker__label, .maps-marker.is-hot .maps-marker__label { border-color: var(--glow); color: var(--star); }
+.maps-marker[data-left="true"] .maps-marker__label { left: auto; right: 24px; }
+.maps-marker:focus-visible { outline: 3px solid var(--glow); outline-offset: 2px; border-radius: 8px; }
+
+/* ---------- Glasgow: captures fill the viewer ---------- */
+.maps-gallery { position: absolute; inset: 0; z-index: 4; display: grid; grid-template-rows: minmax(0, 1fr) auto; background: var(--space-1); }
+.maps-gallery[hidden] { display: none; }
+.maps-gallery__main { position: relative; display: block; width: 100%; height: 100%; min-height: 0; padding: 0; border: 0; background: var(--space-0); cursor: zoom-in; overflow: hidden; }
+.maps-gallery__main img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.maps-gallery__main:focus-visible { outline-offset: -6px; }
+.maps-gallery__thumbs { display: flex; gap: var(--s-2); padding: var(--s-2) var(--s-3); background: rgba(5, 7, 11, .9); border-top: 1px solid var(--line); overflow-x: auto; }
+.maps-gallery__thumb { flex: none; width: 88px; height: 50px; padding: 0; border: 2px solid var(--line-strong); border-radius: 8px; overflow: hidden; background: var(--space-2); cursor: pointer; }
+.maps-gallery__thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.maps-gallery__thumb[aria-pressed="true"] { border-color: var(--glow); }
+.maps-gallery__thumb:hover { border-color: var(--star); }
+
+/* ---------- side column ---------- */
+.maps-h { margin: 0 0 var(--s-2); font-family: var(--font-mono); font-size: .8125rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--text-2); }
+.maps-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-2); }
+.maps-item {
+  width: 100%; min-height: 44px; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .25rem var(--s-3); text-align: left;
+  padding: .55rem .9rem; border: 1px solid var(--line); border-radius: 12px; background: var(--space-1); color: var(--text); cursor: pointer;
+  transition: border-color var(--t-ui) var(--ease), background var(--t-ui) var(--ease);
+}
+.maps-item:hover, .maps-item.is-hot { border-color: var(--glow); background: var(--space-2); }
+.maps-item[aria-current="true"] { border-color: var(--glow); background: var(--space-2); box-shadow: inset 3px 0 0 var(--glow); }
+.maps-item__title { font-family: var(--font-display); font-weight: 600; letter-spacing: .02em; }
+.maps-item__tags { grid-column: 1; font-family: var(--font-mono); font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); }
+.maps-item__go { grid-column: 2; grid-row: 1 / span 2; font-family: var(--font-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--glow); }
+
+.maps-detail { min-height: 12rem; padding: var(--s-5); }
+.maps-detail h3 { margin-bottom: var(--s-3); }
+.maps-detail h3:focus-visible { outline: 3px solid var(--glow); outline-offset: 4px; }
+.maps-detail .cluster { margin-bottom: var(--s-3); }
+.maps-tag { display: inline-block; padding: .1em .65em; border-radius: var(--radius-pill); border: 1px solid var(--line-strong); font-family: var(--font-mono); font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; color: var(--text-2); }
+.maps-facts { display: grid; grid-template-columns: minmax(5.5rem, auto) minmax(0, 1fr); gap: 0 var(--s-4); margin: var(--s-4) 0; font-size: .9375rem; }
+.maps-facts dt { padding: .45rem 0; border-bottom: 1px solid var(--line); color: var(--text-3); font-family: var(--font-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; }
+.maps-facts dd { margin: 0; padding: .4rem 0; border-bottom: 1px solid var(--line); color: var(--text); }
+.maps-facts ul { margin: 0; padding-left: 1rem; }
+.maps-features { margin: 0 0 var(--s-4); padding-left: 1.1rem; font-size: .9375rem; color: var(--text-2); }
+.maps-features li + li { margin-top: .3rem; }
+.maps-features .src { display: none; }
+.show-src .maps-features .src, .show-src .maps-facts .src { display: block; }
+.maps-note { margin: 0 0 var(--s-4); font-size: .875rem; color: var(--text-3); }
+.maps-caps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr)); gap: var(--s-3); }
+.maps-cap { width: 100%; display: grid; gap: .3rem; padding: 0; border: 0; background: transparent; text-align: left; cursor: zoom-in; color: var(--text-2); }
+.maps-cap img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; border: 1px solid var(--line); background: var(--space-2); transition: border-color var(--t-ui) var(--ease); }
+.maps-cap:hover img { border-color: var(--glow); }
+.maps-cap__t { font-family: var(--font-mono); font-size: .6875rem; letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); }
+.maps-empty { margin: 0; color: var(--text-2); }
+
+@media (max-width: 899.98px) {
+  .maps-item__go { display: none; }
+  .maps-item { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 599.98px) {
+  .maps-detail { padding: var(--s-4); }
+  .maps-marker__label { font-size: .625rem; padding: .05rem .4rem; display: none; }
+  .maps-marker:hover .maps-marker__label, .maps-marker:focus-visible .maps-marker__label, .maps-marker.is-hot .maps-marker__label { display: block; z-index: 2; }
+  .maps-readout { font-size: .6875rem; }
+  .maps-badge { font-size: .625rem; }
+  .maps-gallery__thumb { width: 72px; height: 42px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .maps-marker__dot, .maps-item, .maps-cap img { transition: none; }
+}

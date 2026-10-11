@@ -1,0 +1,1074 @@
+<!doctype html>
+<html lang="en-GB" data-webgl="pending">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>orion-81.io</title>
+<meta name="description" content="Orion-81 is a grounded space-combat game made entirely with AI, so that its revenue can hire graphic designers and software engineers who lost work to AI. Explore the ships, maps and weapons built so far.">
+<meta name="color-scheme" content="dark">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#05070b">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="orion-81.io">
+<meta property="og:title" content="orion-81.io">
+<meta property="og:description" content="A space-combat game made entirely with AI, so that its revenue can hire graphic designers and software engineers who lost work to AI.">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/logo/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/img/logo/favicon-180.png">
+<script>document.documentElement.classList.add("js");</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400..700&amp;family=JetBrains+Mono:wght@400..600&amp;display=swap">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/sec-story.css">
+<link rel="stylesheet" href="css/sec-ships.css">
+<link rel="stylesheet" href="css/sec-maps.css">
+<link rel="stylesheet" href="css/sec-weapons.css">
+<link rel="stylesheet" href="css/sec-build.css">
+<link rel="stylesheet" href="css/sec-styles-economy.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<noscript><p class="noscript-note">JavaScript is off, so the explorers are not running. The text and still images on this page are complete.</p></noscript>
+<header class="bar" id="bar">
+  <div class="bar__inner">
+    <a class="bar__brand" href="#top" aria-label="Orion-81, back to the top">
+      <svg class="bar__mark" viewBox="0 0 58 42" width="38" height="27" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="logo-frame" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#eef3f9"/>
+            <stop offset="1" stop-color="#8f9db0"/>
+          </linearGradient>
+        </defs>
+        <rect x="3" y="3" width="52" height="36" rx="11" fill="#05070b" stroke="#4f9be8" stroke-opacity=".45" stroke-width="7"/>
+        <rect x="3" y="3" width="52" height="36" rx="11" fill="#070d16" stroke="url(#logo-frame)" stroke-width="4.5"/>
+        <path d="M0 21.5H58" stroke="#8cc8ff" stroke-opacity=".28" stroke-width=".8"/>
+        <g fill="#f4f8ff">
+          <path transform="translate(17 29) scale(.62)" d="M0-7 1.4-1.4 7 0 1.4 1.4 0 7-1.4 1.4-7 0-1.4-1.4Z"/>
+          <path transform="translate(29.5 22) scale(.7)" d="M0-7 1.4-1.4 7 0 1.4 1.4 0 7-1.4 1.4-7 0-1.4-1.4Z"/>
+          <path transform="translate(42 13.5) scale(.82)" d="M0-7 1.4-1.4 7 0 1.4 1.4 0 7-1.4 1.4-7 0-1.4-1.4Z"/>
+        </g>
+      </svg>
+      <span class="bar__name">Orion-81</span>
+    </a>
+    <nav class="bar__nav" aria-label="Chapters">
+      <button class="bar__menu" id="nav-menu-btn" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+      <ul class="bar__links" id="nav-links">
+        <li><a href="#mission">Mission</a></li>
+        <li><a href="#ai">AI-made</a></li>
+        <li><a href="#ships">Ships</a></li>
+        <li><a href="#maps">Maps</a></li>
+        <li><a href="#weapons">Weapons</a></li>
+        <li><a href="#build">Build</a></li>
+        <li><a href="#styles">Styles</a></li>
+        <li><a href="#economy">Economy</a></li>
+        <li><a href="#proof">Proof</a></li>
+        <li><a href="#roadmap">Roadmap</a></li>
+      </ul>
+    </nav>
+    <button class="bar__motion" id="motion-toggle" type="button" aria-pressed="true"><span class="bar__motion-label">Motion</span> <span class="bar__motion-state" aria-hidden="true">on</span></button>
+  </div>
+  <div class="bar__progress" id="progress" aria-hidden="true"><span class="bar__progress-fill"></span><i class="bar__progress-star"></i></div>
+</header>
+<main id="main" tabindex="-1">
+<section id="top" class="chapter hero" data-section="story" aria-labelledby="top-title">
+  <div class="wrap hero__grid">
+    <div class="hero__copy">
+      <img class="hero__logo" id="top-logo" src="assets/img/logo/logo-512.webp" width="512" height="367" alt="Orion-81 logo: three glowing blue-white stars inside a rounded silver frame.">
+      <p class="eyebrow">ORION-81.IO &nbsp;·&nbsp; IN DEVELOPMENT &nbsp;·&nbsp; WINDOWS PC</p>
+      <h1 id="top-title" tabindex="-1">Orion-81</h1>
+      <p class="hero__genre">Grounded six-degrees-of-freedom space combat, from a 12 m fighter to a 1.2 km flagship.</p>
+      <p class="hero__mission">A space-combat game made entirely with AI, so that its revenue can hire graphic designers and software engineers who lost work to AI.</p>
+      <p class="hero__disclosure"><strong>Orion-81 is a completely AI-generated project.</strong> <a href="#ai">How it was made</a></p>
+      <p class="hero__badge-row"><a class="hero__badge" href="#mission">100&nbsp;% AI-GENERATED &nbsp;·&nbsp; 0&nbsp;% HUMAN-MADE SO FAR</a></p>
+      <p class="hero__badge-note small muted">One item is still open and shown openly: <a href="#ai-origins">the licence review of game code that came across from the GPL prototype</a>.</p>
+      <div class="hero__ctas">
+        <span class="btn-wrap">
+          <button class="btn btn--primary" type="button" aria-disabled="true" aria-describedby="top-kick-note">Follow the Kickstarter</button>
+          <span class="btn__note" id="top-kick-note">Not live yet</span>
+        </span>
+        <a class="btn btn--secondary" href="#ships">Explore the ships</a>
+        <a class="btn btn--ghost" href="#proof">See the proof</a>
+      </div>
+    </div>
+    <div class="hero__slot">
+      <p class="mono-label hero__slot-label">Trailer</p>
+      <div class="hero__frame">
+        <div class="hero__stage" id="top-viewer">
+          <img class="viewer__poster" src="assets/img/hero/poster.webp" srcset="assets/img/hero/poster-800.webp 800w, assets/img/hero/poster.webp 880w" sizes="(max-width: 900px) 100vw, 50vw" width="880" height="495" alt="An in-game capture from version 0.6.1: a small fighter under fire in the THETA-7 asteroid field, its shield bubble glowing." decoding="async">
+        </div>
+        <div class="hero__plate">
+          <p class="hero__plate-t"><strong>Trailer coming.</strong> We will cut one from the game itself.</p>
+        </div>
+      </div>
+      <p class="hero__slotnote">
+        <span data-when="live">Behind this plate: the ORION-1 in-game model from version 0.6.1, rendered live in your browser (converted for the web, texture reduced to 512 px).</span>
+        <span data-when="static">Behind this plate: an in-game capture from version 0.6.1. Interactive 3D is off on this device.</span>
+      </p>
+      <button class="btn btn--sm hero__play" type="button" aria-disabled="true" title="Trailer coming">Play trailer</button>
+    </div>
+  </div>
+</section>
+<section id="mission" class="chapter" data-section="story" aria-labelledby="mission-title">
+  <div class="wrap">
+    <p class="chapter__label">01 · The mission</p>
+    <h2 id="mission-title" tabindex="-1">AI made this game. Its job is to pay people.</h2>
+    <p class="lead">Orion-81 exists to create paid work for graphic designers and software engineers who have lost work to AI.</p>
+    <p class="mission__body">The game starts out 100&nbsp;% AI-generated. As it earns money, we hire designers to replace AI-made ships, art and interfaces piece by piece, credited by name, and engineers who move into AI-assisted development. Orion-81 is meant to be the first of many projects like it. The goal is to use AI to do some good for the people it affects.</p>
+
+    <ol class="mission__steps" aria-label="How the mission works, in three steps">
+      <li class="mission__step panel">
+        <span class="mono-label">Step 1</span>
+        <h3>AI builds the game</h3>
+        <p><span class="chip chip--built"><span class="chip__t">Built</span></span></p>
+        <p class="muted">Everything you see here, so far.</p>
+      </li>
+      <li class="mission__step panel">
+        <span class="mono-label">Step 2</span>
+        <h3>The game earns</h3>
+        <p><span class="chip chip--planned"><span class="chip__t">Planned</span></span></p>
+        <p class="muted">Free to play, with optional in-game purchases.</p>
+      </li>
+      <li class="mission__step panel">
+        <span class="mono-label">Step 3</span>
+        <h3>People replace AI work</h3>
+        <p><span class="chip chip--planned"><span class="chip__t">Planned</span></span></p>
+        <p class="muted">Paid, credited commissions, as revenue allows. No targets or dates are promised.</p>
+      </li>
+    </ol>
+
+    <div class="mission__meter panel panel--raised frame">
+      <p class="mission__meter-label" id="mission-meter-label">Human-made today: <strong class="big-num mission__pct"><span data-bind="humanMadePct">0</span>&nbsp;%</strong></p>
+      <div class="meter" role="meter" aria-labelledby="mission-meter-label" aria-describedby="mission-meter-note" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="0 per cent human-made">
+        <span class="meter__fill"></span>
+      </div>
+      <p class="small muted" id="mission-meter-note">Counts Orion-81's own code and assets, the logo included. The open-source libraries it uses are listed under <a href="#ai-not-ai">'Not AI-made'</a>. Everything built so far is AI-made. When a designer replaces an item, this page will say so, with their name.</p>
+    </div>
+
+    <h3 id="mission-ledger-title" class="mission__ledger-h">The replacement ledger</h3>
+    <div class="table-wrap" tabindex="0" role="region" aria-labelledby="mission-ledger-title">
+      <table class="table mission__ledger" id="mission-ledger" aria-labelledby="mission-ledger-title">
+        <thead><tr><th scope="col">Element</th><th scope="col" class="num">Amount</th><th scope="col">Made with</th><th scope="col">Status</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Game and engine code</th><td class="num"><span data-bind="ledger.0.count.v" data-fmt="num">254,581</span> lines</td><td>Claude Code</td><td><span class="chip chip--ai"><span class="chip__t">AI-made</span></span> <a class="chip chip--review mission__rev" href="#ai-origins"><span class="chip__t">Under review</span></a></td></tr>
+          <tr><th scope="row">Ships (3D models and textures)</th><td class="num"><span data-bind="ledger.1.count.v">16</span> ship classes</td><td>Claude Code (generator tools it wrote)</td><td><span class="chip chip--ai"><span class="chip__t">AI-made</span></span></td></tr>
+          <tr><th scope="row">Maps and skies</th><td class="num"><span data-bind="ledger.2.count.v">5</span> maps</td><td>Claude Code (generator tools it wrote)</td><td><span class="chip chip--ai"><span class="chip__t">AI-made</span></span></td></tr>
+          <tr><th scope="row">Sounds and music</th><td class="num"><span data-bind="ledger.3.count.v">141</span> sound and music files</td><td>Claude Code (generator tools it wrote)</td><td><span class="chip chip--ai"><span class="chip__t">AI-made</span></span></td></tr>
+          <tr><th scope="row">Interface and HUD</th><td class="num"><span data-bind="ledger.4.count.v">79</span> interface files</td><td>Claude Code</td><td><span class="chip chip--ai"><span class="chip__t">AI-made</span></span></td></tr>
+          <tr><th scope="row">This website and its copy</th><td class="num">not counted</td><td>Claude Code</td><td><span class="chip chip--ai"><span class="chip__t">AI-made</span></span></td></tr>
+          <tr class="mission__more"><th scope="row">Trailer</th><td class="num">not made yet</td><td>Will be made with AI from in-game footage</td><td><span class="chip chip--planned"><span class="chip__t">Planned</span></span></td></tr>
+          <tr class="mission__more"><th scope="row">Logo</th><td class="num"><span data-bind="ledger.7.count.v">1</span> logo</td><td>Claude (Anthropic)</td><td><span class="chip chip--ai"><span class="chip__t">AI-made</span></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="mission__ledger-foot small muted">Counts are of Orion-81's own code and assets; third-party libraries are excluded. Files are counted in the 0.6.1 build.</p>
+    <p class="mission__ledger-btn"><button class="btn btn--sm" type="button" id="mission-ledger-toggle" aria-expanded="true" aria-controls="mission-ledger" hidden>Show all</button></p>
+
+    <figure class="mission__founder panel">
+      <blockquote><p>A statement from the founder is coming soon.</p></blockquote>
+      <figcaption class="mono-label">Founder's statement</figcaption>
+    </figure>
+  </div>
+</section>
+<section id="ai" class="chapter" data-section="story" aria-labelledby="ai-title">
+  <div class="wrap">
+    <p class="chapter__label">02 · How it was made</p>
+    <h2 id="ai-title" tabindex="-1">100&nbsp;% AI-generated.</h2>
+    <p class="lead"><strong>Orion-81 is a completely AI-generated project.</strong> Every line of Orion-81's own code was written with Claude Code, directed by the founder. Every ship, map, texture and sound was generated by tools that Claude Code wrote. The founder decides what to build; Claude Code works out how. The open-source libraries it builds on are listed below under 'Not AI-made'. One item is still open and is shown openly: a <a href="#ai-origins">licence review</a> of game code that came across from the GPL prototype.</p>
+
+    <h3 id="ai-use-title">Use of AI, in full</h3>
+    <div class="table-wrap" tabindex="0" role="region" aria-labelledby="ai-use-title">
+      <table class="table ai__table" aria-labelledby="ai-use-title">
+        <thead><tr><th scope="col">Element</th><th scope="col">Made with</th><th scope="col">Human role</th><th scope="col">Status</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Game and engine code</th><td>Claude Code</td><td>Direction, review and acceptance by the founder</td><td><span class="chip chip--ai"><span class="chip__t">AI-made</span></span> <a class="chip chip--review" href="#ai-origins"><span class="chip__t">Under review</span></a></td></tr>
+          <tr><th scope="row">Ships (3D models and textures)</th><td>Claude Code (generator tools it wrote)</td><td>Direction, review and acceptance by the founder</td><td><span class="chip chip--ai"><span class="chip__t">AI-made</span></span></td></tr>
+          <tr><th scope="row">Maps and skies</th><td>Claude Code (generator tools it wrote)</td><td>Direction, review and acceptance by the founder</td><td><span class="chip chip--ai"><span class="chip__t">AI-made</span></span></td></tr>
+          <tr><th scope="row">Sounds and music</th><td>Claude Code (generator tools it wrote)</td><td>Direction, review and acceptance by the founder</td><td><span class="chip chip--ai"><span class="chip__t">AI-made</span></span></td></tr>
+          <tr><th scope="row">Interface and HUD</th><td>Claude Code</td><td>Direction, review and acceptance by the founder</td><td><span class="chip chip--ai"><span class="chip__t">AI-made</span></span></td></tr>
+          <tr><th scope="row">This website and its copy</th><td>Claude Code</td><td>Direction, review and acceptance by the founder</td><td><span class="chip chip--ai"><span class="chip__t">AI-made</span></span></td></tr>
+          <tr><th scope="row">Trailer</th><td>Will be made with AI from in-game footage</td><td>Not made yet</td><td><span class="chip chip--planned"><span class="chip__t">Planned</span></span></td></tr>
+          <tr><th scope="row">Logo</th><td>Claude (Anthropic)</td><td>Acceptance by the founder</td><td><span class="chip chip--ai"><span class="chip__t">AI-made</span></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="ai-not-ai" tabindex="-1" class="ai__sub">Not AI-made</h3>
+    <p class="muted">Orion-81 builds on open-source software written by people. It is listed here because it is not AI-made.</p>
+    <div class="table-wrap" tabindex="0" role="region" aria-labelledby="ai-not-ai">
+      <table class="table ai__table ai__table--third" aria-labelledby="ai-not-ai">
+        <thead><tr><th scope="col">Name</th><th scope="col">Used in</th><th scope="col">Licence</th><th scope="col">Note</th></tr></thead>
+        <tbody>
+<!--gen:thirdparty-->
+          <tr><th scope="row">SDL2</th><td>Game</td><td>zlib</td><td>Open-source library linked into the game<span class="src">docs/LICENSING.md#L13 (table)</span></td></tr>
+          <tr><th scope="row">zlib</th><td>Game</td><td>zlib</td><td>Open-source library linked into the game<span class="src">docs/LICENSING.md#L14 (table)</span></td></tr>
+          <tr><th scope="row">Compiler runtime (LLVM compiler-rt, mingw-w64 CRT)</th><td>Game</td><td>Apache-2.0 WITH LLVM-exception; mingw-w64 permissive / public domain</td><td>Linked into the game by the toolchain<span class="src">docs/LICENSING.md#L15 (table)</span></td></tr>
+          <tr><th scope="row">three.js</th><td>This site</td><td>MIT</td><td>3D library this website loads from a CDN<span class="src">DESIGN.md 5.1 (pinned three@0.186.0)</span></td></tr>
+          <tr><th scope="row">Oxanium, JetBrains Mono</th><td>This site</td><td>OFL</td><td>Web fonts on this website<span class="src">DESIGN.md 3.2</span></td></tr>
+          <tr class="ai__row-review"><th scope="row">Game code ported from the GPL prototype</th><td>Game</td><td><span class="chip chip--review"><span class="chip__t">Under review</span></span></td><td>Ported onto BuB and renamed. An automated similarity scan against the prototype's source ran on 8 Oct 2026; the expert review of its matches is in progress<span class="src">tracker/epics/EP-003-bub-orion-s-own-engine-and-the-port-onto-it.md (ORI-0018); tracker/epics/EP-004-clean-slate-no-references-to-the-prototype-engin.md (ORI-0024, ORI-0027); tracker/epics/EP-021-licence-compliance-audit.md</span></td></tr>
+<!--/gen:thirdparty-->
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="ai-origins" tabindex="-1" class="ai__sub">Where it started</h3>
+    <div class="ai__origins">
+      <p>Orion began on 28 September 2026 as a prototype on the open-source Quake III Arena engine (GPL), with ships from Elite Dangerous as its inspiration. On day two the game's code moved onto BuB, a new engine written with Claude Code; the game modules came across from the prototype and were renamed. Release 0.3.0 gave all 16 ship classes new hulls of their own. A licence-compliance review is checking whether any of the code is still derived from the GPL original, and whether the early ship designs are too close to their inspiration. An automated similarity scan of the code against the GPL prototype's source ran on 8 October 2026, and the expert review of its matches is in progress. Anything that is derived will be rewritten or redesigned.</p>
+      <p class="small muted ai__tm">Quake III Arena and Elite Dangerous are trademarks of their respective owners. Orion-81 is not affiliated with or endorsed by them.</p>
+    </div>
+
+    <h3 id="ai-timeline-title" class="ai__sub">From prototype to 0.6.1 in <span data-bind="stats.daysToV061.v">10</span> days</h3>
+    <div class="timeline" id="ai-timeline">
+      <ol class="timeline__list" id="ai-timeline-list" aria-labelledby="ai-timeline-title">
+<!--gen:timeline-->
+        <li class="timeline__item" data-chip="origin" data-i="0"><time class="timeline__date" datetime="2026-09-28">2026-09-28</time> <span class="chip"><span class="chip__t">Origin</span></span><p class="timeline__text">The prototype begins on the open-source (GPL) Quake III Arena engine, with Elite Dangerous ships as its inspiration.</p><p class="timeline__src">Source: tracker/epics/EP-021-licence-compliance-audit.md#L16 (began on 2026-09-28 on a GPL-2.0 engine)</p></li>
+        <li class="timeline__item" data-chip="origin" data-i="1"><time class="timeline__date" datetime="2026-09-29">2026-09-29</time> <span class="chip"><span class="chip__t">Origin</span></span><p class="timeline__text">The game's code moves onto BuB, a new engine written with Claude Code. The game modules come across from the prototype and are renamed afterwards.</p><p class="timeline__src">Source: tracker/epics/EP-021-licence-compliance-audit.md#L16 (moved to BuB on 2026-09-29)</p></li>
+        <li class="timeline__item" data-chip="built" data-i="2"><time class="timeline__date" datetime="2026-10-03">2026-10-03</time> <span class="chip chip--built"><span class="chip__t">Built</span></span><p class="timeline__text">Version 0 (demo) frozen: 8 ship classes, lasers and salvo fire, the THETA-7 asteroid field.</p><p class="timeline__src">Source: tracker/BOARD.md#L253</p></li>
+        <li class="timeline__item" data-chip="built" data-i="3"><time class="timeline__date" datetime="2026-10-03">2026-10-03</time> <span class="chip chip--built"><span class="chip__t">Built</span></span><p class="timeline__text">Version 0.1.0 frozen: a grounded hard-SF look, rockets and railguns, 16 ships from 12 m to 1.2 km, the Glasgow map.</p><p class="timeline__src">Source: tracker/BOARD.md#L253</p></li>
+        <li class="timeline__item" data-chip="built" data-i="4"><time class="timeline__date" datetime="2026-10-03">2026-10-03</time> <span class="chip chip--built"><span class="chip__t">Built</span></span><p class="timeline__text">Version 0.2.0 frozen: local-network multiplayer and three new maps (LUNA, EARTH ORBIT, SOL).</p><p class="timeline__src">Source: tracker/BOARD.md#L248</p></li>
+        <li class="timeline__item" data-chip="built" data-i="5"><time class="timeline__date" datetime="2026-10-04">2026-10-04</time> <span class="chip chip--built"><span class="chip__t">Built</span></span><p class="timeline__text">Version 0.2.1 frozen: miniguns, plus manual and automatic targeting for lasers, miniguns and rockets.</p><p class="timeline__src">Source: tracker/items/ORI-0080-0-2-1-freeze-to-versions-v0-2-1-and-deployed-v0-.md#L40</p></li>
+        <li class="timeline__item" data-chip="built" data-i="6"><time class="timeline__date" datetime="2026-10-04">2026-10-04</time> <span class="chip chip--built"><span class="chip__t">Built</span></span><p class="timeline__text">Version 0.2.2 frozen: a free-view camera and an AUTO mode that attacks the nearest hostile.</p><p class="timeline__src">Source: tracker/items/ORI-0816-0-2-2-freeze.md#L40</p></li>
+        <li class="timeline__item" data-chip="built" data-i="7"><time class="timeline__date" datetime="2026-10-04">2026-10-04</time> <span class="chip chip--built"><span class="chip__t">Built</span></span><p class="timeline__text">Version 0.2.3 frozen: deployable and retractable weapons.</p><p class="timeline__src">Source: tracker/items/ORI-0837-0-2-3-freeze.md#L41</p></li>
+        <li class="timeline__item" data-chip="built" data-i="8"><time class="timeline__date" datetime="2026-10-05">2026-10-05</time> <span class="chip chip--built"><span class="chip__t">Built</span></span><p class="timeline__text">Version 0.3.0 frozen: modular ships that break apart, and new hulls for all 16 classes.</p><p class="timeline__src">Source: tracker/items/ORI-0417-0-3-0-mvp-freeze.md#L32</p></li>
+        <li class="timeline__item" data-chip="origin" data-i="9"><time class="timeline__date" datetime="2026-10-05">2026-10-05</time> <span class="chip"><span class="chip__t">Origin</span></span><p class="timeline__text">Release 0.3.0 gives all 16 ship classes new hulls (visual only: names, roles, stats and hardpoint layouts carry over).</p><p class="timeline__src">Source: versions/README.md#L14</p></li>
+        <li class="timeline__item" data-chip="built" data-i="10"><time class="timeline__date" datetime="2026-10-05">2026-10-05</time> <span class="chip chip--built"><span class="chip__t">Built</span></span><p class="timeline__text">Version 0.4.0 frozen: a photoreal look: image-based lighting, ambient occlusion, soft sun shadows.</p><p class="timeline__src">Source: tracker/epics/EP-010-release-0-4-0-photoreal-look.md#L48</p></li>
+        <li class="timeline__item" data-chip="built" data-i="11"><time class="timeline__date" datetime="2026-10-05">2026-10-05</time> <span class="chip chip--built"><span class="chip__t">Built</span></span><p class="timeline__text">Version 0.5.0 frozen: physically lit cockpits, classed stars, a ringed gas giant and a nebula backdrop.</p><p class="timeline__src">Source: tracker/BOARD.md#L236</p></li>
+        <li class="timeline__item" data-chip="built" data-i="12"><time class="timeline__date" datetime="2026-10-06">2026-10-06</time> <span class="chip chip--built"><span class="chip__t">Built</span></span><p class="timeline__text">Version 0.5.1 frozen: hardpoint seats, six-rocket volleys, and an ANVIL bay that launches 10 NEEDLEs.</p><p class="timeline__src">Source: tracker/BOARD.md#L232</p></li>
+        <li class="timeline__item" data-chip="built" data-i="13"><time class="timeline__date" datetime="2026-10-07">2026-10-07</time> <span class="chip chip--built"><span class="chip__t">Built</span></span><p class="timeline__text">Version 0.5.2 frozen: squadron stances, a ROCKETS INCOMING sign and turret seats.</p><p class="timeline__src">Source: tracker/BOARD.md#L228</p></li>
+        <li class="timeline__item" data-chip="built" data-i="14"><time class="timeline__date" datetime="2026-10-07">2026-10-07</time> <span class="chip chip--built"><span class="chip__t">Built</span></span><p class="timeline__text">Version 0.5.3 frozen: a 240 m ANVIL with a see-through hangar and NEEDLE scrambles from both sides.</p><p class="timeline__src">Source: tracker/epics/EP-017-release-0-5-3-realistic-drive-plumes-a-240-m-anv.md#L34</p></li>
+        <li class="timeline__item" data-chip="built" data-i="15"><time class="timeline__date" datetime="2026-10-07">2026-10-07</time> <span class="chip chip--built"><span class="chip__t">Built</span></span><p class="timeline__text">Version 0.6.0 frozen: a LOADOUT screen before every match, with hull and shield tiers and shield colour.</p><p class="timeline__src">Source: tracker/epics/EP-018-release-0-6-0-ship-loadout-skeleton-pre-match-lo.md#L46</p></li>
+        <li class="timeline__item" data-chip="built" data-i="16"><time class="timeline__date" datetime="2026-10-08">2026-10-08</time> <span class="chip chip--built"><span class="chip__t">Built</span></span><p class="timeline__text">Version 0.6.1 frozen: hostile AI ANVILs that launch their wings, and craft that return to dock.</p><p class="timeline__src">Source: tracker/epics/EP-019-release-0-6-1-enemy-carriers-return-to-dock-craft-colour-rail-zoom.md#L44</p></li>
+        <li class="timeline__item" data-chip="review" data-i="17"><time class="timeline__date" datetime="2026-10-08">2026-10-08</time> <span class="chip chip--review"><span class="chip__t">Under review</span></span><p class="timeline__text">An automated similarity scan of the game's code against the GPL prototype's source ran on 8 Oct 2026. The expert review of its matches is in progress. Anything found to be copied or adapted will be rewritten.</p><p class="timeline__src">Source: tracker/epics/EP-021-licence-compliance-audit.md#L16</p></li>
+<!--/gen:timeline-->
+      </ol>
+    </div>
+  </div>
+</section>
+<section id="ships" class="chapter" data-section="ships" aria-labelledby="ships-title">
+  <div class="wrap">
+
+    <div class="ships-explore" role="group" aria-labelledby="ships-explore-label">
+      <p class="chapter__label" id="ships-explore-label">03 · Explore</p>
+      <p class="ships-explore__line"><span data-when="live">The explorers below run in your browser, built from the game's own data.</span><span data-when="static">The explorers below are built from the game's own data. On this device the 3D views show still images.</span></p>
+      <ul class="ships-explore__links" aria-label="The six explorers">
+        <li><a href="#ships">Ships</a></li>
+        <li><a href="#maps">Maps</a></li>
+        <li><a href="#weapons">Weapons</a></li>
+        <li><a href="#build">Build</a></li>
+        <li><a href="#styles">Fighting styles</a></li>
+        <li><a href="#economy">Economy</a></li>
+      </ul>
+    </div>
+
+    <header class="ships-head">
+      <p class="chapter__label">04 · Ships</p>
+      <div class="cluster ships-head__chips">
+        <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span> <span class="chip__v">0.1.0</span></span>
+        <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Hulls redesigned</span> <span class="chip__v">0.3.0</span></span>
+      </div>
+      <h2 id="ships-title">The fleet</h2>
+      <p class="lead">Sixteen ship classes on one size ladder, from the 12 m KESTREL to the 1.2 km LEVIATHAN. Each 3D model is the ship's in-game model from version 0.6.1, converted for the web; the caption under the viewer says which detail level you are seeing.</p>
+    </header>
+
+    <div class="ships-ladder" id="ships-ladder-block">
+      <div class="ships-ladder__ctl">
+        <div role="tablist" aria-label="Filter the ladder by class" id="ships-tabs" class="ships-tabs">
+          <button type="button" role="tab" id="ships-tab-all" data-filter="all" aria-selected="true" aria-controls="ships-ladder" tabindex="0">All</button>
+          <button type="button" role="tab" id="ships-tab-small" data-filter="small" aria-selected="false" aria-controls="ships-ladder" tabindex="-1">Small 1-5</button>
+          <button type="button" role="tab" id="ships-tab-medium" data-filter="medium" aria-selected="false" aria-controls="ships-ladder" tabindex="-1">Medium 6-10</button>
+          <button type="button" role="tab" id="ships-tab-large" data-filter="large" aria-selected="false" aria-controls="ships-ladder" tabindex="-1">Large 11-16</button>
+        </div>
+        <div class="ships-ladder__opts">
+          <div class="pill-group" role="group" aria-label="Bar scale">
+            <button type="button" class="pill" data-scale="true" aria-pressed="true">True scale</button>
+            <button type="button" class="pill" data-scale="log" aria-pressed="false">Log scale</button>
+          </div>
+          <label class="ships-sort"><span class="mono-label">Sort by</span>
+            <select id="ships-sort">
+              <option value="length">Length, short to long</option>
+              <option value="mass">Mass, light to heavy</option>
+              <option value="speed">Speed, fastest first</option>
+              <option value="dps">Firepower, highest first</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div class="ships-ladder__scroll" id="ships-ladder" role="tabpanel" aria-labelledby="ships-tab-all">
+        <ul class="ships-ladder__list" id="ships-ladder-list" aria-label="Ship classes">
+          <li class="ships-card ships-card--static" data-ship="kestrel"><span class="ships-card__name">KESTREL</span> <span class="ships-card__role">LIGHT FIGHTER</span> <span class="ships-card__len">12 m</span></li>
+          <li class="ships-card ships-card--static" data-ship="orion1"><span class="ships-card__name">ORION-1</span> <span class="ships-card__role">MULTIROLE INTERCEPTOR</span> <span class="ships-card__len">16.3 m</span></li>
+          <li class="ships-card ships-card--static" data-ship="needle"><span class="ships-card__name">NEEDLE</span> <span class="ships-card__role">INTERCEPTOR</span> <span class="ships-card__len">22.2 m</span></li>
+          <li class="ships-card ships-card--static" data-ship="pathfinder"><span class="ships-card__name">PATHFINDER</span> <span class="ships-card__role">EXPLORER</span> <span class="ships-card__len">30.1 m</span></li>
+          <li class="ships-card ships-card--static" data-ship="brawler"><span class="ships-card__name">BRAWLER</span> <span class="ships-card__role">HEAVY FIGHTER</span> <span class="ships-card__len">41 m</span></li>
+          <li class="ships-card ships-card--static" data-ship="halberd"><span class="ships-card__name">HALBERD</span> <span class="ships-card__role">STRIKE CORVETTE</span> <span class="ships-card__len">55.7 m</span></li>
+          <li class="ships-card ships-card--static" data-ship="warhound"><span class="ships-card__name">WARHOUND</span> <span class="ships-card__role">GUNSHIP</span> <span class="ships-card__len">75.7 m</span></li>
+          <li class="ships-card ships-card--static" data-ship="rampart"><span class="ships-card__name">RAMPART</span> <span class="ships-card__role">ESCORT FRIGATE</span> <span class="ships-card__len">102.9 m</span></li>
+          <li class="ships-card ships-card--static" data-ship="mule"><span class="ships-card__name">MULE</span> <span class="ships-card__role">HAULER</span> <span class="ships-card__len">139.9 m</span></li>
+          <li class="ships-card ships-card--static" data-ship="anvil"><span class="ships-card__name">ANVIL</span> <span class="ships-card__role">DESTROYER</span> <span class="ships-card__len">240 m</span></li>
+          <li class="ships-card ships-card--static" data-ship="caravan"><span class="ships-card__name">CARAVAN</span> <span class="ships-card__role">BULK FREIGHTER</span> <span class="ships-card__len">258.5 m</span></li>
+          <li class="ships-card ships-card--static" data-ship="bastion"><span class="ships-card__name">BASTION</span> <span class="ships-card__role">CRUISER</span> <span class="ships-card__len">351.4 m</span></li>
+          <li class="ships-card ships-card--static" data-ship="thresher"><span class="ships-card__name">THRESHER</span> <span class="ships-card__role">BATTLECRUISER</span> <span class="ships-card__len">477.7 m</span></li>
+          <li class="ships-card ships-card--static" data-ship="meridian"><span class="ships-card__name">MERIDIAN</span> <span class="ships-card__role">CARRIER</span> <span class="ships-card__len">649.4 m</span></li>
+          <li class="ships-card ships-card--static" data-ship="ironclad"><span class="ships-card__name">IRONCLAD</span> <span class="ships-card__role">DREADNOUGHT</span> <span class="ships-card__len">882.8 m</span></li>
+          <li class="ships-card ships-card--static" data-ship="leviathan"><span class="ships-card__name">LEVIATHAN</span> <span class="ships-card__role">FLAGSHIP</span> <span class="ships-card__len">1.2 km</span></li>
+        </ul>
+      </div>
+      <p class="ships-ladder__note small muted">Bar width is the ship's length. True scale scrolls sideways; every bar keeps a visible minimum width and the printed length is the real value.
+        <span class="ships-future"><span class="chip chip--future"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Future</span></span> A colossal class is a future plan. No colossal ship is built.</span></p>
+    </div>
+
+    <div class="split ships-main">
+      <div class="col-7 ships-stage">
+        <div class="ships-viewer" id="ships-viewer" aria-label="Ship viewer">
+          <img class="viewer__poster" src="assets/img/ships/orion1.webp" width="256" height="128" alt="Still image of the ORION-1, multirole interceptor." decoding="async">
+        </div>
+        <p class="viewer__caption" id="ships-caption" data-caption-for="ships">ORION-1, the hangar image from the game menu (hull as built for 0.3.0 and later; native size 256 x 128). In-game capture, version 0.6.1</p>
+        <p class="ships-ratio" id="ships-ratio" hidden></p>
+
+        <div class="ships-tools" role="group" aria-label="Compare ships">
+          <label class="ships-cmp"><span class="mono-label">Compare with...</span>
+            <select id="ships-cmp"><option value="">No comparison</option></select>
+          </label>
+          <button type="button" class="btn btn--sm" id="ships-scaleref">Scale reference</button>
+          <button type="button" class="btn btn--sm btn--secondary" id="ships-zoom" hidden>Zoom to KESTREL</button>
+          <button type="button" class="btn btn--sm" id="ships-back" hidden>Back to both</button>
+          <button type="button" class="btn btn--sm btn--ghost" id="ships-clear" hidden>Stop comparing</button>
+        </div>
+
+        <div class="ships-legend" id="ships-legend" role="group" aria-label="Hardpoint groups on the model">
+          <span class="mono-label">Hotspots</span>
+        </div>
+      </div>
+
+      <div class="col-5 ships-panel panel panel--raised" id="ships-panel" role="region" aria-label="Ship data">
+        <p class="mono-label">MULTIROLE INTERCEPTOR</p>
+        <h3 class="ships-panel__name">ORION-1</h3>
+        <p class="ships-panel__blurb">The Orion Defense Initiative workhorse: four lasers, a light chin gun and a six-round rocket bay.</p>
+        <p class="small muted">Length 16.3 m. The full spec list, stat bars and hardpoint list need JavaScript.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+<section id="maps" class="chapter" data-section="maps" aria-labelledby="maps-title">
+  <div class="wrap">
+    <p class="chapter__label mono-label">EXPLORE · MAPS</p>
+    <div class="cluster maps-chips">
+      <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">v0 to 0.2.0</span></span>
+    </div>
+    <h2 id="maps-title">Five places to fight</h2>
+    <p class="lead">An asteroid field, a real-scale Glasgow, the Moon, low Earth orbit and the edge of the Sun.</p>
+
+    <div class="split maps-split">
+      <div class="col-7 maps-stage">
+        <div class="maps-bar">
+          <p class="maps-crumb mono" id="maps-crumb">Chart</p>
+          <button type="button" class="btn btn--sm btn--secondary maps-back" id="maps-back" hidden>Back to chart</button>
+        </div>
+        <div class="maps-viewer" id="maps-viewer"></div>
+        <p class="viewer__caption" data-caption-for="maps" id="maps-caption">Schematic, not to scale. Illustration made for this site.</p>
+        <p class="sr-only" id="maps-howto">Pick a place from the list or from a marker on the chart. Enter or Space flies in. Escape or the Back to chart button returns.</p>
+      </div>
+      <div class="col-5 maps-side">
+        <nav aria-label="Map locations" class="maps-nav">
+          <h3 class="maps-h" id="maps-list-title">Locations</h3>
+          <ul class="maps-list" id="maps-list" aria-labelledby="maps-list-title"></ul>
+        </nav>
+        <div class="maps-detail panel frame" id="maps-detail" role="region" aria-labelledby="maps-detail-title" aria-describedby="maps-howto"></div>
+      </div>
+    </div>
+
+    <div class="maps-static" id="maps-static">
+      <p class="muted small">Without scripts this chapter is a plain list. Each image is a capture from the game.</p>
+      <ul class="maps-static__list">
+        <li class="maps-static__item">
+          <img src="assets/img/maps/theta7-1.webp" width="1024" height="576" alt="THETA-7 ASTEROID FIELD: a sparse field of rocks lit by a distant sun." loading="lazy" decoding="async">
+          <div>
+            <h3>THETA-7 ASTEROID FIELD</h3>
+            <p>A drifting field of rock and ice eight kilometres across. Drones and raiders hunt the miners' beacons in hard vacuum and harder sunlight.</p>
+            <p class="small muted">VACUUM · arrived in the v0 demo. THETA-7 ASTEROID FIELD, the sector image from the game's menu. In-game capture, version 0.6.1.</p>
+          </div>
+        </li>
+        <li class="maps-static__item">
+          <img src="assets/img/maps/glasgow-1.webp" width="1024" height="576" alt="GLASGOW: a hazy aerial view over the city's river and streets." loading="lazy" decoding="async">
+          <div>
+            <h3>GLASGOW, SCOTLAND</h3>
+            <p>Sixteen kilometres of city on the Clyde under a low grey sky. Real gravity, real air, rooftops and cranes: keep your speed up and your nose off the river.</p>
+            <p class="small muted">ATMOSPHERE · GRAVITY 1 G · WEATHER · arrived in version 0.1.0. GLASGOW, the sector image from the game's menu. In-game capture, version 0.6.1.</p>
+          </div>
+        </li>
+        <li class="maps-static__item">
+          <img src="assets/img/maps/luna-1.webp" width="1024" height="576" alt="THE MOON (COPERNICUS): ridged lunar terrain with craters under a black sky." loading="lazy" decoding="async">
+          <div>
+            <h3>COPERNICUS, THE MOON</h3>
+            <p>A low pass over the terraced east wall of Copernicus at the sunset terminator, Earth high overhead. One-sixth gravity and no air: every arc is ballistic.</p>
+            <p class="small muted">VACUUM · GRAVITY 1/6 G · TERMINATOR · arrived in version 0.2.0. THE MOON (COPERNICUS), the sector image from the game's menu. In-game capture, version 0.6.1.</p>
+          </div>
+        </li>
+        <li class="maps-static__item">
+          <img src="assets/img/maps/earth_orbit-1.webp" width="1024" height="576" alt="LOW EARTH ORBIT: a ring station with solar panels above the curve of the Earth." loading="lazy" decoding="async">
+          <div>
+            <h3>LOW EARTH ORBIT</h3>
+            <p>420 km above the night side, three minutes before orbital sunrise. Ashgrove Station, the debris of an old break-up, and Europe's lights sliding by below.</p>
+            <p class="small muted">VACUUM · FREE FALL · DEBRIS · arrived in version 0.2.0. LOW EARTH ORBIT, the sector image from the game's menu. In-game capture, version 0.6.1.</p>
+          </div>
+        </li>
+        <li class="maps-static__item">
+          <img src="assets/img/maps/sol-1.webp" width="1024" height="576" alt="PERIHELION, 4 SOLAR RADII: the Sun's disc with sunspots and a prominence." loading="lazy" decoding="async">
+          <div>
+            <h3>PERIHELION, 4 SOLAR RADII</h3>
+            <p>Three solar radii above the photosphere. Shade is life: the platform's shield, the comet, the big hulls. Flares come every few minutes.</p>
+            <p class="small muted">VACUUM · SOLAR HEAT · FLARES · arrived in version 0.2.0. PERIHELION, 4 SOLAR RADII, the sector image from the game's menu. In-game capture, version 0.6.1.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+<section id="weapons" class="chapter" data-section="weapons" aria-labelledby="weapons-title">
+  <div class="wrap">
+    <p class="chapter__label">Weapons lab</p>
+    <div class="cluster weapons-chips" aria-label="Status of the weapons shown here">
+      <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.1.0</span></span>
+      <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.2.1</span></span>
+    </div>
+    <h2 id="weapons-title">Weapons lab</h2>
+    <p class="lead">Lasers, rockets, railguns and miniguns, plus point defence. Fly a mount by hand or leave it on AUTO.</p>
+    <p class="weapons-intro muted">
+      <span data-when="live">Pick a family and a variant, then fire it on the range. Rates, speeds and damage come from the game's own tuning files.</span>
+      <span data-when="static">Pick a family and a variant to read the game's own numbers for it. On this device the firing range shows a still image.</span>
+    </p>
+    <noscript>
+      <p class="notice">JavaScript is off, so the weapons lab is not running. These in-game captures show some of the weapons.</p>
+      <div class="cards">
+        <figure class="weapons-nojs"><img src="assets/img/features/weapon-laser.webp" width="1280" height="720" loading="lazy" alt="A shielded fighter firing a laser beam at a target box."><figcaption>A laser beam in flight. In-game capture, version 0.5.0</figcaption></figure>
+        <figure class="weapons-nojs"><img src="assets/img/features/weapon-rocket.webp" width="1280" height="720" loading="lazy" alt="A rocket volley warning above the pilot's ship in THETA-7."><figcaption>Rockets incoming warning and volley. In-game capture, version 0.5.2</figcaption></figure>
+        <figure class="weapons-nojs"><img src="assets/img/features/weapon-rail.webp" width="1280" height="720" loading="lazy" alt="A railgun trail lingering after a hit on a shielded hull."><figcaption>A railgun trail lingers after a hit. In-game capture, version 0.6.1</figcaption></figure>
+      </div>
+    </noscript>
+
+    <div class="weapons-lab" id="weapons-lab">
+      <div class="weapons-tabs" id="weapons-tabs" role="tablist" aria-label="Weapon families"></div>
+
+      <div class="weapons-panel" id="weapons-panel" role="tabpanel" aria-labelledby="weapons-tab-laser">
+        <div class="split weapons-split">
+          <div class="col-7 weapons-main">
+            <div class="viewer weapons-viewer" id="weapons-viewer" data-viewer-host></div>
+
+            <div class="weapons-controls" id="weapons-controls">
+              <div class="weapons-row">
+              <div class="weapons-buttons cluster">
+                <button type="button" class="btn btn--primary" id="weapons-fire">FIRE</button>
+                <button type="button" class="btn btn--secondary" id="weapons-charge" hidden>Charge and fire</button>
+                <button type="button" class="btn btn--ghost" id="weapons-stop" hidden>Stop</button>
+              </div>
+              <div class="weapons-hud" aria-hidden="true">
+                <div class="weapons-dial" id="weapons-dial" hidden><span id="weapons-dial-t">0 %</span></div>
+                <div class="weapons-meter-wrap">
+                  <div class="weapons-meter-label"><span id="weapons-meter-name">READY</span><span id="weapons-meter-val"></span></div>
+                  <div class="weapons-meter"><div class="weapons-meter__bar" id="weapons-meter-bar"></div></div>
+                </div>
+              </div>
+              </div>
+              <p class="weapons-status" id="weapons-status">Ready.</p>
+              <p class="viewer__caption" data-caption-for="weapons">Time and distance are compressed for display. Numbers are the game's own.</p>
+              <p class="weapons-readout mono" id="weapons-readout"></p>
+              <p class="weapons-hint small muted" id="weapons-hint">Press FIRE, or Space or Enter while the range has focus. Holding is optional: one press always fires a full burst.</p>
+            </div>
+          </div>
+
+          <div class="col-5 weapons-side">
+            <div class="panel weapons-panel-card stack">
+              <div class="weapons-field">
+                <span class="mono-label" id="weapons-variant-l">Variant</span>
+                <div class="pill-group" id="weapons-variants" role="group" aria-labelledby="weapons-variant-l"></div>
+              </div>
+              <div class="weapons-field" id="weapons-ship-field" hidden>
+                <label class="mono-label" for="weapons-ship">Mounted as on</label>
+                <select id="weapons-ship" class="weapons-select"></select>
+              </div>
+              <div class="weapons-field">
+                <span class="mono-label" id="weapons-mode-l">Control</span>
+                <div id="weapons-mode" aria-labelledby="weapons-mode-l"></div>
+              </div>
+              <div class="weapons-field" id="weapons-posture-field" hidden>
+                <span class="mono-label" id="weapons-posture-l">AUTO posture <span class="chip chip--built chip--sm"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.2.1</span></span></span>
+                <div class="pill-group" id="weapons-posture" role="group" aria-labelledby="weapons-posture-l"></div>
+                <p class="small muted" id="weapons-posture-note"></p>
+              </div>
+              <div class="weapons-field">
+                <span class="mono-label" id="weapons-deploy-l">Mount <span class="chip chip--built chip--sm"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.2.3</span></span></span>
+                <button type="button" class="btn btn--sm" id="weapons-deploy" aria-pressed="true">Deploy mount</button> <span class="weapons-state mono" id="weapons-deploy-state">Deployed</span>
+                <p class="small muted">Retracted weapons are hidden and do not fire.</p>
+              </div>
+            </div>
+
+            <div class="weapons-facts" id="weapons-facts"></div>
+          </div>
+        </div>
+
+        <div class="split weapons-lower">
+          <div class="col-7">
+            <div class="table-wrap" id="weapons-table-wrap" tabindex="0" role="region" aria-labelledby="weapons-table-cap">
+              <table class="table weapons-table" id="weapons-table">
+                <caption id="weapons-table-cap">Stats</caption>
+                <thead><tr><th scope="col">Stat</th><th scope="col" class="num">Value</th></tr></thead>
+                <tbody id="weapons-tbody"></tbody>
+              </table>
+            </div>
+            <p class="small muted weapons-unitnote">Game units are converted to metres (1 game unit = 0.1 m). A stat is left out where the game has no such value.</p>
+            <div id="weapons-src"></div>
+          </div>
+          <div class="col-5">
+            <h3 class="weapons-h3" id="weapons-mounted-h">Mounted on</h3>
+            <ul class="weapons-mounted" id="weapons-mounted" aria-labelledby="weapons-mounted-h"></ul>
+            <figure class="weapons-capture" id="weapons-capture"></figure>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="build" class="chapter" data-section="build" aria-labelledby="build-title">
+  <div class="wrap">
+    <p class="chapter__label">Build mechanics</p>
+    <h2 id="build-title" tabindex="-1">Build your ship</h2>
+    <p class="lead">Before every match, the LOADOUT screen sets your hull and shield, the shield's colour, every hardpoint's weapon and mode, and what your hangar launches. Ships are built from modules that take damage separately and break apart.</p>
+    <p class="cluster build-chips" aria-label="Build status">
+      <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.6.0</span></span>
+      <span class="build-chips__t">LOADOUT screen</span>
+      <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.3.0</span></span>
+      <span class="build-chips__t">Modules and break-up</span>
+      <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.6.1</span></span>
+      <span class="build-chips__t">Craft shield colour</span>
+    </p>
+
+    <p class="build-nojs panel">The configurator needs JavaScript, which is off here. In the game, the LOADOUT screen offers three hull tiers (standard, reinforced, bulwark), three shield tiers (standard, hardened, deep-field), eight shield colours plus a custom colour, a fit and a mode for each hardpoint, and, on the ANVIL, the craft its hangar launches.</p>
+
+    <div class="build-app" id="build-app" hidden>
+      <div class="build-pick">
+        <label for="build-ship" class="mono-label">Ship</label>
+        <select id="build-ship" aria-describedby="build-shipinfo"></select>
+        <span id="build-shipinfo" class="muted small"></span>
+      </div>
+
+      <div class="split build-split">
+        <div class="col-7 build-stage">
+          <div id="build-viewer" class="build-viewer"></div>
+          <p class="viewer__caption" data-caption-for="build"></p>
+          <div class="cluster build-actions" id="build-actions">
+            <button type="button" class="btn btn--sm btn--secondary" id="build-hit">Test hit</button>
+            <button type="button" class="btn btn--sm" id="build-subject" aria-pressed="false" hidden>Show hangar craft</button>
+          </div>
+          <p class="small muted build-viewnote" id="build-viewnote">
+            <span data-when="live">The bubble in the 3D view takes the colour you pick. Drag to orbit; focus a hardpoint row to see where the mount sits on the hull.</span>
+            <span data-when="static">3D is off on this device, so the view above is a still image. The numbers, the colours and the loadout string below still work.</span>
+          </p>
+        </div>
+
+        <div class="col-5 build-side">
+          <div role="tablist" aria-label="Build mechanics">
+            <button type="button" role="tab" id="build-tab-loadout" aria-controls="build-panel-loadout" aria-selected="true">Loadout</button>
+            <button type="button" role="tab" id="build-tab-damage" aria-controls="build-panel-damage" aria-selected="false" tabindex="-1">Damage</button>
+          </div>
+
+          <div role="tabpanel" id="build-panel-loadout" aria-labelledby="build-tab-loadout" tabindex="0" class="build-panel">
+            <div id="build-hull"></div>
+            <div id="build-shield"></div>
+            <div id="build-stats" class="build-stats"></div>
+            <div id="build-colour"></div>
+            <div id="build-hardpoints" class="build-hp-wrap"></div>
+            <div id="build-hangar"></div>
+            <div id="build-string-wrap"></div>
+            <div class="cluster build-reset">
+              <button type="button" class="btn btn--sm" id="build-reset">Reset to stock</button>
+            </div>
+            <figure class="build-shot" id="build-shot"></figure>
+          </div>
+
+          <div role="tabpanel" id="build-panel-damage" aria-labelledby="build-tab-damage" tabindex="0" class="build-panel" hidden>
+            <p class="small muted" id="build-dmg-intro"></p>
+            <div id="build-modules"></div>
+            <div class="cluster build-dmg-actions">
+              <button type="button" class="btn btn--sm btn--secondary" id="build-damage">Damage module</button>
+              <button type="button" class="btn btn--sm btn--primary" id="build-break">Break apart</button>
+              <button type="button" class="btn btn--sm" id="build-reassemble">Reassemble</button>
+            </div>
+            <p class="small" id="build-dmg-status" role="status"></p>
+            <p class="small muted">Preview animation for this site. In the game (0.3.0) modules take damage separately, joints fail and the hulk breaks into tumbling pieces with secondary explosions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="styles" class="chapter" data-section="styles-economy" aria-labelledby="styles-title">
+<div class="wrap">
+<p class="chapter__label">Explore · Fighting styles</p>
+<h2 id="styles-title">Fighting styles</h2>
+<div class="cluster styles-chips"><span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.6.1</span></span><span class="chip chip--future"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Future</span></span></div>
+<p class="lead">Size changes how you fight.</p>
+<p class="muted styles-intro">Small, medium and large are built: the numbers below come from the game's own ship files (damage per second: the 0.2.1 loadout table in the fleet document), and every "how it fights" line carries the version it arrived in and where it comes from. Colossal is a future class and is not designed yet.</p>
+<div class="styles-tabs" role="tablist" aria-label="Ship size class">
+<button type="button" role="tab" id="styles-tab-small" aria-controls="styles-panel-small" aria-selected="true" tabindex="0" data-class="small">Small · classes 1-5</button>
+<button type="button" role="tab" id="styles-tab-medium" aria-controls="styles-panel-medium" aria-selected="false" tabindex="-1" data-class="medium">Medium · classes 6-10</button>
+<button type="button" role="tab" id="styles-tab-large" aria-controls="styles-panel-large" aria-selected="false" tabindex="-1" data-class="large">Large · classes 11-16</button>
+<button type="button" role="tab" id="styles-tab-colossal" aria-controls="styles-panel-colossal" aria-selected="false" tabindex="-1" data-class="colossal">Colossal · future</button>
+</div>
+<div class="split styles-grid">
+<div class="col-7 styles-stage">
+<div class="styles-viewerbox" id="styles-viewerbox">
+<div id="styles-viewer" aria-label="Scripted 3D scene for the selected size class, rotatable. A still image is shown when 3D is off."><img class="viewer__poster" src="assets/img/hero/poster.webp" width="880" height="495" alt="A small fighter in combat, a still image for the fighting styles viewer." decoding="async"></div>
+<p class="viewer__caption styles-caption" id="styles-caption" aria-live="off"><span data-when="live" id="styles-caption-live"></span><span data-when="static" id="styles-caption-static">Still image: a small fighter in combat. In-game capture, version 0.6.1.</span></p>
+</div>
+<figure class="styles-colossal" id="styles-colossal" hidden>
+<div class="styles-sil-stage" role="img" aria-label="Two generic ship outlines side by side. A small outline stands for the LEVIATHAN. A much larger dashed outline stands for the future colossal class. It is a placeholder, not a design."><div class="styles-sil-wrap styles-sil-wrap--big"><div class="styles-sil styles-sil--big"></div></div><div class="styles-sil-wrap styles-sil-wrap--lev"><div class="styles-sil styles-sil--lev"></div></div></div>
+<figcaption class="viewer__caption styles-caption"><span class="styles-keys"><span class="styles-key styles-key--lev">LEVIATHAN, the largest class built</span><span class="styles-key styles-key--big">Colossal, future</span></span> Placeholder outlines, not a design. No 3D and no numbers until it is designed.</figcaption>
+</figure>
+</div>
+<div class="col-5 styles-side">
+<div class="styles-panel is-on" role="tabpanel" id="styles-panel-small" aria-labelledby="styles-tab-small" tabindex="0" data-class="small">
+<h3 class="styles-panel__title">Small · classes 1-5</h3>
+<div class="styles-block"><p class="mono-label" id="styles-ships-small">Ships in this class</p>
+<ul class="styles-ships" aria-labelledby="styles-ships-small">
+<li><a class="styles-ship" href="#ships" data-ship="kestrel" aria-label="KESTREL, Light Fighter: open in the ships explorer"><span class="styles-ship__n">KESTREL</span><span class="styles-ship__r">LIGHT FIGHTER</span></a></li>
+<li><a class="styles-ship" href="#ships" data-ship="orion1" aria-label="ORION-1, Multirole Interceptor: open in the ships explorer"><span class="styles-ship__n">ORION-1</span><span class="styles-ship__r">MULTIROLE INTERCEPTOR</span></a></li>
+<li><a class="styles-ship" href="#ships" data-ship="needle" aria-label="NEEDLE, Interceptor: open in the ships explorer"><span class="styles-ship__n">NEEDLE</span><span class="styles-ship__r">INTERCEPTOR</span></a></li>
+<li><a class="styles-ship" href="#ships" data-ship="pathfinder" aria-label="PATHFINDER, Explorer: open in the ships explorer"><span class="styles-ship__n">PATHFINDER</span><span class="styles-ship__r">EXPLORER</span></a></li>
+<li><a class="styles-ship" href="#ships" data-ship="brawler" aria-label="BRAWLER, Heavy Fighter: open in the ships explorer"><span class="styles-ship__n">BRAWLER</span><span class="styles-ship__r">HEAVY FIGHTER</span></a></li>
+</ul></div>
+<div class="styles-block"><p class="mono-label">Ranges across the class</p><dl class="spec styles-spec">
+<dt>Length</dt><dd><span data-bind="classes.0.ranges.lengthM.0">12</span> to <span data-bind="classes.0.ranges.lengthM.1">41</span> m</dd>
+<dt>Mass</dt><dd><span data-bind="classes.0.ranges.massT.0" data-fmt="num">24</span> to <span data-bind="classes.0.ranges.massT.1" data-fmt="num">894</span> t</dd>
+<dt>Cruise speed</dt><dd><span data-bind="classes.0.ranges.cruiseMs.0">65.2</span> to <span data-bind="classes.0.ranges.cruiseMs.1">96.4</span> m/s</dd>
+<dt>Turn rate</dt><dd><span data-bind="classes.0.ranges.turnDegS.0">55</span> to <span data-bind="classes.0.ranges.turnDegS.1">140</span> deg/s</dd>
+<dt>Hull + shield</dt><dd><span data-bind="classes.0.ranges.hullShield.0" data-fmt="num">130</span> to <span data-bind="classes.0.ranges.hullShield.1" data-fmt="num">320</span></dd>
+<dt>Damage per second</dt><dd><span data-bind="classes.0.ranges.dps.0">53</span> to <span data-bind="classes.0.ranges.dps.1">201</span></dd>
+</dl>
+<p class="styles-src">Length, mass, speed, turn rate, hull and shield are computed from the 5 ship files of this class; damage per second is as of the 0.2.1 loadouts (docs/FLEET.md section 9.5). Sources: derived from fleet[] (versions/v0.6.1/src/shared/fleet/&lt;ship&gt;.json). Class bands: docs/FLEET.md#L66 (band: fighter 1-5, mid 6-10, capital 11-16).</p></div>
+<div class="styles-block"><p class="mono-label">AI profiles the game uses here</p><ul class="styles-profiles">
+<li>fighter</li>
+</ul></div>
+<div class="styles-block"><h4 class="styles-h4">How it fights</h4><ul class="styles-fights">
+<li><span class="styles-fights__t">Fixed lasers converge on one aim point in front of the ship.</span> <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.1.0</span></span><span class="styles-src">Source: docs/FLEET.md#L130</span></li>
+<li><span class="styles-fights__t">Lock-on rockets: a rocket is guided only if its lock is complete when it launches.</span> <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.1.0</span></span><span class="styles-src">Source: docs/FLEET.md#L137</span></li>
+<li><span class="styles-fights__t">Some carry fixed rotary miniguns beside the lasers.</span> <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.2.1</span></span><span class="styles-src">Source: docs/FLEET.md#L252</span></li>
+<li><span class="styles-fights__t">Double boost.</span> <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.5.1</span></span><span class="styles-src">Source: versions/README.md#L17</span></li>
+<li><span class="styles-fights__t">Volleys of six rockets.</span> <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.5.1</span></span><span class="styles-src">Source: versions/README.md#L17</span></li>
+</ul></div>
+</div>
+<div class="styles-panel" role="tabpanel" id="styles-panel-medium" aria-labelledby="styles-tab-medium" tabindex="0" data-class="medium">
+<h3 class="styles-panel__title">Medium · classes 6-10</h3>
+<div class="styles-block"><p class="mono-label" id="styles-ships-medium">Ships in this class</p>
+<ul class="styles-ships" aria-labelledby="styles-ships-medium">
+<li><a class="styles-ship" href="#ships" data-ship="halberd" aria-label="HALBERD, Strike Corvette: open in the ships explorer"><span class="styles-ship__n">HALBERD</span><span class="styles-ship__r">STRIKE CORVETTE</span></a></li>
+<li><a class="styles-ship" href="#ships" data-ship="warhound" aria-label="WARHOUND, Gunship: open in the ships explorer"><span class="styles-ship__n">WARHOUND</span><span class="styles-ship__r">GUNSHIP</span></a></li>
+<li><a class="styles-ship" href="#ships" data-ship="rampart" aria-label="RAMPART, Escort Frigate: open in the ships explorer"><span class="styles-ship__n">RAMPART</span><span class="styles-ship__r">ESCORT FRIGATE</span></a></li>
+<li><a class="styles-ship" href="#ships" data-ship="mule" aria-label="MULE, Hauler: open in the ships explorer"><span class="styles-ship__n">MULE</span><span class="styles-ship__r">HAULER</span></a></li>
+<li><a class="styles-ship" href="#ships" data-ship="anvil" aria-label="ANVIL, Destroyer: open in the ships explorer"><span class="styles-ship__n">ANVIL</span><span class="styles-ship__r">DESTROYER</span></a></li>
+</ul></div>
+<div class="styles-block"><p class="mono-label">Ranges across the class</p><dl class="spec styles-spec">
+<dt>Length</dt><dd><span data-bind="classes.1.ranges.lengthM.0">55.7</span> to <span data-bind="classes.1.ranges.lengthM.1">240</span> m</dd>
+<dt>Mass</dt><dd><span data-bind="classes.1.ranges.massT.0" data-fmt="num">1,106</span> to <span data-bind="classes.1.ranges.massT.1" data-fmt="num">30,844</span> t</dd>
+<dt>Cruise speed</dt><dd><span data-bind="classes.1.ranges.cruiseMs.0">45.6</span> to <span data-bind="classes.1.ranges.cruiseMs.1">65.4</span> m/s</dd>
+<dt>Turn rate</dt><dd><span data-bind="classes.1.ranges.turnDegS.0">12.6</span> to <span data-bind="classes.1.ranges.turnDegS.1">45.6</span> deg/s</dd>
+<dt>Hull + shield</dt><dd><span data-bind="classes.1.ranges.hullShield.0" data-fmt="num">490</span> to <span data-bind="classes.1.ranges.hullShield.1" data-fmt="num">3,100</span></dd>
+<dt>Damage per second</dt><dd><span data-bind="classes.1.ranges.dps.0">112</span> to <span data-bind="classes.1.ranges.dps.1">366</span></dd>
+</dl>
+<p class="styles-src">Length, mass, speed, turn rate, hull and shield are computed from the 5 ship files of this class; damage per second is as of the 0.2.1 loadouts (docs/FLEET.md section 9.5). Sources: derived from fleet[] (versions/v0.6.1/src/shared/fleet/&lt;ship&gt;.json). Class bands: docs/FLEET.md#L66 (band: fighter 1-5, mid 6-10, capital 11-16).</p></div>
+<div class="styles-block"><p class="mono-label">AI profiles the game uses here</p><ul class="styles-profiles">
+<li>gunboat</li>
+<li>hauler</li>
+</ul></div>
+<div class="styles-block"><h4 class="styles-h4">How it fights</h4><ul class="styles-fights">
+<li><span class="styles-fights__t">Spinal railgun: hold to charge, release to fire.</span> <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.1.0</span></span><span class="styles-src">Source: docs/FLEET.md#L138</span></li>
+<li><span class="styles-fights__t">Laser and gun turrets can each be set to MANUAL or AUTO.</span> <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.2.1</span></span><span class="styles-src">Source: docs/FLEET.md#L185</span></li>
+<li><span class="styles-fights__t">The ANVIL launches ten allied NEEDLEs from its hangar bay.</span> <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.5.1</span></span><span class="styles-src">Source: versions/README.md#L17</span></li>
+<li><span class="styles-fights__t">ATTACK orders cycle between a single target and the nearest.</span> <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.5.3</span></span><span class="styles-src">Source: versions/README.md#L19</span></li>
+<li><span class="styles-fights__t">Sit in a hardpoint seat and fire from it.</span> <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.5.1</span></span><span class="styles-src">Source: versions/README.md#L17</span></li>
+</ul></div>
+</div>
+<div class="styles-panel" role="tabpanel" id="styles-panel-large" aria-labelledby="styles-tab-large" tabindex="0" data-class="large">
+<h3 class="styles-panel__title">Large · classes 11-16</h3>
+<div class="styles-block"><p class="mono-label" id="styles-ships-large">Ships in this class</p>
+<ul class="styles-ships" aria-labelledby="styles-ships-large">
+<li><a class="styles-ship" href="#ships" data-ship="caravan" aria-label="CARAVAN, Bulk Freighter: open in the ships explorer"><span class="styles-ship__n">CARAVAN</span><span class="styles-ship__r">BULK FREIGHTER</span></a></li>
+<li><a class="styles-ship" href="#ships" data-ship="bastion" aria-label="BASTION, Cruiser: open in the ships explorer"><span class="styles-ship__n">BASTION</span><span class="styles-ship__r">CRUISER</span></a></li>
+<li><a class="styles-ship" href="#ships" data-ship="thresher" aria-label="THRESHER, Battlecruiser: open in the ships explorer"><span class="styles-ship__n">THRESHER</span><span class="styles-ship__r">BATTLECRUISER</span></a></li>
+<li><a class="styles-ship" href="#ships" data-ship="meridian" aria-label="MERIDIAN, Carrier: open in the ships explorer"><span class="styles-ship__n">MERIDIAN</span><span class="styles-ship__r">CARRIER</span></a></li>
+<li><a class="styles-ship" href="#ships" data-ship="ironclad" aria-label="IRONCLAD, Dreadnought: open in the ships explorer"><span class="styles-ship__n">IRONCLAD</span><span class="styles-ship__r">DREADNOUGHT</span></a></li>
+<li><a class="styles-ship" href="#ships" data-ship="leviathan" aria-label="LEVIATHAN, Flagship: open in the ships explorer"><span class="styles-ship__n">LEVIATHAN</span><span class="styles-ship__r">FLAGSHIP</span></a></li>
+</ul></div>
+<div class="styles-block"><p class="mono-label">Ranges across the class</p><dl class="spec styles-spec">
+<dt>Length</dt><dd><span data-bind="classes.2.ranges.lengthM.0">258.5</span> to <span data-bind="classes.2.ranges.lengthM.1">1200</span> m</dd>
+<dt>Mass</dt><dd><span data-bind="classes.2.ranges.massT.0" data-fmt="num">66,355</span> to <span data-bind="classes.2.ranges.massT.1" data-fmt="num">3,649,536</span> t</dd>
+<dt>Cruise speed</dt><dd><span data-bind="classes.2.ranges.cruiseMs.0">36.7</span> to <span data-bind="classes.2.ranges.cruiseMs.1">41.7</span> m/s</dd>
+<dt>Turn rate</dt><dd><span data-bind="classes.2.ranges.turnDegS.0">4.5</span> to <span data-bind="classes.2.ranges.turnDegS.1">9.2</span> deg/s</dd>
+<dt>Hull + shield</dt><dd><span data-bind="classes.2.ranges.hullShield.0" data-fmt="num">4,295</span> to <span data-bind="classes.2.ranges.hullShield.1" data-fmt="num">25,165</span></dd>
+<dt>Damage per second</dt><dd><span data-bind="classes.2.ranges.dps.0">203</span> to <span data-bind="classes.2.ranges.dps.1">1060</span></dd>
+</dl>
+<p class="styles-src">Length, mass, speed, turn rate, hull and shield are computed from the 6 ship files of this class; damage per second is as of the 0.2.1 loadouts (docs/FLEET.md section 9.5). Sources: derived from fleet[] (versions/v0.6.1/src/shared/fleet/&lt;ship&gt;.json). Class bands: docs/FLEET.md#L66 (band: fighter 1-5, mid 6-10, capital 11-16).</p></div>
+<div class="styles-block"><p class="mono-label">AI profiles the game uses here</p><ul class="styles-profiles">
+<li>capital</li>
+<li>carrier</li>
+<li>hauler</li>
+</ul></div>
+<div class="styles-block"><h4 class="styles-h4">How it fights</h4><ul class="styles-fights">
+<li><span class="styles-fights__t">Batteries of laser and gun turrets that start in AUTO.</span> <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.2.1</span></span><span class="styles-src">Source: docs/FLEET.md#L265</span></li>
+<li><span class="styles-fights__t">Point defence turrets shoot down incoming rockets by themselves.</span> <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.1.0</span></span><span class="styles-src">Source: docs/FLEET.md#L133</span></li>
+<li><span class="styles-fights__t">Heavy spinal railguns on the biggest ships.</span> <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.1.0</span></span><span class="styles-src">Source: docs/FLEET.md#L31</span></li>
+<li><span class="styles-fights__t">Rail turrets fire on release when the target bears.</span> <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.1.0</span></span><span class="styles-src">Source: docs/FLEET.md#L140</span></li>
+<li><span class="styles-fights__t">Modules take damage separately and the hull breaks apart.</span> <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.3.0</span></span><span class="styles-src">Source: versions/README.md#L14</span></li>
+</ul></div>
+</div>
+<div class="styles-panel" role="tabpanel" id="styles-panel-colossal" aria-labelledby="styles-tab-colossal" tabindex="0" data-class="colossal">
+<h3 class="styles-panel__title">Colossal · future</h3>
+<p><span class="chip chip--future"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Future</span></span></p>
+<p class="lead styles-colossal__line">A class above the 1.2 km LEVIATHAN. Not designed yet.</p>
+<p class="muted">There are no ships, stats or models for this class. It is on the list for the future and nothing here is built.</p>
+</div>
+</div>
+</div>
+<div class="styles-compare panel" id="styles-compare" hidden>
+<h3 class="styles-h3">Compare the classes</h3>
+<p class="muted">Each bar spans the smallest to the largest value among the ships of that class. Pick a measure.</p>
+<fieldset class="styles-measure"><legend class="mono-label">Measure</legend><div class="pill-group" id="styles-measure"></div></fieldset>
+<ul class="styles-bars" id="styles-bars"></ul>
+</div>
+</div>
+</section>
+<section id="economy" class="chapter" data-section="styles-economy" aria-labelledby="economy-title">
+<div class="wrap">
+<p class="chapter__label">Explore · Economy</p>
+<h2 id="economy-title">The economy</h2>
+<div class="cluster economy-chips"><span class="chip chip--planned chip--lg"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Planned</span></span></div>
+<p class="lead">Free to play, with in-game currency and cosmetics. Ships and upgrades can be earned by playing or bought.</p>
+<p class="economy-nothing"><strong>Nothing in this section is built yet.</strong></p>
+<div class="economy-grid">
+<div class="economy-diagram panel panel--raised frame" id="economy-diagram" data-path="both">
+<svg class="eco-svg eco-svg--wide" viewBox="0 0 960 370" role="img" aria-labelledby="economy-t economy-d" focusable="false"><title id="economy-t">Planned earn and buy paths</title><desc id="economy-d">Earn path: play matches, earn in-game currency. Buy path: real money buys in-game currency. Both paths lead to the same place: ships, ship upgrades and cosmetics, and then back into matches. Planned, not built.</desc><g class="eco-earn"><text class="eco-cap" x="30" y="58" font-size="13">EARN</text><rect class="eco-box" x="30" y="70" width="210" height="64" rx="14"/><text class="eco-txt" x="135.0" y="108.0" text-anchor="middle" font-size="17">Play matches</text><path class="eco-line" d="M240 102 H316"/><path class="eco-head" d="M328 102 L319 97 L319 107 Z"/><rect class="eco-box" x="330" y="70" width="250" height="64" rx="14"/><text class="eco-txt" x="455.0" y="108.0" text-anchor="middle" font-size="17">Earn in-game currency</text><path class="eco-line" d="M580 102 H668"/><path class="eco-head" d="M680 102 L671 97 L671 107 Z"/></g><g class="eco-buy"><text class="eco-cap" x="30" y="248" font-size="13">BUY</text><rect class="eco-box" x="30" y="260" width="210" height="64" rx="14"/><text class="eco-txt" x="135.0" y="297.9" text-anchor="middle" font-size="17">Real money</text><path class="eco-line" d="M240 292 H316"/><path class="eco-head" d="M328 292 L319 287 L319 297 Z"/><rect class="eco-box" x="330" y="260" width="250" height="64" rx="14"/><text class="eco-txt" x="455.0" y="297.9" text-anchor="middle" font-size="17">Buy in-game currency</text><path class="eco-line" d="M580 292 H668"/><path class="eco-head" d="M680 292 L671 287 L671 297 Z"/></g><g class="eco-hub"><rect class="eco-hubbox" x="680" y="50" width="250" height="290" rx="14"/><text class="eco-cap" x="805.0" y="80" text-anchor="middle" font-size="13">SPEND IT ON</text><rect class="eco-item" x="700" y="100" width="210" height="52" rx="10"/><text class="eco-txt" x="805.0" y="131.9" text-anchor="middle" font-size="17">Ships</text><rect class="eco-item" x="700" y="166" width="210" height="52" rx="10"/><text class="eco-txt" x="805.0" y="197.9" text-anchor="middle" font-size="17">Ship upgrades</text><rect class="eco-item" x="700" y="232" width="210" height="52" rx="10"/><text class="eco-txt" x="805.0" y="263.9" text-anchor="middle" font-size="17">Cosmetics</text></g><g class="eco-back"><path class="eco-line" d="M805 50 V28 H135 V58"/><path class="eco-head" d="M135 68 L130 59 L140 59 Z"/><text class="eco-cap" x="470" y="20" text-anchor="middle" font-size="13">BACK INTO MATCHES</text></g></svg><svg class="eco-svg eco-svg--narrow" viewBox="0 0 340 600" role="img" aria-labelledby="economy-t2 economy-d2" focusable="false"><title id="economy-t2">Planned earn and buy paths</title><desc id="economy-d2">Earn path: play matches, earn in-game currency. Buy path: real money buys in-game currency. Both paths lead to the same place: ships, ship upgrades and cosmetics, and then back into matches. Planned, not built.</desc><g class="eco-earn"><text class="eco-cap" x="8" y="22" font-size="13">EARN</text><rect class="eco-box" x="8" y="34" width="150" height="62" rx="14"/><text class="eco-txt" x="83.0" y="70.2" text-anchor="middle" font-size="15">Play matches</text><path class="eco-line" d="M83 96 V128"/><path class="eco-head" d="M83 140 L78 131 L88 131 Z"/><rect class="eco-box" x="8" y="142" width="150" height="76" rx="14"/><text class="eco-txt" x="83.0" y="175.9" text-anchor="middle" font-size="15">Earn in-game</text><text class="eco-txt" x="83.0" y="194.7" text-anchor="middle" font-size="15">currency</text><path class="eco-line" d="M83 218 V282"/><path class="eco-head" d="M83 294 L78 285 L88 285 Z"/></g><g class="eco-buy"><text class="eco-cap" x="182" y="22" font-size="13">BUY</text><rect class="eco-box" x="182" y="34" width="150" height="62" rx="14"/><text class="eco-txt" x="257.0" y="70.2" text-anchor="middle" font-size="15">Real money</text><path class="eco-line" d="M257 96 V128"/><path class="eco-head" d="M257 140 L252 131 L262 131 Z"/><rect class="eco-box" x="182" y="142" width="150" height="76" rx="14"/><text class="eco-txt" x="257.0" y="175.9" text-anchor="middle" font-size="15">Buy in-game</text><text class="eco-txt" x="257.0" y="194.7" text-anchor="middle" font-size="15">currency</text><path class="eco-line" d="M257 218 V282"/><path class="eco-head" d="M257 294 L252 285 L262 285 Z"/></g><g class="eco-hub"><rect class="eco-hubbox" x="8" y="296" width="324" height="230" rx="14"/><text class="eco-cap" x="170.0" y="326" text-anchor="middle" font-size="13">SPEND IT ON</text><rect class="eco-item" x="28" y="346" width="284" height="44" rx="10"/><text class="eco-txt" x="170.0" y="373.2" text-anchor="middle" font-size="15">Ships</text><rect class="eco-item" x="28" y="400" width="284" height="44" rx="10"/><text class="eco-txt" x="170.0" y="427.2" text-anchor="middle" font-size="15">Ship upgrades</text><rect class="eco-item" x="28" y="454" width="284" height="44" rx="10"/><text class="eco-txt" x="170.0" y="481.2" text-anchor="middle" font-size="15">Cosmetics</text></g><g class="eco-back"><text class="eco-cap" x="170" y="560" text-anchor="middle" font-size="13">THEN BACK INTO MATCHES</text></g></svg>
+</div>
+<fieldset class="radio-cards economy-path" id="economy-path" hidden><legend>Highlight a path</legend><label class="radio-card"><input type="radio" name="economy-path" value="earn"><span class="radio-card__body"><span class="radio-card__title">Show the earn path</span><span class="radio-card__sub">Play matches, earn in-game currency</span></span></label><label class="radio-card"><input type="radio" name="economy-path" value="buy"><span class="radio-card__body"><span class="radio-card__title">Show the buy path</span><span class="radio-card__sub">Real money buys in-game currency</span></span></label><label class="radio-card"><input type="radio" name="economy-path" value="both" checked><span class="radio-card__body"><span class="radio-card__title">Show both</span><span class="radio-card__sub">Two ways to get currency</span></span></label></fieldset>
+</div>
+<p class="economy-fair"><span class="mono-label">Pay to win</span><span class="economy-fair__t" data-bind="economy.fairness.text">How paid ships stay fair in player-versus-player is still being designed.</span></p>
+<p class="muted economy-lan">Multiplayer today is LAN only (since 0.2.0). Online multiplayer is not built.</p>
+<p class="economy-f2p"><strong>Free to play.</strong></p>
+<p class="economy-dedication"><q data-bind="economy.dedication.text">Made for the dads who never had the time to live out their childhood selves.</q></p>
+<div class="economy-today panel" aria-labelledby="economy-today-h">
+<h3 class="styles-h3" id="economy-today-h">What exists today</h3>
+<p>The LOADOUT screen's hull and shield tiers and shield colours (0.6.0) show the kind of upgrade and cosmetic the economy is meant to offer.</p>
+<ul class="economy-today__list">
+<li><span>The LOADOUT screen offers 3 hull plating tiers (STANDARD PLATING, REINFORCED PLATING, BULWARK PLATING).</span> <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.6.0</span></span><span class="styles-src">Source: versions/v0.6.1/src/shared/bg_loadout.c#L21</span></li>
+<li><span>It offers 3 shield emitter tiers (STANDARD EMITTER, HARDENED EMITTER, DEEP-FIELD EMITTER).</span> <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.6.0</span></span><span class="styles-src">Source: versions/v0.6.1/src/shared/bg_loadout.c#L28</span></li>
+<li><span>It offers 8 shield colours, plus a custom colour.</span> <span class="chip chip--built"><span class="chip__dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="chip__t">Built</span><span class="chip__v">0.6.0</span></span><span class="styles-src">Source: versions/v0.6.1/src/shared/bg_loadout.c#L35</span></li>
+</ul><p class="muted">Nothing else is claimed.</p>
+</div>
+<p class="styles-src economy-src">Plan source: Orion-81/orion-81-mission/company-roadmap.md#L24 (Business model)</p>
+</div>
+</section>
+<section id="proof" class="chapter" data-section="story" aria-labelledby="proof-title">
+  <div class="wrap">
+    <p class="chapter__label">04 · Proof of concept</p>
+    <h2 id="proof-title" tabindex="-1">Built with Claude Code.</h2>
+    <p class="lead">Built so far by one founder directing Claude Code: the founder decides what to build; Claude Code plans, writes, tests and freezes it. <span data-bind="stats.versionsFrozen.v">14</span> versions in <span data-bind="stats.daysToV061.v">10</span> days, each one frozen in the project's archive.</p>
+
+    <p class="proof__tools"><button class="btn btn--sm" type="button" id="proof-src-toggle" aria-pressed="false" hidden>Show sources</button></p>
+    <ul class="counters" id="proof-counters" aria-label="Counts from the project's repository and build logs">
+<!--gen:counters-->
+      <li class="counter"><span class="big-num counter__n"><span data-bind="stats.versionsFrozen.v" data-fmt="num">14</span></span><span class="counter__label">versions frozen</span><span class="src">versions/README.md (14 rows, v0 to 0.6.1)</span></li>
+      <li class="counter"><span class="big-num counter__n"><span data-bind="stats.daysToV061.v" data-fmt="num">10</span></span><span class="counter__label">days from the first prototype to the 0.6.1 freeze</span><span class="src">tracker/epics/EP-021-licence-compliance-audit.md (began 2026-09-28) and tracker/epics/EP-019-release-0-6-1-enemy-carriers-return-to-dock-craft-colour-rail-zoom.md#L44</span></li>
+      <li class="counter"><span class="big-num counter__n"><span data-bind="stats.shipClasses.v" data-fmt="num">16</span></span><span class="counter__label">ship classes</span><span class="src">versions/v0.6.1/src/shared/fleet/fleet.json</span></li>
+      <li class="counter"><span class="big-num counter__n"><span data-bind="stats.maps.v" data-fmt="num">5</span></span><span class="counter__label">maps</span><span class="src">versions/v0.6.1/src/shared/bg_maps.c</span></li>
+      <li class="counter"><span class="big-num counter__n"><span data-bind="stats.linesOfCode.v" data-fmt="num">254,581</span></span><span class="counter__label">lines of Orion-81's own code (third-party libraries excluded)</span><span class="src">versions/v0.6.1: non-blank lines of .c/.h/.py in bub/src, bub/include, bub/tests, src, tools, tests and build.py (521 files); bub/thirdparty excluded</span></li>
+      <li class="counter"><span class="big-num counter__n">13</span><span class="counter__label">test suites in the 0.6.1 build; every check passed except one timing check, waived (ORI-0948)</span><span class="counter__parts"><span data-bind="stats.testChecksV061.v" data-fmt="num">714,414,059</span> individual checks in total, most from two sweep-style suites</span><span class="src">build/mvp061/integration/full.log (lines: orionTests L1687, cgUnit L1699, cgDraw L1760, gameHarness L3815, uiDraw L4402, bubBodies L967, headlessV010 L11139, headlessMaps L14051, headlessGuns L24048, headlessFreeview L24707, headlessDeploy L25279, headlessRailzoom L27324, headlessWaves L65635)</span></li>
+      <li class="counter"><span class="big-num counter__n"><span data-bind="stats.tracker.v" data-fmt="num">540</span></span><span class="counter__label">tracker items, EP-001 to EP-021: game, tooling, policy and audit work</span><span class="counter__parts"><span data-bind="stats.tracker.parts.done">389</span> done, across <span data-bind="stats.tracker.parts.epics">21</span> epics</span><span class="src">tracker/items and tracker/epics (items of epics EP-001 to EP-021, which include the policy epic EP-011, the ship design album EP-020 and the licence audit EP-021; the website epic EP-022 is not counted)</span></li>
+<!--/gen:counters-->
+    </ul>
+    <p class="small muted proof__note">Test checks: one timing check in the engine test test_bodies (0.606 ms against a 0.6 ms limit) failed and was waived (ORI-0948); every other suite reported 0 failures.</p>
+
+    <h3 id="proof-versions-title" class="proof__sub">Every version, frozen</h3>
+    <p class="muted">Each version is frozen in the project's archive. The list shows what each one added.</p>
+    <p class="proof__tools"><button class="btn btn--sm" type="button" id="proof-ver-toggle" aria-expanded="false" hidden>Expand all</button></p>
+    <div class="versions" id="proof-versions" role="group" aria-labelledby="proof-versions-title">
+<!--gen:versions-->
+      <details class="ver ver--early" data-v="v0"><summary><span class="ver__v">Version 0 (demo)</span><time class="ver__date" datetime="2026-10-03">2026-10-03</time><span class="chip chip--built"><span class="chip__t">Built</span> <span class="chip__v">v0</span></span></summary><div class="ver__body"><p>Eight ship classes, lasers and salvo fire, and the THETA-7 asteroid field.</p></div></details>
+      <details class="ver ver--early" data-v="0.1.0"><summary><span class="ver__v">Version 0.1.0</span><time class="ver__date" datetime="2026-10-03">2026-10-03</time><span class="chip chip--built"><span class="chip__t">Built</span> <span class="chip__v">0.1.0</span></span></summary><div class="ver__body"><p>A grounded, hard-science-fiction look, half-speed mechanics, rockets and railguns, 16 ships from 12 m to 1.2 km, and the Glasgow map.</p></div></details>
+      <details class="ver ver--early" data-v="0.2.0"><summary><span class="ver__v">Version 0.2.0</span><time class="ver__date" datetime="2026-10-03">2026-10-03</time><span class="chip chip--built"><span class="chip__t">Built</span> <span class="chip__v">0.2.0</span></span></summary><div class="ver__body"><p>Local-network multiplayer (find games on the same Wi-Fi, host or join a lobby, launch together; co-op waves and free-for-all) and three new maps: LUNA, EARTH ORBIT and SOL.</p></div></details>
+      <details class="ver ver--early" data-v="0.2.1"><summary><span class="ver__v">Version 0.2.1</span><time class="ver__date" datetime="2026-10-04">2026-10-04</time><span class="chip chip--built"><span class="chip__t">Built</span> <span class="chip__v">0.2.1</span></span></summary><div class="ver__body"><p>Miniguns, plus manual and automatic targeting for lasers, miniguns and rockets (turret modes, point defence, weapon postures).</p></div></details>
+      <details class="ver ver--early" data-v="0.2.2"><summary><span class="ver__v">Version 0.2.2</span><time class="ver__date" datetime="2026-10-04">2026-10-04</time><span class="chip chip--built"><span class="chip__t">Built</span> <span class="chip__v">0.2.2</span></span></summary><div class="ver__body"><p>A free-view orbit camera, an AUTO mode that attacks the nearest hostile, a switch between AUTO and holding course, and a smooth hand-back to the pilot.</p></div></details>
+      <details class="ver ver--early" data-v="0.2.3"><summary><span class="ver__v">Version 0.2.3</span><time class="ver__date" datetime="2026-10-04">2026-10-04</time><span class="chip chip--built"><span class="chip__t">Built</span> <span class="chip__v">0.2.3</span></span></summary><div class="ver__body"><p>Weapons can be deployed and retracted (retracted weapons are hidden), and ships no longer trail smoke.</p></div></details>
+      <details class="ver" data-v="0.3.0"><summary><span class="ver__v">Version 0.3.0</span><time class="ver__date" datetime="2026-10-05">2026-10-05</time><span class="chip chip--built"><span class="chip__t">Built</span> <span class="chip__v">0.3.0</span></span></summary><div class="ver__body"><p>Modular ships that break apart (module damage, joint failure, tumbling hulks, secondary explosions) and new hulls for all 16 classes (visual only).</p><p class="src">Source wording: Modular ships that break apart (module damage, joint failure, tumbling hulks, secondary explosions, minimal module HUD), all 0.2.x features kept, and a hull redesign of all 16 classes (organic, distinct silhouettes; visual only) (versions/README.md#L14)</p><p class="mono-label">Evidence in the project's archive</p><ul class="ver__ev"><li><code>docs/v0.3/STATUS_MVP.md</code></li><li><code>tracker/epics/EP-009-release-0-3-0-modular-ships-that-break-apart.md</code></li><li><code>versions/v0.3.0/MANIFEST.sha256</code></li></ul><p class="small muted">Tracker epic EP-009</p></div></details>
+      <details class="ver" data-v="0.4.0"><summary><span class="ver__v">Version 0.4.0</span><time class="ver__date" datetime="2026-10-05">2026-10-05</time><span class="chip chip--built"><span class="chip__t">Built</span> <span class="chip__v">0.4.0</span></span></summary><div class="ver__body"><p>A photoreal look: image-based lighting, ambient occlusion, soft sun shadows and a filmic grade, with a REALISM menu toggle, and polished BASTION and IRONCLAD hulls.</p><p class="src">Source wording: Photoreal look: image-based lighting, ambient occlusion, PCSS soft sun shadows, filmic grade with a REALISM menu toggle (r_realism 0 = 0.3.0 image), plus the BASTION / IRONCLAD hull polish that finishes the owner's organic-hull request (versions/README.md#L15)</p><p class="mono-label">Evidence in the project's archive</p><ul class="ver__ev"><li><code>docs/v0.4/STATUS_MVP.md</code></li><li><code>tracker/epics/EP-010-release-0-4-0-photoreal-look.md</code></li><li><code>versions/v0.4.0/MANIFEST.sha256</code></li></ul><p class="small muted">Tracker epic EP-010</p></div></details>
+      <details class="ver" data-v="0.5.0"><summary><span class="ver__v">Version 0.5.0</span><time class="ver__date" datetime="2026-10-05">2026-10-05</time><span class="chip chip--built"><span class="chip__t">Built</span> <span class="chip__v">0.5.0</span></span></summary><div class="ver__body"><p>The look: physically lit cockpits, classed stars, a ringed gas giant, a galaxy and nebula backdrop, engine plumes and navigation lights; the 0.1.0 play feel locked.</p><p class="src">Source wording: The look: physically lit cockpits (canopy, diegetic panes at cg_hudDiegetic), classed stars, ringed gas giant, galaxy/nebula backdrop, plume and nav lights, 0.1.0 play feel locked (versions/README.md#L16)</p><p class="mono-label">Evidence in the project's archive</p><ul class="ver__ev"><li><code>docs/v0.5/STATUS_MVP.md</code></li><li><code>tracker/epics/EP-012-release-0-5-0-the-look-cockpit-presence-and-cine.md</code></li><li><code>versions/v0.5.0/MANIFEST.sha256</code></li></ul><p class="small muted">Tracker epic EP-012</p></div></details>
+      <details class="ver" data-v="0.5.1"><summary><span class="ver__v">Version 0.5.1</span><time class="ver__date" datetime="2026-10-06">2026-10-06</time><span class="chip chip--built"><span class="chip__t">Built</span> <span class="chip__v">0.5.1</span></span></summary><div class="ver__body"><p>Hardpoint seats, six-rocket volleys with a follow camera, double boost, ANVIL ripple lasers, an ANVIL bay that launches 10 allied NEEDLEs, and a camera-shake slider.</p><p class="src">Source wording: Camera shake % slider, hardpoint seats, 6-rocket volleys with follow camera, double boost, ANVIL ripple lasers, ANVIL bay launching 10 allied NEEDLEs (versions/README.md#L17)</p><p class="mono-label">Evidence in the project's archive</p><ul class="ver__ev"><li><code>docs/v0.5.1/STATUS_MVP.md</code></li><li><code>tracker/epics/EP-015-release-0-5-1-hardpoint-seats-rocket-volleys-sha.md</code></li><li><code>versions/v0.5.1/MANIFEST.sha256</code></li></ul><p class="small muted">Tracker epic EP-015</p></div></details>
+      <details class="ver" data-v="0.5.2"><summary><span class="ver__v">Version 0.5.2</span><time class="ver__date" datetime="2026-10-07">2026-10-07</time><span class="chip chip--built"><span class="chip__t">Built</span> <span class="chip__v">0.5.2</span></span></summary><div class="ver__body"><p>Developer tuning (boost, rocket spacing, bay interval), squadron stances, a ROCKETS INCOMING sign and turret third-person seats.</p><p class="src">Source wording: Developer tuning (boost %, rocket spacing, bay interval), squadron stances, ROCKETS INCOMING sign, turret third-person seats (tracker/epics/EP-016-release-0-5-2-developer-tuning-boost-rocket-spac.md#title (the README row has no description))</p><p class="mono-label">Evidence in the project's archive</p><ul class="ver__ev"><li><code>docs/v0.5.2/STATUS_MVP.md</code></li><li><code>tracker/epics/EP-016-release-0-5-2-developer-tuning-boost-rocket-spac.md</code></li><li><code>versions/v0.5.2/MANIFEST.sha256</code></li></ul><p class="small muted">Tracker epic EP-016</p></div></details>
+      <details class="ver" data-v="0.5.3"><summary><span class="ver__v">Version 0.5.3</span><time class="ver__date" datetime="2026-10-07">2026-10-07</time><span class="chip chip--built"><span class="chip__t">Built</span> <span class="chip__v">0.5.3</span></span></summary><div class="ver__body"><p>Engine plumes sized from the nozzle, a 240 m ANVIL with a see-through hangar and doors, NEEDLE scrambles from both sides, single or nearest-target ATTACK cycling, and AI ANVILs that launch their wings.</p><p class="src">Source wording: Plumes from nozzle size and real propulsion, 240 m ANVIL with a see-through hangar and doors, NEEDLE scramble from both sides, ATTACK single / nearest target cycle, AI ANVILs launch their wings (versions/README.md#L19)</p><p class="mono-label">Evidence in the project's archive</p><ul class="ver__ev"><li><code>docs/v0.5.3/STATUS_MVP.md</code></li><li><code>tracker/epics/EP-017-release-0-5-3-realistic-drive-plumes-a-240-m-anv.md</code></li><li><code>versions/v0.5.3/MANIFEST.sha256</code></li></ul><p class="small muted">Tracker epic EP-017</p></div></details>
+      <details class="ver" data-v="0.6.0"><summary><span class="ver__v">Version 0.6.0</span><time class="ver__date" datetime="2026-10-07">2026-10-07</time><span class="chip chip--built"><span class="chip__t">Built</span> <span class="chip__v">0.6.0</span></span></summary><div class="ver__body"><p>A LOADOUT screen before every match (single player and multiplayer lobby) with hull and shield tiers, shield colour, per-hardpoint rows and ANVIL bay craft.</p><p class="src">Source wording: Loadout skeleton: LOADOUT screen before every match (SP and MP lobby) with hull/shield tiers, shield colour, per-hardpoint rows and ANVIL bay craft, populated from existing loadouts only (versions/README.md#L20)</p><p class="mono-label">Evidence in the project's archive</p><ul class="ver__ev"><li><code>docs/v0.6.0/STATUS_MVP.md</code></li><li><code>tracker/epics/EP-018-release-0-6-0-ship-loadout-skeleton-pre-match-lo.md</code></li><li><code>versions/v0.6.0/MANIFEST.sha256</code></li></ul><p class="small muted">Tracker epic EP-018</p></div></details>
+      <details class="ver" data-v="0.6.1"><summary><span class="ver__v">Version 0.6.1</span><time class="ver__date" datetime="2026-10-08">2026-10-08</time><span class="chip chip--built"><span class="chip__t">Built</span> <span class="chip__v">0.6.1</span></span></summary><div class="ver__body"><p>Hostile AI ANVILs launch their wings in battle, carrier craft return to dock, craft wear their carrier's shield colour, and railguns zoom in automatically.</p><p class="src">Source wording: Hostile AI ANVILs launch their wings in battle, carrier craft return to dock on a damage-rate projection, craft wear their carrier's LOADOUT shield colour, automatic railgun zoom (developer settings: on/off, distance, linger) (versions/README.md#L21)</p><p class="mono-label">Evidence in the project's archive</p><ul class="ver__ev"><li><code>docs/v0.6.1/STATUS_MVP.md</code></li><li><code>tracker/epics/EP-019-release-0-6-1-enemy-carriers-return-to-dock-craft-colour-rail-zoom.md</code></li><li><code>versions/v0.6.1/MANIFEST.sha256</code></li></ul><p class="small muted">Tracker epic EP-019</p></div></details>
+<!--/gen:versions-->
+    </div>
+
+    <h3 id="proof-pipe-title" class="proof__sub">How the work is done</h3>
+    <p class="muted">Since 2026-10-03 (version 0.2.1 onward), a planner model (Claude Opus 5.5) writes the plan and acceptance criteria into a tracker. Executor models (Claude Sonnet 5.5) build in parallel, each on its own files. A planner reviews, executors fix, the checks run, and only then is a version frozen. Earlier versions (v0 to 0.2.0) were planned and built by Claude Code with a single model.</p>
+    <div class="pipe" id="proof-pipe">
+<!--gen:pipeline-->
+      <svg class="pipe__svg" viewBox="0 0 1100 236" role="group" aria-label="The work pipeline, nine steps. Each step can be selected for a one-line explanation." focusable="false">
+        <defs><marker id="pipe-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" class="pipe__arrowhead"/></marker></defs>
+        <path class="pipe__link" d="M191 54H228" marker-end="url(#pipe-arrow)"/>
+        <path class="pipe__link" d="M418 54H455" marker-end="url(#pipe-arrow)"/>
+        <path class="pipe__link" d="M645 54H682" marker-end="url(#pipe-arrow)"/>
+        <path class="pipe__link" d="M872 54H909" marker-end="url(#pipe-arrow)"/>
+        <path class="pipe__link" d="M1004 100V136" marker-end="url(#pipe-arrow)"/>
+        <path class="pipe__link" d="M909 182H872" marker-end="url(#pipe-arrow)"/>
+        <path class="pipe__link" d="M682 182H645" marker-end="url(#pipe-arrow)"/>
+        <path class="pipe__link" d="M455 182H418" marker-end="url(#pipe-arrow)"/>
+        <g class="pipe__node" tabindex="0" role="button" aria-pressed="true" aria-label="Step 1 of 9: Founder decides what" data-i="0" data-desc="The founder decides what to build, and reviews and accepts the result." data-title="Founder decides what">
+          <rect x="1" y="8" width="190" height="92" rx="14"/>
+          <text class="pipe__n" x="15" y="28">01</text>
+          <text class="pipe__t" x="96" y="52" text-anchor="middle">Founder</text>
+          <text class="pipe__s" x="96" y="69" text-anchor="middle">decides what</text>
+        </g>
+        <g class="pipe__node" tabindex="0" role="button" aria-pressed="false" aria-label="Step 2 of 9: Planner Claude Opus 5.5" data-i="1" data-desc="Writes the plan, the work items and the acceptance criteria into the tracker before any building starts." data-title="Planner Claude Opus 5.5">
+          <rect x="228" y="8" width="190" height="92" rx="14"/>
+          <text class="pipe__n" x="242" y="28">02</text>
+          <text class="pipe__t" x="323" y="52" text-anchor="middle">Planner</text>
+          <text class="pipe__s" x="323" y="69" text-anchor="middle">Claude Opus 5.5</text>
+        </g>
+        <g class="pipe__node" tabindex="0" role="button" aria-pressed="false" aria-label="Step 3 of 9: Executors in parallel Claude Sonnet 5.5" data-i="2" data-desc="Build the work items in parallel, each on its own files." data-title="Executors in parallel">
+          <rect x="455" y="8" width="190" height="92" rx="14"/>
+          <text class="pipe__n" x="469" y="28">03</text>
+          <text class="pipe__t" x="550" y="52" text-anchor="middle">Executors</text>
+          <text class="pipe__s" x="550" y="69" text-anchor="middle">in parallel</text>
+          <text class="pipe__s" x="550" y="86" text-anchor="middle">Claude Sonnet 5.5</text>
+        </g>
+        <g class="pipe__node" tabindex="0" role="button" aria-pressed="false" aria-label="Step 4 of 9: Integrate" data-i="3" data-desc="An executor merges the finished work." data-title="Integrate">
+          <rect x="682" y="8" width="190" height="92" rx="14"/>
+          <text class="pipe__n" x="696" y="28">04</text>
+          <text class="pipe__t" x="777" y="52" text-anchor="middle">Integrate</text>
+        </g>
+        <g class="pipe__node" tabindex="0" role="button" aria-pressed="false" aria-label="Step 5 of 9: Review by a planner" data-i="4" data-desc="A planner reviews the result, finds problems and judges them." data-title="Review by a planner">
+          <rect x="909" y="8" width="190" height="92" rx="14"/>
+          <text class="pipe__n" x="923" y="28">05</text>
+          <text class="pipe__t" x="1004" y="52" text-anchor="middle">Review</text>
+          <text class="pipe__s" x="1004" y="69" text-anchor="middle">by a planner</text>
+        </g>
+        <g class="pipe__node" tabindex="0" role="button" aria-pressed="false" aria-label="Step 6 of 9: Fix by executors" data-i="5" data-desc="Executors apply the fixes for the recorded findings." data-title="Fix by executors">
+          <rect x="909" y="136" width="190" height="92" rx="14"/>
+          <text class="pipe__n" x="923" y="156">06</text>
+          <text class="pipe__t" x="1004" y="180" text-anchor="middle">Fix</text>
+          <text class="pipe__s" x="1004" y="197" text-anchor="middle">by executors</text>
+        </g>
+        <g class="pipe__node" tabindex="0" role="button" aria-pressed="false" aria-label="Step 7 of 9: Verify the checks run" data-i="6" data-desc="Builds, tests and measurements run." data-title="Verify the checks run">
+          <rect x="682" y="136" width="190" height="92" rx="14"/>
+          <text class="pipe__n" x="696" y="156">07</text>
+          <text class="pipe__t" x="777" y="180" text-anchor="middle">Verify</text>
+          <text class="pipe__s" x="777" y="197" text-anchor="middle">the checks run</text>
+        </g>
+        <g class="pipe__node" tabindex="0" role="button" aria-pressed="false" aria-label="Step 8 of 9: Accept planner signs off" data-i="7" data-desc="The planner signs off and closes the items." data-title="Accept planner signs off">
+          <rect x="455" y="136" width="190" height="92" rx="14"/>
+          <text class="pipe__n" x="469" y="156">08</text>
+          <text class="pipe__t" x="550" y="180" text-anchor="middle">Accept</text>
+          <text class="pipe__s" x="550" y="197" text-anchor="middle">planner signs off</text>
+        </g>
+        <g class="pipe__node" tabindex="0" role="button" aria-pressed="false" aria-label="Step 9 of 9: Freeze in the archive" data-i="8" data-desc="Only then is the version frozen in the project's archive." data-title="Freeze in the archive">
+          <rect x="228" y="136" width="190" height="92" rx="14"/>
+          <text class="pipe__n" x="242" y="156">09</text>
+          <text class="pipe__t" x="323" y="180" text-anchor="middle">Freeze</text>
+          <text class="pipe__s" x="323" y="197" text-anchor="middle">in the archive</text>
+        </g>
+      </svg>
+      <ol class="pipe__list">
+        <li><button type="button" class="pipe__step" aria-pressed="true" data-i="0" data-desc="The founder decides what to build, and reviews and accepts the result." data-title="Founder decides what"><span class="pipe__stepn">01</span> Founder decides what</button></li>
+        <li><button type="button" class="pipe__step" aria-pressed="false" data-i="1" data-desc="Writes the plan, the work items and the acceptance criteria into the tracker before any building starts." data-title="Planner Claude Opus 5.5"><span class="pipe__stepn">02</span> Planner Claude Opus 5.5</button></li>
+        <li><button type="button" class="pipe__step" aria-pressed="false" data-i="2" data-desc="Build the work items in parallel, each on its own files." data-title="Executors in parallel"><span class="pipe__stepn">03</span> Executors in parallel (Claude Sonnet 5.5)</button></li>
+        <li><button type="button" class="pipe__step" aria-pressed="false" data-i="3" data-desc="An executor merges the finished work." data-title="Integrate"><span class="pipe__stepn">04</span> Integrate</button></li>
+        <li><button type="button" class="pipe__step" aria-pressed="false" data-i="4" data-desc="A planner reviews the result, finds problems and judges them." data-title="Review by a planner"><span class="pipe__stepn">05</span> Review by a planner</button></li>
+        <li><button type="button" class="pipe__step" aria-pressed="false" data-i="5" data-desc="Executors apply the fixes for the recorded findings." data-title="Fix by executors"><span class="pipe__stepn">06</span> Fix by executors</button></li>
+        <li><button type="button" class="pipe__step" aria-pressed="false" data-i="6" data-desc="Builds, tests and measurements run." data-title="Verify the checks run"><span class="pipe__stepn">07</span> Verify the checks run</button></li>
+        <li><button type="button" class="pipe__step" aria-pressed="false" data-i="7" data-desc="The planner signs off and closes the items." data-title="Accept planner signs off"><span class="pipe__stepn">08</span> Accept planner signs off</button></li>
+        <li><button type="button" class="pipe__step" aria-pressed="false" data-i="8" data-desc="Only then is the version frozen in the project's archive." data-title="Freeze in the archive"><span class="pipe__stepn">09</span> Freeze in the archive</button></li>
+      </ol>
+<!--/gen:pipeline-->
+      <p class="pipe__detail panel" id="proof-pipe-detail" aria-live="polite"><span class="mono-label">Step 1 of 9</span> <strong>Founder decides what.</strong> The founder decides what to build, and reviews and accepts the result.</p>
+    </div>
+
+    <p class="proof__foot small muted">Every game figure on this page comes from the project's repository and build logs. Other sources are linked where they are used. All sources are listed in the data file.</p>
+  </div>
+</section>
+<section id="roadmap" class="chapter" data-section="story" aria-labelledby="roadmap-title">
+  <div class="wrap">
+    <p class="chapter__label">05 · Roadmap</p>
+    <h2 id="roadmap-title" tabindex="-1">Where this goes</h2>
+    <p class="lead">Eight phases, from the company roadmap. Only the first is under way. Everything else is a plan, with no dates promised.</p>
+    <ol class="phases" id="roadmap-phases">
+<!--gen:phases-->
+      <li class="phase panel phase--current" aria-current="step"><span class="mono-label">Phase 1</span><h3>AI development on the BuB engine</h3><p class="phase__status"><span class="phase__here">We are here</span></p><ul><li>Everything is developed with AI on the BuB engine, using Claude Code.</li><li>We need to understand all the legal requirements of publishing a 100% AI-generated game.</li></ul></li>
+      <li class="phase panel"><span class="mono-label">Phase 2</span><h3>Ship design and an AI asset library (Blender)</h3><p class="phase__status"><span class="chip chip--planned"><span class="chip__t">Planned</span></span></p><ul><li>Ship design, completely AI-generated.</li><li>Models stored, artbooks created.</li><li>Blender is used to produce the models and animations.</li></ul></li>
+      <li class="phase panel"><span class="mono-label">Phase 3</span><h3>Move to Unreal Engine 5</h3><p class="phase__status"><span class="chip chip--planned"><span class="chip__t">Planned</span></span></p><ul><li>Complete rework from the AI-BuB engine to Unreal Engine 5</li></ul></li>
+      <li class="phase panel"><span class="mono-label">Phase 4</span><h3>The Kickstarter trailer (AI-generated)</h3><p class="phase__status"><span class="chip chip--planned"><span class="chip__t">Planned</span></span></p><ul><li>AI-generated trailer is produced along with AI-generated artwork.</li></ul></li>
+      <li class="phase panel"><span class="mono-label">Phase 5</span><h3>Kickstarter</h3><p class="phase__status"><span class="chip chip--planned"><span class="chip__t">Planned</span></span></p><ul><li>First round of public fund raising.</li></ul></li>
+      <li class="phase panel"><span class="mono-label">Phase 6</span><h3>First hires: designers and engineers who lost work to AI</h3><p class="phase__status"><span class="chip chip--planned"><span class="chip__t">Planned</span></span></p><ul><li>The first round of developers and graphic designers who lost their jobs to AI are hired with the Kickstarter money.</li></ul></li>
+      <li class="phase panel"><span class="mono-label">Phase 7</span><h3>Publishing with a publisher that accepts AI-made games</h3><p class="phase__status"><span class="chip chip--planned"><span class="chip__t">Planned</span></span></p><ul><li>A game publisher that allows 100% AI-generated content publishes the game.</li></ul></li>
+      <li class="phase panel"><span class="mono-label">Phase 8</span><h3>Growth: revenue hires more people</h3><p class="phase__status"><span class="chip chip--planned"><span class="chip__t">Planned</span></span></p><ul><li>The revenue is used to hire more people and expand the initiative.</li></ul></li>
+<!--/gen:phases-->
+    </ol>
+    <p class="roadmap__yt panel">The journey will be documented on a YouTube channel called Orion-81 (not created yet).</p>
+
+    <h3 id="roadmap-risks-title" class="roadmap__sub">Risks and challenges</h3>
+    <ul class="risks" aria-labelledby="roadmap-risks-title">
+<!--gen:risks-->
+      <li>Built so far by one founder.</li>
+      <li>AI-generated assets may have limited copyright protection; we are checking the law.</li>
+      <li>The licence review is still open: an automated similarity scan of the code against the GPL prototype's source ran on 8 Oct 2026, and the expert review of its matches is in progress.</li>
+      <li>The economy and online multiplayer are not built, and how paid ships stay fair in player-versus-player is still being designed.</li>
+      <li>Moving to Unreal Engine 5 is a rewrite.</li>
+<!--/gen:risks-->
+    </ul>
+  </div>
+</section>
+<section id="why" class="chapter" data-section="story" aria-labelledby="why-title">
+  <div class="wrap">
+    <p class="chapter__label">06 · Why it matters</p>
+    <h2 id="why-title" tabindex="-1">Why it matters</h2>
+    <div class="cards why__cards">
+      <article class="panel why__card">
+        <h3>For Anthropic</h3>
+        <p>A fully documented example of agentic building, from engine to game (repository, tracker and every frozen version kept), and a small, practical test of one way AI's gains can fund the people it displaces.</p>
+      </article>
+      <article class="panel why__card">
+        <h3>For publishers and engine makers</h3>
+        <p>A fully disclosed AI-made game with a mission players can check, planned to move to Unreal Engine 5 (roadmap phase 3).</p>
+        <p><span class="chip chip--planned"><span class="chip__t">Planned</span></span></p>
+      </article>
+      <article class="panel why__card">
+        <h3>For designers and engineers</h3>
+        <p>Planned: paid, credited work replacing AI-made assets one by one, as revenue allows.</p>
+        <p><span class="chip chip--planned"><span class="chip__t">Planned</span></span></p>
+      </article>
+    </div>
+
+    <h3 id="why-ask-title" class="why__sub">What we are asking for</h3>
+    <p class="muted why__ask-lead">Every item below is a plan or is still to be announced. Nothing here has been agreed, and no figure is promised.</p>
+    <div class="cards why__cards why__ask">
+      <article class="panel why__card">
+        <h3>From Anthropic</h3>
+        <p><span class="chip chip--planned"><span class="chip__t">Planned</span></span></p>
+        <p class="why__ask-quote">A founder went from prototype to 0.6.1 in <span data-bind="stats.daysToV061.v" data-fmt="num">10</span> days. Imagine what a dedicated team of five could do.</p>
+        <p>The ask is simple: five Claude seats to start. If the founder can fill them with talented, motivated people, we will show how AI can be used with good intent to make something beautiful.</p>
+        <p>Routes that exist in Anthropic's public programmes include Claude for Startups (credits and Applied AI office hours) and Claude Founder House events. Orion-81 could also be a field site for researchers studying AI-funded re-employment. No agreement or endorsement exists.</p>
+      </article>
+      <article class="panel why__card">
+        <h3>From backers</h3>
+        <p><span class="chip chip--planned"><span class="chip__t">Planned</span></span></p>
+        <p><span class="mono">Funding goal: to be announced.</span></p>
+        <p>The Kickstarter (roadmap phase 5) is the first round of public fundraising. Its money is meant to hire the first developers and graphic designers who lost work to AI (phase 6), who then replace AI-made assets one by one. <span class="mono">What the first round pays for, role by role: to be announced.</span></p>
+      </article>
+    </div>
+
+    <h3 id="why-context-title" class="why__sub">Context</h3>
+    <ul class="why__context" aria-labelledby="why-context-title">
+      <li><a href="https://www.anthropic.com/research/economic-index-june-2026-report" rel="noopener noreferrer">Anthropic's Economic Index (June 2026)</a> finds early-career workers see the most of their work as AI-doable.</li>
+      <li><a href="https://www.anthropic.com/research/reviewing-the-evidence-on-worker-retraining-programs" rel="noopener noreferrer">Anthropic's review of retraining evidence (August 2026)</a> finds employer-linked, sector-specific programmes work best.</li>
+      <li><a href="https://www.anthropic.com/policy-on-the-ai-exponential/epf" rel="noopener noreferrer">Anthropic's economic policy framework (June 2026)</a> asks firms to retrain and redeploy people rather than cut.</li>
+    </ul>
+    <p class="why__close">Orion-81 tests one small version of that idea. It is a plan, with no hires yet.</p>
+    <p class="small muted">Links are for context only and imply no endorsement.</p>
+    <p class="why__researchers panel">Studying AI-funded re-employment? <span class="mono">Contact details coming soon.</span></p>
+  </div>
+</section>
+<section id="faq" class="chapter" data-section="story" aria-labelledby="faq-title">
+  <div class="wrap faq">
+    <p class="chapter__label">07 · Questions</p>
+    <h2 id="faq-title" tabindex="-1">Questions</h2>
+    <div class="faq__list">
+      <details class="faq__item">
+        <summary>Why would an AI-made game help designers?</summary>
+        <p>Because its revenue is meant to pay them. The game starts fully AI-made so it can exist at all; paid designers then replace AI work, credited by name.</p>
+      </details>
+      <details class="faq__item">
+        <summary>Which parts will people replace, and how will I know?</summary>
+        <p>Ships, art, interface and more, as revenue allows. <a href="#mission-ledger-title">The ledger on this page</a> lists every element and will show each replacement and its designer.</p>
+      </details>
+      <details class="faq__item">
+        <summary>Was anyone's work copied?</summary>
+        <p>The prototype was built on the open-source Quake III Arena engine (GPL) and took Elite Dangerous ships as inspiration. On day two the game's code moved onto BuB, a new engine written with Claude Code; the game modules came across from the prototype and were renamed. Release 0.3.0 gave all 16 ship classes new hulls. A licence-compliance review is checking whether any of the code is still derived from the GPL original and whether the early ship designs are too close to their inspiration. An automated similarity scan of the code against the GPL prototype's source ran on 8 October 2026, and the expert review of its matches is in progress. Anything that is derived will be rewritten or redesigned. Until the review is finished, we do not claim the answer is no.</p>
+      </details>
+      <details class="faq__item">
+        <summary>Is it free to play?</summary>
+        <p>That is the plan: free to play with optional in-game currency and cosmetics. It is not built yet.</p>
+      </details>
+      <details class="faq__item">
+        <summary>Will it be pay to win?</summary>
+        <p>Ships and upgrades are planned to be earnable by playing or buyable. How paid ships stay fair in player-versus-player is still being designed.</p>
+      </details>
+      <details class="faq__item">
+        <summary>Can I play online?</summary>
+        <p>Not yet. LAN multiplayer on the same network works today (since 0.2.0); online play is not built.</p>
+      </details>
+      <details class="faq__item">
+        <summary>When is it out, and on what?</summary>
+        <p>Windows PC. There is no release date and no price yet.</p>
+      </details>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="site-footer" id="footer" data-section="story" aria-label="Site footer">
+  <div class="wrap">
+    <div class="footer__ctas cluster">
+      <span class="btn-wrap">
+        <button class="btn btn--primary" type="button" aria-disabled="true" aria-describedby="footer-kick-note">Follow the Kickstarter</button>
+        <span class="btn__note" id="footer-kick-note">Not live yet</span>
+      </span>
+      <span class="btn-wrap">
+        <button class="btn" type="button" aria-disabled="true" aria-describedby="footer-yt-note">Devlog on YouTube</button>
+        <span class="btn__note" id="footer-yt-note">Channel coming</span>
+      </span>
+    </div>
+
+    <p class="footer__disclosure"><strong>Orion-81 is a completely AI-generated project.</strong> Orion-81's own code by Claude Code, directed by the founder; ships, maps, textures and sounds generated by tools Claude Code wrote. Open-source libraries it uses are listed under <a href="#ai-not-ai">'Not AI-made'</a>.</p>
+
+    <p class="footer__licence small">One item is still open: the <a href="#ai-origins">licence review</a> of game code that came across from the GPL prototype. An automated similarity scan of the code against the prototype's source ran on 8 Oct 2026, and the expert review of its matches is in progress.</p>
+
+    <div class="footer__partners" role="group" aria-labelledby="footer-partners-h">
+      <p class="mono-label" id="footer-partners-h">Future partners?</p>
+      <p class="footer__partners-list">Unreal Engine · Blender · Anthropic · Epic Games</p>
+      <p class="small muted">Aspirational. No partnership, affiliation or endorsement exists.</p>
+    </div>
+
+    <p class="footer__tm small">Anthropic, Claude and Claude Code are trademarks of Anthropic, PBC. Unreal Engine and Epic Games are trademarks of Epic Games, Inc. Blender is a trademark of the Blender Foundation. Quake III Arena and Elite Dangerous are trademarks of their respective owners. All names belong to their owners and are used only to identify the products referred to. Orion-81 is not affiliated with, sponsored or endorsed by any of them.</p>
+
+    <p class="footer__local small">No trackers. No cookies. Preview site. Every fact traces to the project archive; nothing here is an offer or a promise.</p>
+    <div id="footer-3d-quality"></div>
+    <p class="footer__copy small muted">© 2026 Orion-81. orion-81.io</p>
+  </div>
+</footer>
+<script src="assets/data/orion-data.js"></script>
+<script src="assets/models/index.js"></script>
+<script src="assets/img/manifest.js"></script>
+<script src="js/core.js"></script>
+<script src="js/sec-story.js"></script>
+<script src="js/sec-ships.js"></script>
+<script src="js/sec-maps.js"></script>
+<script src="js/sec-weapons.js"></script>
+<script src="js/sec-build.js"></script>
+<script src="js/sec-styles-economy.js"></script>
+<script type="importmap">{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/" } }</script>
+<script type="module">
+  try {
+    // test hooks (5.3, section 7): ?no3d=cdn simulates a failed CDN; ?no3d=delay delays boot by 25 s
+    const q = new URLSearchParams(location.search).get('no3d');
+    if (q === 'cdn') throw new Error('no3d=cdn test hook');
+    if (q === 'delay') await new Promise(r => setTimeout(r, 25000));
+    const THREE = await import('three');
+    const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
+    const { RoomEnvironment } = await import('three/addons/environments/RoomEnvironment.js');
+    window.ORION.boot({ THREE, OrbitControls, RoomEnvironment });
+  } catch (e) {
+    // if core.js itself is missing or threw, there is no ORION.fallback: mark the page as failed so the still images and notes show
+    if (window.ORION && window.ORION.fallback) window.ORION.fallback('cdn', e); else document.documentElement.setAttribute('data-webgl', 'failed');
+  }
+</script>
+</body>
+</html>
