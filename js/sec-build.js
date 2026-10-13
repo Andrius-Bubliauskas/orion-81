@@ -26,7 +26,124 @@
 	function upper(s) { return String(s).toUpperCase(); }
 	function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 
-	var FAMILY = { laser: 'LASER', gun: 'MINIGUN', rocket: 'ROCKET', rail: 'RAILGUN', pd: 'POINT DEFENCE' };
+	function famTag(f) {
+		var ORION = W.ORION;
+		switch (f) {
+			case 'laser': return ORION.t('build.fam.laser', 'LASER'); case 'gun': return ORION.t('build.fam.gun', 'MINIGUN'); case 'rocket': return ORION.t('build.fam.rocket', 'ROCKET');
+			case 'rail': return ORION.t('build.fam.rail', 'RAILGUN'); case 'pd': return ORION.t('build.fam.pd', 'POINT DEFENCE');
+		}
+		return '';
+	}
+	function kindTag(k) {
+		var ORION = W.ORION;
+		switch (k) {
+			case 'fixed': return ORION.t('build.kind.fixed', 'FIXED'); case 'turret': return ORION.t('build.kind.turret', 'TURRET'); case 'launcher': return ORION.t('build.kind.launcher', 'LAUNCHER');
+			case 'spinal': return ORION.t('build.kind.spinal', 'SPINAL'); case 'railturret': return ORION.t('build.kind.railturret', 'RAILTURRET'); case 'pd': return ORION.t('build.kind.pd', 'PD');
+		}
+		return upper(k);
+	}
+	function modWord(w) {
+		var ORION = W.ORION;
+		switch (w) {
+			case 'l': return ORION.t('build.mw.l', 'left');
+			case 'r': return ORION.t('build.mw.r', 'right');
+			case 'al': return ORION.t('build.mw.al', 'aft left');
+			case 'ar': return ORION.t('build.mw.ar', 'aft right');
+			case 'fl': return ORION.t('build.mw.fl', 'fore left');
+			case 'fr': return ORION.t('build.mw.fr', 'fore right');
+			case 'hab': return ORION.t('build.mw.hab', 'habitat');
+			case 'cic': return ORION.t('build.mw.cic', 'CIC');
+			case 'ciws': return ORION.t('build.mw.ciws', 'CIWS');
+			case 'rcs': return ORION.t('build.mw.rcs', 'thruster');
+			case 'tur': return ORION.t('build.mw.tur', 'turret');
+			case 'mgt': return ORION.t('build.mw.mgt', 'minigun turret');
+			case 'mg': return ORION.t('build.mw.mg', 'minigun');
+			case 'pd': return ORION.t('build.mw.pd', 'point defence');
+			case 'rtur': return ORION.t('build.mw.rtur', 'railgun turret');
+			case 'rail': return ORION.t('build.mw.rail', 'railgun');
+			case 'rkt': return ORION.t('build.mw.rkt', 'rocket launcher');
+			case 'gun': return ORION.t('build.mw.gun', 'laser');
+			case 'gunp': return ORION.t('build.mw.gunp', 'gun pod');
+			case 'cells': return ORION.t('build.mw.cells', 'missile cells');
+			case 'aux': return ORION.t('build.mw.aux', 'auxiliary');
+			case 'fore': return ORION.t('build.mw.fore', 'fore');
+			case 'aft': return ORION.t('build.mw.aft', 'aft');
+			case 'array': return ORION.t('build.mw.array', 'array');
+			case 'battery': return ORION.t('build.mw.battery', 'battery');
+			case 'belt': return ORION.t('build.mw.belt', 'belt');
+			case 'bow': return ORION.t('build.mw.bow', 'bow');
+			case 'bridge': return ORION.t('build.mw.bridge', 'bridge');
+			case 'cab': return ORION.t('build.mw.cab', 'cab');
+			case 'canard': return ORION.t('build.mw.canard', 'canard');
+			case 'cargo': return ORION.t('build.mw.cargo', 'cargo');
+			case 'cheek': return ORION.t('build.mw.cheek', 'cheek');
+			case 'citadel': return ORION.t('build.mw.citadel', 'citadel');
+			case 'city': return ORION.t('build.mw.city', 'city');
+			case 'cockpit': return ORION.t('build.mw.cockpit', 'cockpit');
+			case 'core': return ORION.t('build.mw.core', 'core');
+			case 'crew': return ORION.t('build.mw.crew', 'crew');
+			case 'deck': return ORION.t('build.mw.deck', 'deck');
+			case 'dorsal': return ORION.t('build.mw.dorsal', 'dorsal');
+			case 'drive': return ORION.t('build.mw.drive', 'drive');
+			case 'drum': return ORION.t('build.mw.drum', 'drum');
+			case 'hangar': return ORION.t('build.mw.hangar', 'hangar');
+			case 'hull': return ORION.t('build.mw.hull', 'hull');
+			case 'launcher': return ORION.t('build.mw.launcher', 'launcher');
+			case 'magazine': return ORION.t('build.mw.magazine', 'magazine');
+			case 'main': return ORION.t('build.mw.main', 'main');
+			case 'mast': return ORION.t('build.mw.mast', 'mast');
+			case 'mid': return ORION.t('build.mw.mid', 'mid');
+			case 'nose': return ORION.t('build.mw.nose', 'nose');
+			case 'outrigger': return ORION.t('build.mw.outrigger', 'outrigger');
+			case 'pod': return ORION.t('build.mw.pod', 'pod');
+			case 'power': return ORION.t('build.mw.power', 'power');
+			case 'prow': return ORION.t('build.mw.prow', 'prow');
+			case 'radiator': return ORION.t('build.mw.radiator', 'radiator');
+			case 'reactor': return ORION.t('build.mw.reactor', 'reactor');
+			case 'ring': return ORION.t('build.mw.ring', 'ring');
+			case 'rocket': return ORION.t('build.mw.rocket', 'rocket');
+			case 'sensor': return ORION.t('build.mw.sensor', 'sensor');
+			case 'slab': return ORION.t('build.mw.slab', 'slab');
+			case 'spinal': return ORION.t('build.mw.spinal', 'spinal');
+			case 'spine': return ORION.t('build.mw.spine', 'spine');
+			case 'sponson': return ORION.t('build.mw.sponson', 'sponson');
+			case 'tail': return ORION.t('build.mw.tail', 'tail');
+			case 'tank': return ORION.t('build.mw.tank', 'tank');
+			case 'truss': return ORION.t('build.mw.truss', 'truss');
+			case 'tug': return ORION.t('build.mw.tug', 'tug');
+			case 'waist': return ORION.t('build.mw.waist', 'waist');
+			case 'wing': return ORION.t('build.mw.wing', 'wing');
+		}
+		return w;
+	}
+	function partKind(k) {
+		var ORION = W.ORION;
+		switch (k) {
+			case 'hull': return ORION.t('build.mk.hull', 'hull');
+			case 'livery': return ORION.t('build.mk.livery', 'livery');
+			case 'drive': return ORION.t('build.mk.drive', 'drive');
+			case 'rail': return ORION.t('build.mk.rail', 'rail');
+			case 'bridge': return ORION.t('build.mk.bridge', 'bridge');
+			case 'weapon': return ORION.t('build.mk.weapon', 'weapon');
+			case 'turret': return ORION.t('build.mk.turret', 'turret');
+			case 'magazine': return ORION.t('build.mk.magazine', 'magazine');
+			case 'reactor': return ORION.t('build.mk.reactor', 'reactor');
+			case 'radiator': return ORION.t('build.mk.radiator', 'radiator');
+			case 'rcs': return ORION.t('build.mk.rcs', 'rcs');
+			case 'joint': return ORION.t('build.mk.joint', 'joint');
+			case 'door': return ORION.t('build.mk.door', 'door');
+			case 'armour': return ORION.t('build.mk.armour', 'armour');
+			case 'crew': return ORION.t('build.mk.crew', 'crew');
+			case 'tank': return ORION.t('build.mk.tank', 'tank');
+			case 'sensor': return ORION.t('build.mk.sensor', 'sensor');
+			case 'wing': return ORION.t('build.mk.wing', 'wing');
+			case 'hangar': return ORION.t('build.mk.hangar', 'hangar');
+			case 'cargo': return ORION.t('build.mk.cargo', 'cargo');
+			case 'other': return ORION.t('build.mk.other', 'other');
+		}
+		return k;
+	}
+	function lc(x) { return W.ORION.i18n.lang === 'en' ? String(x).toLowerCase() : String(x); } /* English lower-casing only */
 	var TINT_SEL = 0x4f9be8, TINT_DMG = 0xffb347;
 
 	function init(root, ORION) {
@@ -66,12 +183,12 @@
 		function segments(p) {
 			var stockTier = L.hullTypes[0].token + L.shieldTypes[0].token, stockCol = L.shieldColors[0].token;
 			return [
-				{ key: 'tiers', label: 'Hull and shield tier', value: p.hull + p.shield, stock: stockTier },
-				{ key: 'colour', label: 'Shield colour', value: p.color, stock: stockCol },
-				{ key: 'hp', label: 'Hardpoint options', value: trimZeros(p.hp.join('')), stock: '' },
-				{ key: 'craft', label: 'Hangar craft', value: p.craft, stock: rules.stockCraftToken },
-				{ key: 'ctiers', label: 'Craft hull and shield tier', value: p.craftHull + p.craftShield, stock: stockTier },
-				{ key: 'chp', label: 'Craft hardpoint options', value: trimZeros(p.craftHp.join('')), stock: '' }
+				{ key: 'tiers', label: ORION.t('build.seg.tiers', 'Hull and shield tier'), value: p.hull + p.shield, stock: stockTier },
+				{ key: 'colour', label: ORION.t('build.seg.colour', 'Shield colour'), value: p.color, stock: stockCol },
+				{ key: 'hp', label: ORION.t('build.seg.hp', 'Hardpoint options'), value: trimZeros(p.hp.join('')), stock: '' },
+				{ key: 'craft', label: ORION.t('build.seg.craft', 'Hangar craft'), value: p.craft, stock: rules.stockCraftToken },
+				{ key: 'ctiers', label: ORION.t('build.seg.ctiers', 'Craft hull and shield tier'), value: p.craftHull + p.craftShield, stock: stockTier },
+				{ key: 'chp', label: ORION.t('build.seg.chp', 'Craft hardpoint options'), value: trimZeros(p.craftHp.join('')), stock: '' }
 			];
 		}
 		function buildString(p) {
@@ -109,22 +226,26 @@
 			host: $('#build-viewer', root)
 		};
 		var sayT = 0;
-		function say(text) { clearTimeout(sayT); sayT = setTimeout(function () { announce(text); }, 350); }
+		function say(text) { var l0 = ORION.i18n && ORION.i18n.lang; clearTimeout(sayT); sayT = setTimeout(function () { if (!ORION.i18n || ORION.i18n.lang === l0) announce(text); }, 350); }   /* dropped when the language changed meanwhile: it was worded in the old one */
 
 		/* ------------------------------------------------------------ ship picker */
-		function buildShipPicker() {
-			var groups = { small: 'Small, classes 1-5', medium: 'Medium, classes 6-10', large: 'Large, classes 11-16' };
+		function fillShipPicker() {
+			var keep = ui.ship.value || S.ship; ui.ship.textContent = '';
+			var groups = { small: ORION.t('build.group.small', 'Small, classes 1-5'), medium: ORION.t('build.group.medium', 'Medium, classes 6-10'), large: ORION.t('build.group.large', 'Large, classes 11-16') };
 			Object.keys(groups).forEach(function (k) {
 				var og = el('optgroup', { label: groups[k] });
-				data.fleet.filter(function (f) { return f.siteClass === k; }).forEach(function (f) { og.append(el('option', { value: f.id, text: f.name + '  ·  ' + f.role })); });
+				data.fleet.filter(function (f) { return f.siteClass === k; }).forEach(function (f) { og.append(el('option', { value: f.id, text: f.name + '  \u00b7  ' + ORION.i18n.d(f.role) })); });
 				ui.ship.append(og);
 			});
-			ui.ship.value = S.ship;
+			ui.ship.value = keep;
+		}
+		function buildShipPicker() {
+			fillShipPicker();
 			ui.ship.addEventListener('change', function () { setShip(ui.ship.value, 'picker'); });
 		}
 		function updateShipInfo() {
-			var f = FLEET[S.ship];
-			ui.shipInfo.textContent = fmt.len(f.lengthM) + ' · ' + f.hardpoints.length + ' hardpoints' + (hasBay(S.ship) ? ' · hangar bay' : '') + ' · ' + f.modules.count + ' modules';
+			var f = FLEET[S.ship], v = { length: fmt.len(f.lengthM), hp: f.hardpoints.length, mods: f.modules.count };
+			ui.shipInfo.textContent = hasBay(S.ship) ? ORION.t('build.shipInfoBay', '{length} \u00b7 {hp} hardpoints \u00b7 hangar bay \u00b7 {mods} modules', v) : ORION.t('build.shipInfo', '{length} \u00b7 {hp} hardpoints \u00b7 {mods} modules', v);
 		}
 		function setShip(id, from) {
 			if (!FLEET[id]) return;
@@ -137,7 +258,7 @@
 			rebuildContent(true);
 			loadModules();
 			ORION.bus.emit('build:ship', { id: id, from: from || 'picker' });
-			say(FLEET[id].name + ' selected. Tiers and mounts are back to stock; your shield colour stays.');
+			say(ORION.t('build.shipSelected', '{name} selected. Tiers and mounts are back to stock; your shield colour stays.', { name: FLEET[id].name }));
 		}
 
 		/* ------------------------------------------------------------ tiers (radio cards) */
@@ -145,12 +266,12 @@
 			var fs = el('fieldset', { class: 'radio-cards build-tiers' }, [el('legend', { text: legend })]);
 			list.forEach(function (t, i) {
 				var inp = el('input', { type: 'radio', name: name, value: String(i) });
-				var scale = which === 'hull' ? '× ' + t.hullScale + ' hull, armour +' + t.armorAdd : '× ' + t.shieldScale + ' shield, regen × ' + t.regenScale;
+				var scale = which === 'hull' ? ORION.t('build.hullScale', '\u00d7 {scale} hull, armour +{add}', { scale: t.hullScale, add: t.armorAdd }) : ORION.t('build.shieldScale', '\u00d7 {scale} shield, regen \u00d7 {regen}', { scale: t.shieldScale, regen: t.regenScale });
 				var sub2 = el('span', { class: 'radio-card__sub build-tier__now', 'data-tier': String(i) });
 				inp.addEventListener('change', function () {
 					if (!inp.checked) return;
 					if (which === 'hull') S.hull = i; else S.shield = i;
-					refreshLoadout(); say(t.name + ' selected.');
+					refreshLoadout(); say(ORION.t('build.tierSelected', '{name} selected.', { name: t.name }));
 				});
 				fs.append(el('label', { class: 'radio-card' }, [inp, el('span', { class: 'radio-card__body' }, [el('span', { class: 'radio-card__title', text: t.name }), el('span', { class: 'radio-card__sub', text: scale }), sub2])]));
 			});
@@ -161,60 +282,62 @@
 			$$('input[name="build-shield"]', ui.shield).forEach(function (r) { r.checked = Number(r.value) === S.shield; });
 		}
 		function updateTierSubs() {
-			$$('.build-tier__now', ui.hull).forEach(function (n) { var s = stats(S.ship, Number(n.dataset.tier), S.shield); n.textContent = fmt.num(s.hull) + ' hull, armour ' + s.armor; });
-			$$('.build-tier__now', ui.shield).forEach(function (n) { var s = stats(S.ship, S.hull, Number(n.dataset.tier)); n.textContent = fmt.num(s.shield) + ' shield, ' + fmt.num(s.regen, 1) + '/s'; });
+			$$('.build-tier__now', ui.hull).forEach(function (n) { var s = stats(S.ship, Number(n.dataset.tier), S.shield); n.textContent = ORION.t('build.hullNow', '{hull} hull, armour {armor}', { hull: fmt.num(s.hull), armor: s.armor }); });
+			$$('.build-tier__now', ui.shield).forEach(function (n) { var s = stats(S.ship, S.hull, Number(n.dataset.tier)); n.textContent = ORION.t('build.shieldNow', '{shield} shield, {regen}/s', { shield: fmt.num(s.shield), regen: fmt.num(s.regen, 1) }); });
 		}
 
 		/* ------------------------------------------------------------ stats with deltas vs stock */
 		function statsDl(id, h, s, tag) {
 			var cur = stats(id, h, s), base = stats(id, 0, 0);
-			var rowsDef = [['hull', 'Hull', 0, 'points'], ['armor', 'Armour', 0, 'flat per hit'], ['shield', 'Shield', 0, 'points'], ['regen', 'Shield regen', 1, 'per second']];
+			var rowsDef = [['hull', ORION.t('build.stat.hull', 'Hull'), 0], ['armor', ORION.t('build.stat.armour', 'Armour'), 0], ['shield', ORION.t('build.stat.shield', 'Shield'), 0], ['regen', ORION.t('build.stat.regen', 'Shield regen'), 1]];
 			var dl = el('dl', { class: 'spec build-spec', 'data-stats': tag || 'ship' });
 			rowsDef.forEach(function (r) {
 				var d = Math.round((cur[r[0]] - base[r[0]]) * 100) / 100;
-				var dtxt = d === 0 ? 'stock' : (d > 0 ? '+' : '−') + fmt.num(Math.abs(d), r[2]);
+				var dtxt = d === 0 ? ORION.t('build.stock', 'stock') : (d > 0 ? '+' : '\u2212') + fmt.num(Math.abs(d), r[2]);
 				dl.append(el('dt', { text: r[1] }), el('dd', { 'data-stat': r[0] }, [
-					el('span', { class: 'build-val', text: fmt.num(cur[r[0]], r[2]) }), ' ',
+					el('span', { class: 'build-val', 'data-v': String(cur[r[0]]), text: fmt.num(cur[r[0]], r[2]) }), ' ',
 					el('span', { class: 'build-delta' + (d > 0 ? ' is-up' : '') , text: dtxt })]));
 			});
 			return dl;
 		}
 		function renderStats() {
-			var f = FLEET[S.ship];
+			var f = FLEET[S.ship], fp = el('p', { class: 'small muted build-formula' });
+			ORION.i18n.fill(fp, 'build.formula', 'Game formulas: hull = <0/>, armour = <1/>, shield = <2/>, regen = <3/>. Deltas are against the stock loadout.', [el('code', { translate: 'no', text: L.formulas.hull }), el('code', { translate: 'no', text: L.formulas.armor }), el('code', { translate: 'no', text: L.formulas.shield }), el('code', { translate: 'no', text: L.formulas.regen })]);
+			fp.append(ORION.ui.src(L.src && L.src.formulas));
 			ui.stats.replaceChildren(
-				el('h3', { class: 'build-h', text: f.name + ' with this loadout' }),
-				statsDl(S.ship, S.hull, S.shield, 'ship'),
-				el('p', { class: 'small muted build-formula' }, [
-					'Game formulas: hull = ', el('code', { text: L.formulas.hull }), ', armour = ', el('code', { text: L.formulas.armor }), ', shield = ', el('code', { text: L.formulas.shield }), ', regen = ', el('code', { text: L.formulas.regen }), '. Deltas are against the stock loadout.',
-					ORION.ui.src(L.src && L.src.formulas)
-				]));
+				el('h3', { class: 'build-h', text: ORION.t('build.withLoadout', '{name} with this loadout', { name: f.name }) }),
+				statsDl(S.ship, S.hull, S.shield, 'ship'), fp);
 		}
 
 		/* ------------------------------------------------------------ shield colour */
 		function renderColour() {
-			var fs = el('fieldset', { class: 'build-colours' }, [el('legend', { text: 'Shield colour' })]);
+			var fs = el('fieldset', { class: 'build-colours' }, [el('legend', { text: ORION.t('build.colour.legend', 'Shield colour') })]);
 			var grid = el('div', { class: 'build-sw-grid' });
 			L.shieldColors.forEach(function (c, i) {
 				var inp = el('input', { type: 'radio', name: 'build-colour', value: String(i), 'data-token': c.token });
-				inp.addEventListener('change', function () { if (!inp.checked) return; S.col.mode = 'palette'; S.col.idx = i; refreshColour(); say('Shield colour ' + c.name + '.'); });
+				inp.addEventListener('change', function () { if (!inp.checked) return; S.col.mode = 'palette'; S.col.idx = i; refreshColour(); say(ORION.t('build.colour.say', 'Shield colour {name}.', { name: c.name })); });
 				var sw = el('span', { class: 'build-sw__chip', 'aria-hidden': 'true' }); sw.style.setProperty('--sw', c.hex);
 				grid.append(el('label', { class: 'build-sw' }, [inp, el('span', { class: 'build-sw__body' }, [sw, el('span', { class: 'build-sw__name', text: c.name })])]));
 			});
 			var cin = el('input', { type: 'radio', name: 'build-colour', value: 'custom' });
-			var cpick = el('input', { type: 'color', id: 'build-custom', value: S.col.hex, 'aria-label': 'Custom shield colour' });
-			cin.addEventListener('change', function () { if (!cin.checked) return; S.col.mode = 'custom'; refreshColour(); say('Custom shield colour.'); });
+			var cpick = el('input', { type: 'color', id: 'build-custom', value: S.col.hex, 'aria-label': ORION.t('build.colour.customLabel', 'Custom shield colour') });
+			cin.addEventListener('change', function () { if (!cin.checked) return; S.col.mode = 'custom'; refreshColour(); say(ORION.t('build.colour.sayCustom', 'Custom shield colour.')); });
 			cpick.addEventListener('input', function () { S.col.hex = cpick.value; S.col.mode = 'custom'; cin.checked = true; refreshColour(); });
 			grid.append(el('label', { class: 'build-sw build-sw--custom' }, [cin, el('span', { class: 'build-sw__body' }, [el('span', { class: 'build-sw__name', text: 'CUSTOM' }), cpick])]));
 			var msg = el('p', { class: 'small build-colmsg', id: 'build-colmsg', role: 'status' });
-			fs.append(grid, msg, el('p', { class: 'small muted', text: 'A custom colour is written into the loadout string as six hex digits. ' + rule.text }));
+			fs.append(grid, msg, el('p', { class: 'small muted', text: ORION.t('build.colour.customNote', 'A custom colour is written into the loadout string as six hex digits.') + ' ' + ORION.i18n.d(rule.text) }));
 			ui.colour.replaceChildren(fs);
 		}
-		function refreshColour() {
+		function paintColourUi() {
 			var c = effColor(), msg = $('#build-colmsg', ui.colour);
 			$$('input[name="build-colour"]', ui.colour).forEach(function (r) { r.checked = S.col.mode === 'custom' ? r.value === 'custom' : r.value === String(S.col.idx); });
 			var cp = $('#build-custom', ui.colour); if (cp) cp.value = S.col.hex;
-			if (c.dark) { msg.textContent = 'That colour is too dark: its brightest channel is below 0x' + rule.minBrightestChannel.toString(16).toUpperCase() + ', so the game reads it as STOCK and your shield keeps the stock colour.'; msg.classList.add('notice'); }
+			if (c.dark) { msg.textContent = ORION.t('build.colour.tooDark', 'That colour is too dark: its brightest channel is below 0x{hex}, so the game reads it as STOCK and your shield keeps the stock colour.', { hex: rule.minBrightestChannel.toString(16).toUpperCase() }); msg.classList.add('notice'); }
 			else { msg.textContent = ''; msg.classList.remove('notice'); }
+			return c;
+		}
+		function refreshColour() {
+			var c = paintColourUi();
 			applyShieldColour();
 			refreshString();
 			ORION.bus.emit('shield:color', { rgb: c.rgb });
@@ -224,22 +347,24 @@
 		}
 
 		/* ------------------------------------------------------------ hardpoint rows (joined to the model by name) */
+		/* fit labels are in-game names (protected) except the family word POINT DEFENCE, which is a normal UI string */
+		function fitLabel(l) { return l.indexOf('POINT DEFENCE') < 0 ? l : l.split('POINT DEFENCE').join(ORION.t('weapons.famPd', 'POINT DEFENCE')); }
 		function hpRowEl(shipId, row, store, ownerKey) {
 			var f = FLEET[shipId], h = f.hardpoints.filter(function (x) { return x.name === row.hardpoint; })[0] || {};
-			var meta = (FAMILY[h.siteFamily] || '') + (h.kind && h.kind !== 'pd' ? ' · ' + upper(h.kind) : '');
+			var meta = famTag(h.siteFamily) + (h.kind && h.kind !== 'pd' ? ' · ' + kindTag(h.kind) : '');
 			var li = el('li', { class: 'build-row', 'data-hp': row.hardpoint, 'data-owner': ownerKey });
 			var sid = 'build-hp-' + ownerKey + '-' + row.hardpoint;
-			var lab = el('label', { class: 'build-row__lab', for: sid }, [el('span', { class: 'build-row__name mono', text: row.hardpoint }), el('span', { class: 'build-row__meta', text: meta })]);
+			var lab = el('label', { class: 'build-row__lab', for: sid }, [el('span', { class: 'build-row__name mono', translate: 'no', text: row.hardpoint }), el('span', { class: 'build-row__meta', text: meta })]);
 			var ctl;
 			if (row.options.length > 1) {
 				ctl = el('select', { id: sid, class: 'build-row__sel' });
-				row.options.forEach(function (o) { ctl.append(el('option', { value: o.token, text: o.label })); });
+				row.options.forEach(function (o) { ctl.append(el('option', { value: o.token, text: fitLabel(o.label) })); });
 				ctl.value = store[row.hardpoint] || '0';
-				ctl.addEventListener('change', function () { store[row.hardpoint] = ctl.value; refreshString(); say(row.hardpoint + ': ' + ctl.options[ctl.selectedIndex].text); });
+				ctl.addEventListener('change', function () { store[row.hardpoint] = ctl.value; refreshString(); say(ORION.t('common.labelNote', '{label}: {note}', { label: row.hardpoint, note: ctl.options[ctl.selectedIndex].text })); });
 				ctl.addEventListener('focus', function () { setHot(row.hardpoint, ownerKey); });
 				ctl.addEventListener('blur', function () { setHot(null); });
 			} else {
-				ctl = el('span', { id: sid, class: 'build-row__fit', text: row.options[0].label });
+				ctl = el('span', { id: sid, class: 'build-row__fit', text: fitLabel(row.options[0].label) });
 				lab.removeAttribute('for');
 			}
 			li.append(lab, ctl);
@@ -252,8 +377,8 @@
 			rows.forEach(function (r) { ul.append(hpRowEl(S.ship, r, S.hp, 'ship')); });
 			var changeable = rows.filter(function (r) { return r.options.length > 1; }).length;
 			ui.hp.replaceChildren(
-				el('h3', { class: 'build-h', id: 'build-hp-h' }, ['Hardpoints ', el('span', { class: 'mono muted', text: rows.length + ' · ' + changeable + ' with a choice' })]),
-				el('p', { class: 'small muted', text: 'Each row is one mount, with exactly the fits and modes the game offers for this ship. Focus or hover a row to see the mount on the model.' }),
+				el('h3', { class: 'build-h', id: 'build-hp-h' }, [ORION.t('build.hardpoints', 'Hardpoints') + ' ', el('span', { class: 'mono muted', text: ORION.t('build.hardpointsCount', '{n} · {changeable} with a choice', { n: rows.length, changeable: changeable }) })]),
+				el('p', { class: 'small muted', text: ORION.t('build.hardpointsHelp', 'Each row is one mount, with exactly the fits and modes the game offers for this ship. Focus or hover a row to see the mount on the model.') }),
 				el('div', { class: 'build-hp', role: 'group', 'aria-labelledby': 'build-hp-h' }, [ul]));
 		}
 
@@ -261,18 +386,18 @@
 		function renderHangar() {
 			if (!hasBay(S.ship)) { ui.hangar.replaceChildren(); ui.hangar.hidden = true; return; }
 			ui.hangar.hidden = false;
-			var dims = bay.craftMaxM.map(function (n) { return fmt.num(n, 1); }).join(' × ');
-			var fs = el('fieldset', { class: 'build-hangar' }, [el('legend', { text: 'Hangar bay' })]);
-			fs.append(el('p', { class: 'mono-label', text: bay.name + ' · ' + bay.slots + ' slots · craft up to ' + dims + ' m' }));
-			var cards = el('div', { class: 'radio-cards build-craft', role: 'radiogroup', 'aria-label': 'Craft type' });
+			var dims = bay.craftMaxM.map(function (n) { return fmt.num(n, 1); }).join(' \u00d7 ');
+			var fs = el('fieldset', { class: 'build-hangar' }, [el('legend', { text: ORION.t('build.hangar.legend', 'Hangar bay') })]);
+			fs.append(el('p', { class: 'mono-label', text: ORION.t('build.hangar.bayLine', '{name} \u00b7 {slots} slots \u00b7 craft up to {dims} m', { name: bay.name, slots: bay.slots, dims: dims }) }));
+			var cards = el('div', { class: 'radio-cards build-craft', role: 'radiogroup', 'aria-label': ORION.t('build.hangar.craftType', 'Craft type') });
 			bay.craftOptions.forEach(function (cid) {
 				var inp = el('input', { type: 'radio', name: 'build-craft', value: cid });
 				inp.checked = cid === S.craft;
 				inp.addEventListener('change', function () {
 					if (!inp.checked) return; S.craft = cid; S.craftHp = {};
-					renderHangarRows(); refreshString(); showSubject('craft'); say('Hangar craft ' + FLEET[cid].name + '. Craft hardpoints reset to stock.');
+					renderHangarRows(); refreshString(); showSubject('craft'); say(ORION.t('build.hangar.craftSelected', 'Hangar craft {name}. Craft hardpoints reset to stock.', { name: FLEET[cid].name }));
 				});
-				cards.append(el('label', { class: 'radio-card' }, [inp, el('span', { class: 'radio-card__body' }, [el('span', { class: 'radio-card__title', text: FLEET[cid].name }), el('span', { class: 'radio-card__sub', text: '× ' + bay.slots + (cid === bay.stockCraft ? ' · stock' : '') })])]));
+				cards.append(el('label', { class: 'radio-card' }, [inp, el('span', { class: 'radio-card__body' }, [el('span', { class: 'radio-card__title', text: FLEET[cid].name }), el('span', { class: 'radio-card__sub', text: cid === bay.stockCraft ? ORION.t('build.hangar.craftStock', '\u00d7 {slots} \u00b7 stock', { slots: bay.slots }) : '\u00d7 ' + bay.slots })])]));
 			});
 			fs.append(cards);
 			var tiers = el('div', { class: 'build-ctiers' });
@@ -280,10 +405,10 @@
 				var sel = el('select', { id: id });
 				list.forEach(function (t, i) { sel.append(el('option', { value: String(i), text: t.name })); });
 				sel.value = String(S[key]);
-				sel.addEventListener('change', function () { S[key] = Number(sel.value); renderCraftStats(); refreshString(); showSubject('craft'); say(label + ': ' + sel.options[sel.selectedIndex].text); });
+				sel.addEventListener('change', function () { S[key] = Number(sel.value); renderCraftStats(); refreshString(); showSubject('craft'); say(ORION.t('common.labelNote', '{label}: {note}', { label: label, note: sel.options[sel.selectedIndex].text })); });
 				return el('div', { class: 'build-ctier' }, [el('label', { for: id, class: 'mono-label', text: label }), sel]);
 			}
-			tiers.append(tsel('build-chull', 'Craft hull', L.hullTypes, 'craftHull'), tsel('build-cshield', 'Craft shield', L.shieldTypes, 'craftShield'));
+			tiers.append(tsel('build-chull', ORION.t('build.hangar.craftHull', 'Craft hull'), L.hullTypes, 'craftHull'), tsel('build-cshield', ORION.t('build.hangar.craftShield', 'Craft shield'), L.shieldTypes, 'craftShield'));
 			fs.append(tiers, el('div', { id: 'build-cstats' }), el('div', { id: 'build-crows' }));
 			var ph = ORION.media('feature.bay');
 			if (ph && ph.src) fs.append(el('figure', { class: 'build-shot' }, [el('img', { src: ph.src, alt: ph.alt || '', width: ph.w, height: ph.h, loading: 'lazy', decoding: 'async' }), el('figcaption', { class: 'viewer__caption', text: ph.caption || '' })]));
@@ -293,48 +418,50 @@
 		function renderCraftStats() {
 			var h = $('#build-cstats', ui.hangar); if (!h) return;
 			h.replaceChildren(
-				el('h3', { class: 'build-h', text: FLEET[S.craft].name + ' craft, each of ' + bay.slots }),
+				el('h3', { class: 'build-h', text: ORION.t('build.hangar.craftStats', '{name} craft, each of {slots}', { name: FLEET[S.craft].name, slots: bay.slots }) }),
 				statsDl(S.craft, S.craftHull, S.craftShield, 'craft'),
-				el('p', { class: 'small muted', text: 'The craft take the same hull and shield tiers as any ship. In the preview they wear your carrier’s shield colour (0.6.1).' }));
+				el('p', { class: 'small muted', text: ORION.t('build.hangar.craftNote', 'The craft take the same hull and shield tiers as any ship. In the preview they wear your carrier\u2019s shield colour (0.6.1).') }));
 		}
 		function renderHangarRows() {
 			var h = $('#build-crows', ui.hangar); if (!h) return;
 			var rows = rowsFor(S.craft), ul = el('ul', { class: 'build-rows' });
 			rows.forEach(function (r) { ul.append(hpRowEl(S.craft, r, S.craftHp, 'craft')); });
-			h.replaceChildren(el('h3', { class: 'build-h', id: 'build-chp-h', text: 'Craft hardpoints' }), el('p', { class: 'small muted', text: 'Changing the craft type resets these rows to stock.' }), el('div', { class: 'build-hp', role: 'group', 'aria-labelledby': 'build-chp-h' }, [ul]));
+			h.replaceChildren(el('h3', { class: 'build-h', id: 'build-chp-h', text: ORION.t('build.hangar.craftRows', 'Craft hardpoints') }), el('p', { class: 'small muted', text: ORION.t('build.hangar.craftRowsHelp', 'Changing the craft type resets these rows to stock.') }), el('div', { class: 'build-hp', role: 'group', 'aria-labelledby': 'build-chp-h' }, [ul]));
 		}
 
 		/* ------------------------------------------------------------ loadout string */
 		var selfRes = null;
 		function renderStringBlock() {
 			selfRes = selfCheck();
-			var code = el('code', { id: 'build-str', class: 'build-str__code', tabindex: '0', 'aria-label': 'Loadout string' });
-			var copy = el('button', { type: 'button', class: 'btn btn--sm', id: 'build-copy', text: 'Copy' });
+			var code = el('code', { translate: 'no', id: 'build-str', class: 'build-str__code', tabindex: '0', 'aria-label': ORION.t('build.str.label', 'Loadout string') });
+			var copy = el('button', { type: 'button', class: 'btn btn--sm', id: 'build-copy', text: ORION.t('build.str.copy', 'Copy') });
 			var cstat = el('span', { class: 'small muted', id: 'build-copystat', role: 'status' });
 			copy.addEventListener('click', function () {
-				var text = code.textContent, done = function (ok) { cstat.textContent = ok ? 'Copied.' : 'Select the string and press Ctrl + C.'; if (!ok) { var r = D.createRange(); r.selectNodeContents(code); var s = W.getSelection(); s.removeAllRanges(); s.addRange(r); } setTimeout(function () { cstat.textContent = ''; }, 2500); };
+				var text = code.textContent, done = function (ok) { cstat.textContent = ok ? ORION.t('build.str.copied', 'Copied.') : ORION.t('build.str.copyFailed', 'Select the string and press Ctrl + C.'); if (!ok) { var r = D.createRange(); r.selectNodeContents(code); var s = W.getSelection(); s.removeAllRanges(); s.addRange(r); } setTimeout(function () { cstat.textContent = ''; }, 2500); };
 				try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); }); else done(false); } catch (e) { done(false); }
 			});
 			var seg = el('ol', { class: 'build-segs', id: 'build-segs' });
+			var fmtp = el('p', { class: 'small muted' });
+			ORION.i18n.fill(fmtp, 'build.str.format', 'Format: <0/>', [el('code', { translate: 'no', text: L.stringFormat })]);
 			var det = el('details', { class: 'build-details' }, [
-				el('summary', { text: 'Read the string, and how it is checked' }),
-				el('p', { class: 'small muted' }, ['Format: ', el('code', { text: L.stringFormat })]),
-				el('p', { class: 'small muted', text: rules.text }),
+				el('summary', { text: ORION.t('build.str.summary', 'Read the string, and how it is checked') }),
+				fmtp,
+				el('p', { class: 'small muted', text: ORION.i18n.d(rules.text) }),
 				seg,
 				el('p', { class: 'small', id: 'build-selfsum' }),
-				el('div', { class: 'table-wrap', tabindex: '0', role: 'region', 'aria-label': 'Loadout string checks, scrollable table' }, [el('table', { class: 'table', id: 'build-selftab' })]),
+				el('div', { class: 'table-wrap', tabindex: '0', role: 'region', 'aria-label': ORION.t('build.str.tableLabel', 'Loadout string checks, scrollable table') }, [el('table', { class: 'table', id: 'build-selftab' })]),
 				ORION.ui.src(L.src && L.src.vectors)
 			]);
 			ui.strWrap.replaceChildren(
-				el('h3', { class: 'build-h', text: 'Loadout string' }),
+				el('h3', { class: 'build-h', text: ORION.t('build.str.heading', 'Loadout string') }),
 				el('div', { class: 'build-str' }, [code, copy, cstat]),
-				el('p', { class: 'small muted', text: 'This is the exact string the game sends to the server. Your choices change it live.' }),
+				el('p', { class: 'small muted', text: ORION.t('build.str.help', 'This is the exact string the game sends to the server. Your choices change it live.') }),
 				det);
 			var sum = $('#build-selfsum', ui.strWrap), tab = $('#build-selftab', ui.strWrap);
-			sum.textContent = 'Self-check: this page rebuilt ' + selfRes.pass + ' of ' + selfRes.total + ' loadout strings recorded from the game’s tests and docs, character for character.';
-			tab.append(el('thead', null, [el('tr', null, [el('th', { scope: 'col', text: 'Recorded string' }), el('th', { scope: 'col', text: 'Rebuilt here' })])]));
+			sum.textContent = ORION.t('build.str.selfCheck', 'Self-check: this page rebuilt {pass} of {total} loadout strings recorded from the game\u2019s tests and docs, character for character.', { pass: selfRes.pass, total: selfRes.total });
+			tab.append(el('thead', null, [el('tr', null, [el('th', { scope: 'col', text: ORION.t('build.str.recorded', 'Recorded string') }), el('th', { scope: 'col', text: ORION.t('build.str.rebuilt', 'Rebuilt here') })])]));
 			var tb = el('tbody');
-			selfRes.rows.forEach(function (r) { tb.append(el('tr', null, [el('td', { class: 'mono', text: r.expected }, [ORION.ui.src(r.src)]), el('td', { class: 'mono', text: r.ok ? '✓ identical' : '✗ ' + r.got })])); });
+			selfRes.rows.forEach(function (r) { tb.append(el('tr', null, [el('td', { class: 'mono', text: r.expected }, [ORION.ui.src(r.src)]), el('td', { class: 'mono', text: r.ok ? ORION.t('build.str.identical', '\u2713 identical') : '\u2717 ' + r.got })])); });
 			tab.append(tb);
 			refreshString();
 		}
@@ -344,23 +471,23 @@
 			var segs = segments(p), n = segs.length;
 			while (n > 0 && segs[n - 1].value === segs[n - 1].stock) n--;
 			var ol = $('#build-segs', ui.strWrap); ol.replaceChildren();
-			ol.append(el('li', null, [el('span', { class: 'build-segs__k', text: 'Tag and ship' }), el('code', { text: rules.tag + '.' + S.ship })]));
+			ol.append(el('li', null, [el('span', { class: 'build-segs__k', text: ORION.t('build.str.tagShip', 'Tag and ship') }), el('code', { translate: 'no', text: rules.tag + '.' + S.ship })]));
 			segs.forEach(function (g, i) {
 				var kept = i < n;
 				if (g.key === 'craft' || g.key === 'ctiers' || g.key === 'chp') { if (!hasBay(S.ship) && !kept) return; }
-				ol.append(el('li', { class: kept ? '' : 'is-left-out' }, [el('span', { class: 'build-segs__k', text: g.label }), el('code', { text: g.value === '' ? '(empty)' : g.value }), el('span', { class: 'build-segs__n muted', text: kept ? '' : ' left out: stock, and nothing after it changes' })]));
+				ol.append(el('li', { class: kept ? '' : 'is-left-out' }, [el('span', { class: 'build-segs__k', text: g.label }), el('code', { translate: 'no', text: g.value === '' ? ORION.t('build.str.empty', '(empty)') : g.value }), el('span', { class: 'build-segs__n muted', text: kept ? '' : ORION.t('build.str.leftOut', ' left out: stock, and nothing after it changes') })]));
 			});
 		}
 
 		/* ------------------------------------------------------------ combined loadout refresh */
 		function refreshLoadout() {
 			syncTierRadios(); updateTierSubs(); renderStats(); refreshString();
-			clearTimeout(refreshLoadout._t); refreshLoadout._t = setTimeout(function () { var s = stats(S.ship, S.hull, S.shield); say('Hull ' + fmt.num(s.hull) + ', armour ' + s.armor + ', shield ' + fmt.num(s.shield) + ', regen ' + fmt.num(s.regen, 1) + ' per second.'); }, 500);
+			clearTimeout(refreshLoadout._t); refreshLoadout._t = setTimeout(function () { var s = stats(S.ship, S.hull, S.shield); say(ORION.t('build.statsSay', 'Hull {hull}, armour {armor}, shield {shield}, regen {regen} per second.', { hull: fmt.num(s.hull), armor: s.armor, shield: fmt.num(s.shield), regen: fmt.num(s.regen, 1) })); }, 500);
 		}
 		function renderShot() {
 			var m = ORION.media('feature.loadout');
 			if (!m || !m.src) { ui.shot.hidden = true; return; }
-			ui.shot.replaceChildren(el('h3', { class: 'build-h', text: 'The game’s own LOADOUT screen' }), el('img', { src: m.src, alt: m.alt || '', width: m.w, height: m.h, loading: 'lazy', decoding: 'async' }), el('figcaption', { class: 'viewer__caption', text: m.caption || '' }));
+			ui.shot.replaceChildren(el('h3', { class: 'build-h', text: ORION.t('build.shotHead', 'The game’s own LOADOUT screen') }), el('img', { src: m.src, alt: m.alt || '', width: m.w, height: m.h, loading: 'lazy', decoding: 'async' }), el('figcaption', { class: 'viewer__caption', text: m.caption || '' }));
 		}
 		function renderAll() {
 			updateShipInfo();
@@ -371,8 +498,8 @@
 			applyTabUi();
 		}
 		function buildTiers() {
-			tierCards(ui.hull, 'build-hull', 'Hull type', L.hullTypes, 'hull');
-			tierCards(ui.shield, 'build-shield', 'Shield type', L.shieldTypes, 'shield');
+			tierCards(ui.hull, 'build-hull', ORION.t('build.hullType', 'Hull type'), L.hullTypes, 'hull');
+			tierCards(ui.shield, 'build-shield', ORION.t('build.shieldType', 'Shield type'), L.shieldTypes, 'shield');
 		}
 
 		/* ------------------------------------------------------------ tabs */
@@ -382,7 +509,7 @@
 			if (S.tab === 'loadout') S.subject = 'ship';
 			rebuildContent(false);
 			if (sc.v) sc.v.setLabel(viewLabel());
-			say(t === 'loadout' ? 'Loadout tab.' : 'Damage tab.');
+			say(t === 'loadout' ? ORION.t('build.tabLoadoutSay', 'Loadout tab.') : ORION.t('build.tabDamageSay', 'Damage tab.'));
 		}
 		function applyTabUi() {
 			var L1 = S.tab === 'loadout';
@@ -392,7 +519,7 @@
 			ui.hit.hidden = !L1;
 			ui.subject.hidden = !(L1 && hasBay(S.ship));
 			ui.subject.setAttribute('aria-pressed', String(S.subject === 'craft'));
-			ui.subject.textContent = S.subject === 'craft' ? 'Show ' + FLEET[S.ship].name : 'Show hangar craft';
+			ui.subject.textContent = S.subject === 'craft' ? ORION.t('build.showShip', 'Show {name}', { name: FLEET[S.ship].name }) : ORION.t('build.showCraft', 'Show hangar craft');
 			ui.viewNote.hidden = !L1;
 			refreshCaption();
 			refreshDamageUi();
@@ -412,20 +539,21 @@
 		ui.subject.addEventListener('click', function () { showSubject(S.subject === 'craft' ? 'ship' : 'craft'); });
 		ui.reset.addEventListener('click', function () {
 			S.hull = 0; S.shield = 0; S.col = { mode: 'palette', idx: 0, hex: S.col.hex }; S.hp = {}; S.craftHp = {}; S.craftHull = 0; S.craftShield = 0; S.craft = hasBay(S.ship) ? bay.stockCraft : null; S.subject = 'ship';
-			renderAll(); rebuildContent(true); say('Loadout reset to stock.');
+			renderAll(); rebuildContent(true); say(ORION.t('build.resetSay', 'Loadout reset to stock.'));
 		});
 
 		/* ------------------------------------------------------------ viewer text */
 		function currentId() { return (S.tab === 'loadout' && S.subject === 'craft' && hasBay(S.ship)) ? S.craft : S.ship; }
 		function viewLabel() {
-			var id = currentId(), f = FLEET[id];
-			return '3D model of the ' + f.name + ' ' + f.role.toLowerCase() + ', ' + fmt.len(f.lengthM) + ', rotatable' + (S.tab === 'loadout' ? ', with its shield bubble in ' + effColor().name + (S.subject === 'craft' ? ' (hangar craft)' : '') : ', shown in modules');
+			var id = currentId(), f = FLEET[id], v = { name: f.name, role: lc(ORION.i18n.d(f.role)), length: fmt.len(f.lengthM) };
+			if (S.tab !== 'loadout') return ORION.t('build.viewLabelDamage', '3D model of the {name} {role}, {length}, rotatable, shown in modules', v);
+			v.colour = effColor().name;
+			return S.subject === 'craft' ? ORION.t('build.viewLabelCraft', '3D model of the {name} {role}, {length}, rotatable, with its shield bubble in {colour} (hangar craft)', v) : ORION.t('build.viewLabelLoadout', '3D model of the {name} {role}, {length}, rotatable, with its shield bubble in {colour}', v);
 		}
 		function refreshCaption() {
 			if (!sc.v) return; var id = currentId(), cap;
 			if (sc.v.isLive()) {
-				cap = ORION.ui.modelCaption(id);
-				cap += S.tab === 'loadout' ? '. Shield bubble drawn for this site; in the game it shows when the shield is hit.' : '. Preview animation for this site. In the game (0.3.0) modules take damage separately, joints fail and the hulk breaks into tumbling pieces with secondary explosions.';
+				cap = S.tab === 'loadout' ? ORION.t('build.capLoadout', '{model}. Shield bubble drawn for this site; in the game it shows when the shield is hit.', { model: ORION.ui.modelCaption(id) }) : ORION.t('build.capDamage', '{model}. Preview animation for this site. In the game (0.3.0) modules take damage separately, joints fail and the hulk breaks into tumbling pieces with secondary explosions.', { model: ORION.ui.modelCaption(id) });
 			} else { var m = ORION.media('ship.' + id); cap = m && m.caption ? m.caption : ''; }
 			sc.v.setCaption(cap);
 		}
@@ -462,7 +590,7 @@
 			var ctx = sc.ctx; if (!ctx || !sc.v || !sc.v.renderer) return;
 			var gen = ++sc.gen, id = currentId(), model;
 			try { model = await ctx.loadModel(id); }
-			catch (e) { if (gen === sc.gen && sc.v.renderer) sc.v.unmount('failed', 'The 3D model could not load, so this is a still image.', true); return; }
+			catch (e) { if (gen === sc.gen && sc.v.renderer) sc.v.unmount('failed', 'model', true); return; }
 			if (gen !== sc.gen || sc.ctx !== ctx || !sc.v.renderer) return;
 			placeContent(ctx, model, refit, id);
 		}
@@ -526,43 +654,43 @@
 		}
 		async function loadModules() {
 			var id = S.ship, mark = S.ship;
-			ui.modules.replaceChildren(el('p', { class: 'small muted', text: 'Loading modules…' }));
+			ui.modules.replaceChildren(el('p', { class: 'small muted', text: ORION.t('build.mods.loading', 'Loading modules\u2026') }));
 			try {
 				var model = await ORION.loadModel(id);
 				if (S.ship !== mark) return;
 				S.modInfo = modInfoFrom(model); renderModules();
 			} catch (e) {
 				if (S.ship !== mark) return;
-				ui.modules.replaceChildren(el('p', { class: 'notice', text: 'The module list could not load here.' }));
+				ui.modules.replaceChildren(el('p', { class: 'notice', text: ORION.t('build.mods.failed', 'The module list could not load here.') }));
 			}
 		}
 		function renderDamageIntro() {
-			var f = FLEET[S.ship], k = f.modules.kinds || {}, parts = Object.keys(k).map(function (n) { return n + ' ' + k[n]; }).join(' · ');
-			ui.dmgIntro.textContent = f.name + ' is built from ' + f.modules.count + ' modules (' + parts + '). Select one in the list or on the model, damage it, then break the ship apart.';
+			var f = FLEET[S.ship], k = f.modules.kinds || {}, parts = Object.keys(k).map(function (n) { return partKind(n) + ' ' + k[n]; }).join(' \u00b7 ');
+			ui.dmgIntro.textContent = ORION.t('build.damageIntro', '{name} is built from {count} modules ({parts}). Select one in the list or on the model, damage it, then break the ship apart.', { name: f.name, count: f.modules.count, parts: parts });
 		}
-		var MW = { l: 'left', r: 'right', al: 'aft left', ar: 'aft right', fl: 'fore left', fr: 'fore right', hab: 'habitat', cic: 'CIC', ciws: 'CIWS', rcs: 'thruster', tur: 'turret', mgt: 'minigun turret', mg: 'minigun', pd: 'point defence', rtur: 'railgun turret', rail: 'railgun', rkt: 'rocket launcher', gun: 'laser', gunp: 'gun pod', cells: 'missile cells', aux: 'auxiliary', fore: 'fore', aft: 'aft' };
+		function cap1(w) { return w.charAt(0).toUpperCase() + w.slice(1); }
 		function friendlyMod(n) {
-			var w = String(n).split('_').map(function (t) { var m = /^(\d+)([lr])$/.exec(t), m2 = /^([lr])(\d+)$/.exec(t); if (m) return m[1] + ' ' + MW[m[2]]; if (m2) return MW[m2[1]] + ' ' + m2[2]; return MW[t] || t; }).join(' ');
-			return w.charAt(0).toUpperCase() + w.slice(1);
+			var w = String(n).split('_').map(function (t) { var m = /^(\d+)([lr])$/.exec(t), m2 = /^([lr])(\d+)$/.exec(t); if (m) return m[1] + ' ' + modWord(m[2]); if (m2) return modWord(m2[1]) + ' ' + m2[2]; return modWord(t); }).join(' ');
+			return cap1(w);
 		}
 		function friendlyWeapon(n) {
 			var m = /^([a-z]+)_(\d+)$/.exec(n); if (!m) return n;
-			var w = MW[m[1]] || m[1]; return (m[1] === 'gun' ? 'Fixed laser' : w.charAt(0).toUpperCase() + w.slice(1)) + ' ' + m[2];
+			var w = modWord(m[1]); return (m[1] === 'gun' ? ORION.t('build.mods.fixedLaser', 'Fixed laser') : cap1(w)) + ' ' + m[2];
 		}
 		function renderModules() {
 			var mi = S.modInfo; if (!mi) return;
 			var ul = el('ul', { class: 'build-mods' });
 			mi.order.forEach(function (n) {
 				var m = mi.by[n], b = el('button', { type: 'button', class: 'build-mod', 'data-mod': n, 'aria-pressed': String(S.selMod === n) });
-				b.setAttribute('title', n); b.append(el('span', { class: 'build-mod__name', text: friendlyMod(n) }), el('span', { class: 'build-mod__kind', text: m.kind || '' }));
-				if (m.hps.length) b.append(el('span', { class: 'build-mod__hp', text: 'carries ' + m.hps.map(friendlyWeapon).join(', ') }));
-				b.append(el('span', { class: 'build-mod__state', text: S.damaged[n] ? 'damaged' : '' }));
-				if (n === mi.core) b.append(el('span', { class: 'build-mod__core', text: 'core' }));
+				b.setAttribute('title', n); b.append(el('span', { class: 'build-mod__name', text: friendlyMod(n) }), el('span', { class: 'build-mod__kind', text: m.kind ? partKind(m.kind) : '' }));
+				if (m.hps.length) b.append(el('span', { class: 'build-mod__hp', text: ORION.t('build.mods.carries', 'carries {list}', { list: m.hps.map(friendlyWeapon).join(', ') }) }));
+				b.append(el('span', { class: 'build-mod__state', text: S.damaged[n] ? ORION.t('build.mods.damaged', 'damaged') : '' }));
+				if (n === mi.core) b.append(el('span', { class: 'build-mod__core', text: ORION.t('build.mods.core', 'core') }));
 				if (S.damaged[n]) b.classList.add('is-damaged');
 				b.addEventListener('click', function () { selectModule(n === S.selMod ? null : n, false); });
 				ul.append(el('li', null, [b]));
 			});
-			ui.modules.replaceChildren(el('h3', { class: 'build-h', id: 'build-mods-h' }, ['Modules ', el('span', { class: 'mono muted', text: String(mi.order.length) })]), el('div', { class: 'build-modlist', role: 'group', 'aria-labelledby': 'build-mods-h' }, [ul]));
+			ui.modules.replaceChildren(el('h3', { class: 'build-h', id: 'build-mods-h' }, [ORION.t('build.mods.heading', 'Modules') + ' ', el('span', { class: 'mono muted', text: String(mi.order.length) })]), el('div', { class: 'build-modlist', role: 'group', 'aria-labelledby': 'build-mods-h' }, [ul]));
 		}
 		function selectModule(n, fromModel) {
 			S.selMod = n; refreshTints(); updatePin();
@@ -571,24 +699,24 @@
 				if (on && fromModel) { var c = b.closest('.build-modlist'); if (c) c.scrollTop = Math.max(0, b.offsetTop - c.clientHeight / 2); }
 			});
 			refreshDamageUi();
-			if (n) say('Module ' + n + ' selected' + (S.damaged[n] ? ', damaged.' : '.')); else say('No module selected.');
+			if (n) say(S.damaged[n] ? ORION.t('build.mods.selectedDamaged', 'Module {name} selected, damaged.', { name: n }) : ORION.t('build.mods.selected', 'Module {name} selected.', { name: n })); else say(ORION.t('build.mods.none', 'No module selected.'));
 		}
 		function refreshDamageUi() {
 			var n = S.selMod, live = !!(sc.v && sc.v.isLive() && sc.groups);
-			ui.dmg.textContent = n && S.damaged[n] ? 'Repair module' : 'Damage module';
+			ui.dmg.textContent = n && S.damaged[n] ? ORION.t('build.repairModule', 'Repair module') : ORION.t('build.damageModule', 'Damage module');
 			ui.dmg.disabled = !n || S.brk !== 'idle';
 			ui.brk.disabled = S.brk !== 'idle' || !live;
 			ui.reas.disabled = S.brk === 'idle' && !Object.keys(S.damaged).some(function (k) { return S.damaged[k]; });
 			ui.brk.setAttribute('aria-disabled', String(ui.brk.disabled));
 			ui.hit.setAttribute('aria-disabled', String(!(sc.v && sc.v.isLive() && sc.shield)));
 			var st = '';
-			if (S.brk === 'breaking') st = 'Joints are failing…';
-			else if (S.brk === 'broken') st = 'Broken apart. Reassemble to put the ship back together.';
-			else if (S.brk === 'reassembling') st = 'Reassembling…';
-			else if (S.tab === 'damage' && !live) st = (ORION.state.webgl === 'ok') ? 'The 3D view is not showing right now, so break-apart waits for it. Module damage still works in the list.' : 'Break apart needs the 3D view, which is off on this device. Module damage still works in the list.';
-			else st = failFrom() ? 'Joints will fail outward from ' + failFrom() + '.' : '';
+			if (S.brk === 'breaking') st = ORION.t('build.status.breaking', 'Joints are failing\u2026');
+			else if (S.brk === 'broken') st = ORION.t('build.status.broken', 'Broken apart. Reassemble to put the ship back together.');
+			else if (S.brk === 'reassembling') st = ORION.t('build.status.reassembling', 'Reassembling\u2026');
+			else if (S.tab === 'damage' && !live) st = (ORION.state.webgl === 'ok') ? ORION.t('build.status.waiting', 'The 3D view is not showing right now, so break-apart waits for it. Module damage still works in the list.') : ORION.t('build.status.no3d', 'Break apart needs the 3D view, which is off on this device. Module damage still works in the list.');
+			else st = failFrom() ? ORION.t('build.status.failFrom', 'Joints will fail outward from {list}.', { list: failFrom() }) : '';
 			ui.dmgStatus.textContent = st;
-			$$('.build-mod', ui.modules).forEach(function (b) { var d = !!S.damaged[b.dataset.mod]; b.classList.toggle('is-damaged', d); $('.build-mod__state', b).textContent = d ? 'damaged' : ''; });
+			$$('.build-mod', ui.modules).forEach(function (b) { var d = !!S.damaged[b.dataset.mod]; b.classList.toggle('is-damaged', d); $('.build-mod__state', b).textContent = d ? ORION.t('build.mods.damaged', 'damaged') : ''; });
 		}
 		function failSeeds() {
 			var mi = S.modInfo; if (!mi) return [];
@@ -599,7 +727,7 @@
 		ui.dmg.addEventListener('click', function () {
 			var n = S.selMod; if (!n) return;
 			if (S.damaged[n]) delete S.damaged[n]; else S.damaged[n] = true;
-			refreshTints(); updatePin(); refreshDamageUi(); say(n + (S.damaged[n] ? ' damaged.' : ' repaired.'));
+			refreshTints(); updatePin(); refreshDamageUi(); say(S.damaged[n] ? ORION.t('build.mods.sayDamaged', '{name} damaged.', { name: n }) : ORION.t('build.mods.sayRepaired', '{name} repaired.', { name: n }));
 		});
 		function refreshTints() {
 			var ks = sc.ks, mi = S.modInfo; if (!ks || !mi || !ks.parts || S.tab !== 'damage') return;
@@ -665,18 +793,18 @@
 			S.brk = reduced ? 'broken' : 'breaking';
 			if (reduced) { Object.keys(sc.plan.mods).forEach(function (n) { sc.cur[n] = 1; }); }
 			applyCur(); sc.v.requestRender(); refreshDamageUi();
-			say(reduced ? 'Broken apart. Showing the end state.' : 'Breaking apart.');
+			say(reduced ? ORION.t('build.say.brokenEnd', 'Broken apart. Showing the end state.') : ORION.t('build.say.breaking', 'Breaking apart.'));
 		}
 		function reassemble() {
 			if (!sc.groups || !sc.v) { S.damaged = {}; refreshTints(); refreshDamageUi(); return; }
 			var wasApart = S.brk !== 'idle';
 			S.damaged = {}; refreshTints();
-			if (!wasApart) { refreshDamageUi(); say('Damage cleared.'); return; }
+			if (!wasApart) { refreshDamageUi(); say(ORION.t('build.say.cleared', 'Damage cleared.')); return; }
 			var reduced = sc.v.effectiveMotion() === 'reduced';
 			sc.start = {}; Object.keys(sc.cur).forEach(function (n) { sc.start[n] = sc.cur[n]; });
 			if (reduced) { sc.cur = {}; S.brk = 'idle'; applyCur(); }
 			else { S.brk = 'reassembling'; sc.rt = 0; }
-			sc.v.requestRender(); refreshDamageUi(); say('Reassembling.');
+			sc.v.requestRender(); refreshDamageUi(); say(ORION.t('build.say.reassembling', 'Reassembling.'));
 		}
 		function stepBreak(dt) {
 			if (S.brk === 'breaking') {
@@ -699,13 +827,13 @@
 		/* ---- test hit ---- */
 		ui.hit.addEventListener('click', function () {
 			var v = sc.v, now = (W.performance || Date).now();
-			if (!v || !v.isLive() || !sc.shield) { announce('3D is off on this device, so there is no bubble to flash. The colour still goes into the loadout string.'); return; }
+			if (!v || !v.isLive() || !sc.shield) { announce(ORION.t('build.hit.off', '3D is off on this device, so there is no bubble to flash. The colour still goes into the loadout string.')); return; }
 			if (now - (sc.lastHit || 0) < 600) return; sc.lastHit = now;
 			var T = sc.ctx.THREE, rng = sc.ctx.kit.rng(0x51D + (sc.hits++)), cam = sc.ctx.camera.position;
 			var d = new T.Vector3(cam.x, cam.y, cam.z).normalize().add(new T.Vector3(rng() - 0.5, rng() - 0.5, rng() - 0.5).multiplyScalar(0.9)).normalize();
 			var bb = sc.ks.group.userData.model.meta.bbox, ctr = [(bb.min[0] + bb.max[0]) / 2, (bb.min[1] + bb.max[1]) / 2, (bb.min[2] + bb.max[2]) / 2], r = sc.ks.radius;
 			sc.shield.flash([ctr[0] + d.x * r, ctr[1] + d.y * r, ctr[2] + d.z * r]); v.requestRender();
-			announce('Test hit on the shield.');
+			announce(ORION.t('build.hit.done', 'Test hit on the shield.'));
 		});
 
 		/* ------------------------------------------------------------ the viewer */
@@ -739,6 +867,16 @@
 				};
 			}
 		});
+		/* language switch (I18N.md 3.8): re-render every piece of text this section drew, keeping ship, tiers, colour, mounts, craft, tab and damage state */
+		ORION.bus.on('lang', function () {
+			ORION.ui.keepFocus(root, function () {
+				var det = $('.build-details', ui.strWrap), open = !!(det && det.open);
+				fillShipPicker(); updateShipInfo(); buildTiers(); renderStats(); renderColour(); renderRows(); renderHangar();
+				ui.strWrap.textContent = ''; renderStringBlock(); if (open) { det = $('.build-details', ui.strWrap); if (det) det.open = true; }
+				syncTierRadios(); updateTierSubs(); paintColourUi(); renderDamageIntro(); renderShot(); if (S.modInfo) renderModules(); applyTabUi();
+			});
+			if (sc.v) { sc.v.setTexts({ label: viewLabel(), title: FLEET[S.ship].name }); refreshCaption(); }
+		});
 		ORION.bus.on('webgl', function () { refreshDamageUi(); });
 		ORION.bus.on('motion', function () { if (sc.shield && sc.v) sc.shield.setMotion(sc.v.effectiveMotion()); });
 		ORION.bus.on('ship:select', function (e) { if (e && e.id && e.from !== 'build') setShip(e.id, 'ships'); });
@@ -764,7 +902,7 @@
 			breakApart: breakApart, reassemble: reassemble, groups: function () { return sc.groups; }
 		};
 		function clickEl(e) { e.click(); }
-		function readStat(tag, key) { var n = $('[data-stats="' + tag + '"] [data-stat="' + key + '"] .build-val', root); return n ? Number(n.textContent.replace(/[^0-9.]/g, '')) : NaN; }
+		function readStat(tag, key) { var n = $('[data-stats="' + tag + '"] [data-stat="' + key + '"] .build-val', root); return n ? Number(n.getAttribute('data-v')) : NaN; }
 		ORION.selftest.add('build: hull and shield tiers (9 combinations x ANVIL, KESTREL, LEVIATHAN) equal the formulas', async function () {
 			var keep = S.ship, bad = [], rowsOut = [];
 			for (var si = 0; si < 3; si++) {
@@ -788,7 +926,7 @@
 			var cp = $('#build-custom', ui.colour); cp.value = '#ff8800'; cp.dispatchEvent(new Event('input', { bubbles: true }));
 			chk('custom ff8800', buildString(picksNow()) === 'L1.orion1.00.ff8800' && !$('#build-colmsg', ui.colour).textContent, buildString(picksNow()));
 			cp.value = '#303030'; cp.dispatchEvent(new Event('input', { bubbles: true }));
-			chk('dark reads as STOCK with a visible message', buildString(picksNow()) === 'L1.orion1' && /too dark/.test($('#build-colmsg', ui.colour).textContent), buildString(picksNow()));
+			chk('dark reads as STOCK with a visible message', buildString(picksNow()) === 'L1.orion1' && !!$('#build-colmsg', ui.colour).textContent, buildString(picksNow()));
 			cp.value = '#400000'; cp.dispatchEvent(new Event('input', { bubbles: true }));
 			chk('0x40 boundary is allowed', buildString(picksNow()) === 'L1.orion1.00.400000', buildString(picksNow()));
 			clickEl($$('input[name="build-colour"]', ui.colour)[0]);

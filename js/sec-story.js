@@ -46,12 +46,12 @@
 			b.addEventListener('click', function (e) {
 				e.preventDefault();
 				var did = b.getAttribute('aria-describedby'), note = did ? $('#' + did) : null;
-				var t = b.classList.contains('hero__play') ? 'Trailer coming' : (note ? note.textContent : 'Not live yet');
-				ORION.ui.announce(b.textContent.trim() + ': ' + t);
+				var t = b.classList.contains('hero__play') ? ORION.t('hero.trailerComingTitle', 'Trailer coming') : (note ? note.textContent : ORION.t('hero.notLiveYet', 'Not live yet'));
+				ORION.ui.announce(ORION.t('common.labelNote', '{label}: {note}', { label: b.textContent.trim(), note: t }));
 			});
 		});
 		$$('.hero__play').forEach(function (b) {
-			b.addEventListener('click', function (e) { e.preventDefault(); ORION.ui.announce('Trailer coming. We will cut one from the game itself.'); });
+			b.addEventListener('click', function (e) { e.preventDefault(); ORION.ui.announce(ORION.t('hero.trailerAnnounce', 'Trailer coming. We will cut one from the game itself.')); });
 		});
 	}
 
@@ -65,11 +65,16 @@
 		}
 		var host = $('#top-viewer'); if (!host) return;
 		var ship = (DATA.fleet || []).filter(function (s) { return s.id === 'orion1'; })[0];
-		var label = ship ? '3D model of the ' + ship.name + ' ' + String(ship.role || '').toLowerCase() + ', ' + ORION.ui.fmt.len(ship.lengthM) + ', slowly rotating' : '3D model of the ORION-1 fighter, slowly rotating';
-		ORION.viewer(host, {
+		function heroTexts() {
+			var role = ORION.i18n.d(String((ship && ship.role) || ''));
+			var lbl = ship ? ORION.t('hero.viewerLabel', '3D model of the {name} {role}, {length}, slowly rotating', { name: ship.name, role: ORION.i18n.lang === 'en' ? role.toLowerCase() : role, length: ORION.ui.fmt.len(ship.lengthM) }) : ORION.t('hero.viewerLabelFallback', '3D model of the ORION-1 fighter, slowly rotating');
+			return { label: lbl, groupLabel: ORION.t('hero.viewerGroup', 'Trailer slot: {label}, behind the Trailer coming plate', { label: lbl }), title: ORION.t('hero.trailerPh', 'TRAILER') };
+		}
+		var tx = heroTexts();
+		var hv = ORION.viewer(host, {
 			name: 'hero', priority: 'hero', interactive: true, pausable: true,
-			label: label, groupLabel: 'Trailer slot: ' + label + ', behind the Trailer coming plate',
-			posterKey: 'hero.poster', title: 'TRAILER',
+			label: tx.label, groupLabel: tx.groupLabel,
+			posterKey: 'hero.poster', title: tx.title,
 			controls: { autoRotate: true },
 			setup: async function (ctx) {
 				var T = ctx.THREE, k = ctx.kit;
@@ -86,6 +91,7 @@
 				return { update: function () { return false; }, dispose: function () { /* scene disposal is done by core */ void T; } };
 			}
 		});
+		ORION.bus.on('lang', function () { hv.setTexts(heroTexts()); });
 	}
 
 	/* ---- mission: ledger collapse ---- */
@@ -98,10 +104,11 @@
 		function paint() {
 			var collapsed = tbl.classList.contains('is-collapsed');
 			btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
-			btn.textContent = collapsed ? 'Show all (' + more + ' more)' : 'Show fewer';
+			btn.textContent = collapsed ? ORION.t('mission.showAllMore', 'Show all ({n} more)', { n: more }) : ORION.t('mission.showFewer', 'Show fewer');
 		}
 		paint();
 		btn.addEventListener('click', function () { tbl.classList.toggle('is-collapsed'); paint(); });
+		ORION.bus.on('lang', paint);
 	}
 
 	/* ---- #ai: the timeline scrubber (>= 900 px) over the plain list ---- */
@@ -110,16 +117,29 @@
 		if (!wrap || !list) return;
 		var items = $$('.timeline__item', list); if (!items.length) return;
 		var cur = 0, tabs = [];
-		var scrub = el('div', { class: 'timeline__scrub', role: 'tablist', 'aria-label': 'Timeline events: use the left and right arrow keys to move between them' });
+		/* the first 70 characters of an event for its tab label: English cuts exactly as before; other languages cut at a whole letter (grapheme) and, when there is a space, at a whole word */
+		function clip(t, n) {
+			if (t.length <= n) return t;
+			if (ORION.i18n.lang === 'en' || !window.Intl || !Intl.Segmenter) return t.slice(0, n) + '...';
+			var o = '', it = new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(t)[Symbol.iterator](), x, sp;
+			while (!(x = it.next()).done) { if (o.length + x.value.segment.length > n) break; o += x.value.segment; }
+			sp = o.lastIndexOf(' '); if (sp > n / 2 && /\S/.test(t.charAt(o.length))) o = o.slice(0, sp);
+			return o + '...';
+		}
+		function nodeLabel(li) {
+			var t = $('time', li), date = t ? t.textContent : '', chipT = ($('.chip__t', li) || {}).textContent || '', txt = ($('.timeline__text', li) || {}).textContent || '';
+			return ORION.t('ai.timelineNode', '{date}, {chip}: {text}', { date: date, chip: chipT, text: clip(txt, 70) });
+		}
+		var scrub = el('div', { class: 'timeline__scrub', role: 'tablist', 'aria-label': ORION.t('ai.timelineScrub', 'Timeline events: use the left and right arrow keys to move between them') });
 		var panel = el('div', { class: 'timeline__panel panel panel--raised frame', role: 'tabpanel', id: 'ai-tl-panel', tabindex: '0' });
-		var prev = el('button', { type: 'button', class: 'btn btn--sm', text: 'Previous event' });
-		var next = el('button', { type: 'button', class: 'btn btn--sm', text: 'Next event' });
+		var prev = el('button', { type: 'button', class: 'btn btn--sm', text: ORION.t('ai.prevEvent', 'Previous event') });
+		var next = el('button', { type: 'button', class: 'btn btn--sm', text: ORION.t('ai.nextEvent', 'Next event') });
 		var count = el('span', { class: 'mono-label', 'aria-hidden': 'true' });
 		var nav = el('div', { class: 'timeline__nav' }, [prev, next, count]);
 		items.forEach(function (li, i) {
-			var t = $('time', li), date = t ? t.textContent : '', chipT = ($('.chip__t', li) || {}).textContent || '', txt = ($('.timeline__text', li) || {}).textContent || '';
+			var t = $('time', li), date = t ? t.textContent : '';
 			var b = el('button', { type: 'button', role: 'tab', class: 'tl-node', id: 'ai-tl-tab-' + i, 'aria-selected': 'false', 'aria-controls': 'ai-tl-panel', tabindex: '-1', 'data-chip': li.getAttribute('data-chip') || '',
-				'aria-label': date + ', ' + chipT + ': ' + txt.slice(0, 70) + (txt.length > 70 ? '...' : '') }, [el('i', { class: 'tl-node__dot', 'aria-hidden': 'true' }), el('span', { class: 'tl-node__date', 'aria-hidden': 'true', text: date.slice(5) })]);
+				'aria-label': nodeLabel(li) }, [el('i', { class: 'tl-node__dot', 'aria-hidden': 'true' }), el('span', { class: 'tl-node__date', 'aria-hidden': 'true', text: date.slice(5) })]);
 			b.addEventListener('click', function () { select(i, false); });
 			tabs.push(b); scrub.append(b);
 		});
@@ -130,8 +150,9 @@
 			panel.setAttribute('aria-labelledby', 'ai-tl-tab-' + i);
 			panel.textContent = '';
 			var top = el('div', { class: 'timeline__panel-top' }, [el('time', { class: 'timeline__date', datetime: t ? t.getAttribute('datetime') : '', text: t ? t.textContent : '' }), chipEl ? chipEl.cloneNode(true) : null]);
-			panel.append(top, el('p', { class: 'timeline__text', text: ($('.timeline__text', li) || {}).textContent || '' }), el('p', { class: 'timeline__src', text: ($('.timeline__src', li) || {}).textContent || '' }));
-			count.textContent = (i + 1) + ' of ' + items.length;
+			var tx = $('.timeline__text', li), sc = $('.timeline__src', li);   /* clones keep the markup: the citation stays a translate="no" span */
+			panel.append(top, tx ? tx.cloneNode(true) : el('p', { class: 'timeline__text' }), sc ? sc.cloneNode(true) : el('p', { class: 'timeline__src' }));
+			count.textContent = ORION.t('ai.timelineCount', '{n} of {total}', { n: i + 1, total: items.length });
 			prev.disabled = i === 0; next.disabled = i === items.length - 1;
 			if (focus) tabs[i].focus();
 		}
@@ -145,6 +166,12 @@
 		wrap.append(scrub, panel, nav);
 		wrap.classList.add('timeline--ready');
 		select(0, false);
+		ORION.bus.on('lang', function () {
+			scrub.setAttribute('aria-label', ORION.t('ai.timelineScrub', 'Timeline events: use the left and right arrow keys to move between them'));
+			prev.textContent = ORION.t('ai.prevEvent', 'Previous event'); next.textContent = ORION.t('ai.nextEvent', 'Next event');
+			tabs.forEach(function (b, j) { b.setAttribute('aria-label', nodeLabel(items[j])); });
+			select(cur, false);
+		});
 		wrap.__select = select;
 	}
 
@@ -154,15 +181,19 @@
 		var srcBtn = $('#proof-src-toggle');
 		if (srcBtn) {
 			srcBtn.hidden = false;
-			srcBtn.addEventListener('click', function () { var on = srcBtn.getAttribute('aria-pressed') !== 'true'; srcBtn.setAttribute('aria-pressed', on ? 'true' : 'false'); srcBtn.textContent = on ? 'Hide sources' : 'Show sources'; sec.classList.toggle('show-src', on); });
+			function paintSrc() { srcBtn.textContent = srcBtn.getAttribute('aria-pressed') === 'true' ? ORION.t('proof.hideSources', 'Hide sources') : ORION.t('proof.showSources', 'Show sources'); }
+			srcBtn.addEventListener('click', function () { var on = srcBtn.getAttribute('aria-pressed') !== 'true'; srcBtn.setAttribute('aria-pressed', on ? 'true' : 'false'); paintSrc(); sec.classList.toggle('show-src', on); });
+			ORION.bus.on('lang', paintSrc);
 		}
 		var verBtn = $('#proof-ver-toggle'), vers = $$('.ver', sec);
 		if (verBtn && vers.length) {
 			verBtn.hidden = false;
+			function paintVer() { verBtn.textContent = verBtn.getAttribute('aria-expanded') === 'true' ? ORION.t('proof.collapseAll', 'Collapse all') : ORION.t('proof.expandAll', 'Expand all'); }
+			ORION.bus.on('lang', paintVer);
 			verBtn.addEventListener('click', function () {
 				var open = verBtn.getAttribute('aria-expanded') !== 'true';
 				vers.forEach(function (d) { d.open = open; });
-				verBtn.setAttribute('aria-expanded', open ? 'true' : 'false'); verBtn.textContent = open ? 'Collapse all' : 'Expand all';
+				verBtn.setAttribute('aria-expanded', open ? 'true' : 'false'); paintVer();
 			});
 		}
 		initCounters(ORION, sec);
@@ -172,18 +203,19 @@
 	function initCounters(ORION, sec) {
 		var nums = $$('.counter__n [data-bind]', sec); if (!nums.length) return;
 		var done = false;
-		function finalise() { nums.forEach(function (n) { var v = resolve(ORION.data, n.getAttribute('data-bind')); if (typeof v === 'number') n.textContent = v.toLocaleString('en-GB'); }); }
+		function finalise() { nums.forEach(function (n) { var v = resolve(ORION.data, n.getAttribute('data-bind')); if (typeof v === 'number') n.textContent = ORION.ui.fmt.num(v); }); }
 		function run() {
 			if (done) return; done = true;
 			if (ORION.state.motion === 'reduced') { finalise(); return; }
 			var t0 = performance.now(), dur = 1100, targets = nums.map(function (n) { var v = resolve(ORION.data, n.getAttribute('data-bind')); return typeof v === 'number' ? v : null; });
 			(function step(t) {
 				var p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3);
-				nums.forEach(function (n, i) { if (targets[i] != null) n.textContent = Math.round(targets[i] * e).toLocaleString('en-GB'); });
+				nums.forEach(function (n, i) { if (targets[i] != null) n.textContent = ORION.ui.fmt.num(Math.round(targets[i] * e)); });
 				if (p < 1 && ORION.state.motion !== 'reduced') requestAnimationFrame(step); else finalise();
 			})(t0);
 		}
 		ORION.bus.on('motion', function (s) { if (s && s.motion === 'reduced') finalise(); });
+		ORION.bus.on('lang', function () { if (done) finalise(); });
 		var box = $('#proof-counters');
 		if ('IntersectionObserver' in W && box) {
 			var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { io.disconnect(); run(); } }); }, { threshold: 0.2 });
@@ -201,7 +233,7 @@
 			svgNodes.concat(btns).forEach(function (n) { n.setAttribute('aria-pressed', Number(n.getAttribute('data-i')) === i ? 'true' : 'false'); });
 			var n = svgNodes[i] || btns[i]; if (!n) return;
 			detail.textContent = '';
-			detail.append(el('span', { class: 'mono-label', text: 'Step ' + (i + 1) + ' of ' + total }), D.createTextNode(' '), el('strong', { text: n.getAttribute('data-title') + '.' }), D.createTextNode(' ' + n.getAttribute('data-desc')));
+			detail.append(el('span', { class: 'mono-label', text: ORION.t('proof.pipe.stepOf', 'Step {n} of {total}', { n: i + 1, total: total }) }), D.createTextNode(' '), el('strong', { text: ORION.t('proof.pipe.titleDot', '{title}.', { title: n.getAttribute('data-title') }) }), D.createTextNode(' ' + n.getAttribute('data-desc')));
 			void announce;
 		}
 		function visible(n) { return n.getClientRects().length > 0; }
@@ -220,6 +252,11 @@
 			});
 		}
 		wire(svgNodes); wire(btns);
+		function relabel() {
+			svgNodes.forEach(function (n) { n.setAttribute('aria-label', ORION.t('proof.pipe.nodeLabel', 'Step {n} of {total}: {label}', { n: Number(n.getAttribute('data-i')) + 1, total: total, label: n.getAttribute('data-label') })); });
+			select(cur);
+		}
+		ORION.bus.on('lang', relabel); relabel();
 		pipe.__select = select; void cur;
 	}
 
@@ -233,16 +270,19 @@
 		var add = ORION.selftest && ORION.selftest.add; if (!add) return;
 		var DISCLOSURE = 'Orion-81 is a completely AI-generated project.';
 		add('story: disclosure sentence in hero, #ai and footer', async function () {
+			if (ORION.i18n.lang !== 'en') return { ok: true, note: 'English-only text check, skipped in ' + ORION.i18n.lang };
 			var parts = ['#top', '#ai', '#footer'].map(function (s) { var e = $(s); return e ? e.textContent.replace(/\s+/g, ' ').indexOf(DISCLOSURE) >= 0 : false; });
 			return { ok: parts.every(Boolean), note: 'hero/ai/footer = ' + parts.join('/') };
 		});
 		add('story: Future partners? group is exact text', async function () {
+			if (ORION.i18n.lang !== 'en') return { ok: true, note: 'English-only text check, skipped in ' + ORION.i18n.lang };
 			var g = $('.footer__partners'); if (!g) return { ok: false, note: 'missing' };
 			var t = g.textContent.replace(/\s+/g, ' ').trim();
 			var ok = t === 'Future partners? Unreal Engine · Blender · Anthropic · Epic Games Aspirational. No partnership, affiliation or endorsement exists.' && !$('img, svg, a', g);
 			return { ok: ok, note: t };
 		});
 		add('story: banned phrases absent from the story chapters', async function () {
+			if (ORION.i18n.lang !== 'en') return { ok: true, note: 'English-only text check, skipped in ' + ORION.i18n.lang };
 			var txt = chapters.map(function (c) { return c.textContent; }).join(' ').replace(/\s+/g, ' ');
 			var bad = [/every line of code/i, /original design/i, /replaced every/i, /still playable/i, /public example/i, /ready to move/i, /solo founder/i].filter(function (r) { return r.test(txt); }).map(String);
 			return { ok: !bad.length, note: bad.join(', ') || 'none found' };
@@ -261,7 +301,7 @@
 		add('story: counters equal ORION_DATA after count-up', async function () {
 			var sec = $('#proof'); if (sec && sec.__finalise) await sleep(1500);
 			var bad = $$('#proof [data-bind]').filter(function (n) {
-				var v = resolve(DATA, n.getAttribute('data-bind')); return !(typeof v === 'number' ? n.textContent === v.toLocaleString('en-GB') : n.textContent === String(v));
+				var v = resolve(DATA, n.getAttribute('data-bind')); return !(typeof v === 'number' ? n.textContent === ORION.ui.fmt.num(v) : n.textContent === String(v));
 			}).map(function (n) { return n.getAttribute('data-bind') + '=' + n.textContent; });
 			return { ok: !bad.length, note: bad.join(', ') || 'all bound values equal the data' };
 		});
@@ -280,7 +320,7 @@
 			var vis = $$('#proof-pipe .pipe__node, #proof-pipe .pipe__step').filter(function (n) { return n.getClientRects().length > 0; });
 			if (!vis.length) return { ok: false, note: 'no visible step' };
 			vis[2].dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true })); await sleep(50); var d = $('#proof-pipe-detail').textContent;
-			return { ok: vis.length === 9 && /Step 3 of 9/.test(d) && /Executors/.test(d), note: 'visible steps ' + vis.length + '; detail: ' + d.slice(0, 80) };
+			return { ok: vis.length === 9 && d.indexOf(ORION.t('proof.pipe.stepOf', 'Step {n} of {total}', { n: 3, total: 9 })) >= 0 && d.indexOf(vis[2].getAttribute('data-title')) >= 0, note: 'visible steps ' + vis.length + '; detail: ' + d.slice(0, 80) };
 		});
 		add('story: hero viewer follows webgl state (live or still, copy swaps)', async function () {
 			var v = ORION.__debug && ORION.__debug.get && ORION.__debug.get('hero'); if (!v) return { ok: false, note: 'no hero viewer' };

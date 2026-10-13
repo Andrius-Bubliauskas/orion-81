@@ -17,36 +17,52 @@
 	var RELOAD_DISPLAY_MS = 1500;
 	var FLASH_MAX = 3;       /* WCAG 2.3.1: at most 3 flashes in any 1000 ms window, enforced in flashOK() with the simulation clock */
 	var COLORS = { laser: 0x7fe3ff, rocket: 0xffb347, rail: 0x6fb4ff, gun: 0xffe08a, pd: 0xa6ffcf, hostile: 0xff6b6b };
-	var POSTURE_TXT = { HOLD: 'holds fire', DEFEND: 'returns fire only', FREE: 'engages freely' };
+	function postureTxt(p) {
+		if (p === 'HOLD') return ORION.t('weapons.posture.hold', 'holds fire');
+		if (p === 'DEFEND') return ORION.t('weapons.posture.defend', 'returns fire only');
+		if (p === 'FREE') return ORION.t('weapons.posture.free', 'engages freely');
+		return '';
+	}
+	function lc(x) { return ORION.i18n.lang === 'en' ? String(x).toLowerCase() : String(x); } /* English lower-casing only */
+	function nn1(v) { return ORION.ui.fmt.num(v, 1); }
+	function meterName(id) {
+		switch (id) {
+			case 'READY': return ORION.t('weapons.meter.ready', 'READY'); case 'FIRING': return ORION.t('weapons.meter.firing', 'FIRING'); case 'SPIN': return ORION.t('weapons.meter.spin', 'SPIN');
+			case 'LOCK': return ORION.t('weapons.meter.lock', 'LOCK'); case 'VOLLEY': return ORION.t('weapons.meter.volley', 'VOLLEY'); case 'IN FLIGHT': return ORION.t('weapons.meter.inFlight', 'IN FLIGHT');
+			case 'RELOADING': return ORION.t('weapons.meter.reloading', 'RELOADING'); case 'CHARGE': return ORION.t('weapons.meter.charge', 'CHARGE'); case 'FULL': return ORION.t('weapons.meter.full', 'FULL');
+			case 'COOLDOWN': return ORION.t('weapons.meter.cooldown', 'COOLDOWN'); case 'ENGAGING': return ORION.t('weapons.meter.engaging', 'ENGAGING'); case 'STILL': return ORION.t('weapons.meter.still', 'STILL');
+		}
+		return String(id);
+	}
 
 	/* stats shown, in A.6 order; formatters return the value with its unit */
 	function dec(v) { var s = String(v), i = s.indexOf('.'); return i < 0 ? 0 : Math.min(2, s.length - i - 1); }
 	function nn(v) { return ORION.ui.fmt.num(v, dec(v)); }
 	function ms(v) { return v >= 1000 ? nn(Math.round(v / 10) / 100) + ' s' : nn(v) + ' ms'; }
 	var STAT_DEF = [
-		['damage', 'Damage', function (v) { return nn(v); }],
-		['refireMs', 'Refire interval', ms],
-		['reloadMs', 'Reload', ms],
-		['rpm', 'Rate of fire', function (v) { return nn(v) + ' rpm'; }],
-		['muzzleSpeedMs', 'Muzzle speed', function (v) { return nn(v) + ' m/s'; }],
-		['rangeM', 'Effective range', function (v) { return ORION.ui.fmt.len(v); }],
-		['lockRangeM', 'Lock range', function (v) { return ORION.ui.fmt.len(v); }],
-		['lockMs', 'Lock time', ms],
-		['splashRadiusM', 'Splash radius', function (v) { return nn(v) + ' m'; }],
-		['rocketSpeedMs', 'Rocket speed limit', function (v) { return nn(v) + ' m/s'; }],
-		['turnDegS', 'Turn rate', function (v) { return nn(v) + ' deg/s'; }],
-		['chargeMs', 'Charge time', ms],
-		['cooldownMs', 'Cooldown', ms],
-		['slugMassKg', 'Slug mass', function (v) { return nn(v) + ' kg'; }],
-		['roundMassKg', 'Round mass', function (v) { return nn(v) + ' kg'; }],
-		['spinUpMs', 'Spin-up', ms],
-		['spinDownMs', 'Spin-down', ms],
-		['belt', 'Belt', function (v) { return nn(v) + ' rounds'; }],
-		['reserveBelts', 'Reserve belts', function (v) { return nn(v); }],
-		['heatPerRound', 'Heat per round', function (v) { return nn(v); }],
-		['burst', 'Burst', function (v) { return nn(v) + ' shots'; }],
-		['slewDegS', 'Turret slew rate', function (v) { return nn(v) + ' deg/s'; }],
-		['magazine', 'Magazine (per mount)', function (v) { return nn(v) + ' rockets'; }]
+		['damage', function () { return ORION.t('weapons.stat.damage', 'Damage'); }, function (v) { return nn(v); }],
+		['refireMs', function () { return ORION.t('weapons.stat.refire', 'Refire interval'); }, ms],
+		['reloadMs', function () { return ORION.t('weapons.stat.reload', 'Reload'); }, ms],
+		['rpm', function () { return ORION.t('weapons.stat.rate', 'Rate of fire'); }, function (v) { return nn(v) + ' rpm'; }],
+		['muzzleSpeedMs', function () { return ORION.t('weapons.stat.muzzle', 'Muzzle speed'); }, function (v) { return nn(v) + ' m/s'; }],
+		['rangeM', function () { return ORION.t('weapons.stat.range', 'Effective range'); }, function (v) { return ORION.ui.fmt.len(v); }],
+		['lockRangeM', function () { return ORION.t('weapons.stat.lockRange', 'Lock range'); }, function (v) { return ORION.ui.fmt.len(v); }],
+		['lockMs', function () { return ORION.t('weapons.stat.lockTime', 'Lock time'); }, ms],
+		['splashRadiusM', function () { return ORION.t('weapons.stat.splash', 'Splash radius'); }, function (v) { return nn(v) + ' m'; }],
+		['rocketSpeedMs', function () { return ORION.t('weapons.stat.rocketSpeed', 'Rocket speed limit'); }, function (v) { return nn(v) + ' m/s'; }],
+		['turnDegS', function () { return ORION.t('weapons.stat.turn', 'Turn rate'); }, function (v) { return nn(v) + ' deg/s'; }],
+		['chargeMs', function () { return ORION.t('weapons.stat.charge', 'Charge time'); }, ms],
+		['cooldownMs', function () { return ORION.t('weapons.stat.cooldown', 'Cooldown'); }, ms],
+		['slugMassKg', function () { return ORION.t('weapons.stat.slugMass', 'Slug mass'); }, function (v) { return nn(v) + ' kg'; }],
+		['roundMassKg', function () { return ORION.t('weapons.stat.roundMass', 'Round mass'); }, function (v) { return nn(v) + ' kg'; }],
+		['spinUpMs', function () { return ORION.t('weapons.stat.spinUp', 'Spin-up'); }, ms],
+		['spinDownMs', function () { return ORION.t('weapons.stat.spinDown', 'Spin-down'); }, ms],
+		['belt', function () { return ORION.t('weapons.stat.belt', 'Belt'); }, function (v) { return ORION.t('weapons.val.rounds', { one: '{value} round', other: '{value} rounds' }, { n: v, value: nn(v) }); }],
+		['reserveBelts', function () { return ORION.t('weapons.stat.reserveBelts', 'Reserve belts'); }, function (v) { return nn(v); }],
+		['heatPerRound', function () { return ORION.t('weapons.stat.heat', 'Heat per round'); }, function (v) { return nn(v); }],
+		['burst', function () { return ORION.t('weapons.stat.burst', 'Burst'); }, function (v) { return ORION.t('weapons.val.shots', { one: '{value} shot', other: '{value} shots' }, { n: v, value: nn(v) }); }],
+		['slewDegS', function () { return ORION.t('weapons.stat.slew', 'Turret slew rate'); }, function (v) { return nn(v) + ' deg/s'; }],
+		['magazine', function () { return ORION.t('weapons.stat.magazine', 'Magazine (per mount)'); }, function (v) { return ORION.t('weapons.val.rockets', { one: '{value} rocket', other: '{value} rockets' }, { n: v, value: nn(v) }); }]
 	];
 
 	function h(tag, attrs, kids) {
@@ -107,6 +123,7 @@
 	var E = {};          /* DOM refs */
 	var R = null;        /* the live range controller, or null */
 	var VIEWER = null;
+	var capRange = false;   /* the viewer caption was set to the range caption once; it stays so after the range is evicted, and a language switch must restore it (applyDom resets the tagged caption to the still's text) */
 	var C = { shots: 0, hits: 0, dmg: 0, volleys: 0, rounds: 0, kills: 0, rails: 0, intercepts: 0 };
 	function resetCounters() { for (var k in C) C[k] = 0; }
 	function curFam() { return famById(S.fam); }
@@ -115,11 +132,15 @@
 	function curModes() { return modesFor(curFam(), curVar()); }
 	function reduced() { return ORION.state.motion === 'reduced' || (VIEWER && VIEWER.motionPaused); }
 	function speak(t) { try { ORION.ui.announce(t); } catch (e) { /* ignore */ } }
-	function setStatus(t, say) { if (E.status) E.status.textContent = t; if (say) speak(t); }
-	var meterLast = '';
+	var idleKind = '';   /* which idle line the status shows ('variant' = Ready: {variant}., 'ready' = Ready.), so a language switch re-words the same line */
+	function setStatus(t, say) {
+		if (E.status) E.status.textContent = t; if (say) speak(t);
+		try { idleKind = t === ORION.t('weapons.readyVariant', 'Ready: {variant}.', { variant: vName(curVar()) }) ? 'variant' : (t === ORION.t('weapons.ready', 'Ready.') ? 'ready' : ''); } catch (e) { idleKind = ''; }
+	}
+	var meterLast = '', meterArgs = ['READY', 0, '', false];
 	function setMeter(name, frac, valText, amber) {
-		if (!E.meterBar) return; var key = name + '|' + Math.round(frac * 200) + '|' + valText + '|' + (amber ? 1 : 0); if (key === meterLast) return; meterLast = key;
-		E.meterName.textContent = name; E.meterVal.textContent = valText || '';
+		if (!E.meterBar) return; var key = name + '|' + Math.round(frac * 200) + '|' + valText + '|' + (amber ? 1 : 0); if (key === meterLast) return; meterLast = key; meterArgs = [name, frac, valText, amber];
+		E.meterName.textContent = meterName(name); E.meterVal.textContent = valText || '';
 		E.meterBar.style.transform = 'scaleX(' + clamp(frac, 0, 1).toFixed(3) + ')'; E.meterBar.classList.toggle('is-amber', !!amber);
 	}
 	function setDial(frac) {
@@ -130,16 +151,17 @@
 	function refreshReadout(force) {
 		if (!E.readout) return; var t = performance.now(); if (!force && t - roLast < 200) return; roLast = t;
 		var f = S.fam, st = curStats(), parts = [];
-		if (f === 'laser') { if (st.refireMs) parts.push('refire ' + st.refireMs + ' ms = ' + (1000 / st.refireMs).toFixed(1) + ' shots per second'); parts.push('shots ' + C.shots); parts.push('hits ' + C.hits); if (st.damage != null) parts.push('damage delivered ' + nn(Math.round(C.dmg * 10) / 10)); }
-		else if (f === 'rocket') { parts.push('volleys ' + C.volleys); parts.push('rockets away ' + C.shots); parts.push('hits ' + C.hits); if (st.damage != null) parts.push('damage delivered ' + nn(C.dmg)); }
-		else if (f === 'rail') { parts.push('slugs ' + C.rails); if (st.damage != null) parts.push('damage delivered ' + nn(C.dmg)); if (st.cooldownMs) parts.push('game cooldown ' + ms(st.cooldownMs)); }
-		else if (f === 'gun') { if (st.rpm) parts.push('full rate ' + nn(st.rpm) + ' rpm = ' + (st.rpm / 60).toFixed(1) + ' rounds per second'); parts.push('rounds fired ' + C.rounds); if (st.belt) parts.push('belt left ' + Math.max(0, st.belt - (R ? R.beltUsed() : 0))); }
-		else { parts.push('incoming ' + C.shots); parts.push('destroyed ' + C.intercepts); }
+		if (f === 'laser') { if (st.refireMs) parts.push(ORION.t('weapons.ro.refire', 'refire {ms} ms = {rate} shots per second', { ms: st.refireMs, rate: nn1(1000 / st.refireMs) })); parts.push(ORION.t('weapons.ro.shots', 'shots {n}', { n: C.shots })); parts.push(ORION.t('weapons.ro.hits', 'hits {n}', { n: C.hits })); if (st.damage != null) parts.push(ORION.t('weapons.ro.damage', 'damage delivered {value}', { value: nn(Math.round(C.dmg * 10) / 10) })); }
+		else if (f === 'rocket') { parts.push(ORION.t('weapons.ro.volleys', 'volleys {n}', { n: C.volleys })); parts.push(ORION.t('weapons.ro.rocketsAway', 'rockets away {n}', { n: C.shots })); parts.push(ORION.t('weapons.ro.hits', 'hits {n}', { n: C.hits })); if (st.damage != null) parts.push(ORION.t('weapons.ro.damage', 'damage delivered {value}', { value: nn(C.dmg) })); }
+		else if (f === 'rail') { parts.push(ORION.t('weapons.ro.slugs', 'slugs {n}', { n: C.rails })); if (st.damage != null) parts.push(ORION.t('weapons.ro.damage', 'damage delivered {value}', { value: nn(C.dmg) })); if (st.cooldownMs) parts.push(ORION.t('weapons.ro.cooldown', 'game cooldown {time}', { time: ms(st.cooldownMs) })); }
+		else if (f === 'gun') { if (st.rpm) parts.push(ORION.t('weapons.ro.fullRate', 'full rate {rpm} rpm = {rate} rounds per second', { rpm: nn(st.rpm), rate: nn1(st.rpm / 60) })); parts.push(ORION.t('weapons.ro.rounds', 'rounds fired {n}', { n: C.rounds })); if (st.belt) parts.push(ORION.t('weapons.ro.belt', 'belt left {n}', { n: Math.max(0, st.belt - (R ? R.beltUsed() : 0)) })); }
+		else { parts.push(ORION.t('weapons.ro.incoming', 'incoming {n}', { n: C.shots })); parts.push(ORION.t('weapons.ro.destroyed', 'destroyed {n}', { n: C.intercepts })); }
 		E.readout.textContent = parts.join(' | ');
 	}
 
 	/* ------------------------------------------------------------------ rendering of the DOM panel */
-	function famLabel(f) { return f.name; }
+	function famLabel(f) { return f.id === 'pd' ? ORION.t('weapons.famPd', 'POINT DEFENCE') : ORION.i18n.d(f.name); }
+	function vName(v) { return v.name === 'POINT DEFENCE' ? ORION.t('weapons.famPd', 'POINT DEFENCE') : v.name; }
 	function renderTabs() {
 		E.tabs.textContent = '';
 		FAMS.forEach(function (f) {
@@ -155,7 +177,7 @@
 	function renderVariants() {
 		var f = curFam(); E.variants.textContent = '';
 		f.variants.forEach(function (v) {
-			var b = h('button', { type: 'button', class: 'pill', 'aria-pressed': v.id === S.variant ? 'true' : 'false', 'data-variant': v.id, text: v.name });
+			var b = h('button', { type: 'button', class: 'pill', 'aria-pressed': v.id === S.variant ? 'true' : 'false', 'data-variant': v.id, text: vName(v) });
 			E.variants.append(b);
 		});
 	}
@@ -170,17 +192,17 @@
 		var f = curFam(), m = curModes(); E.mode.textContent = '';
 		if (m.manual && m.auto) {
 			if (S.mode !== 'manual' && S.mode !== 'auto') S.mode = 'manual';
-			var g = h('div', { class: 'pill-group', role: 'group', 'aria-label': 'Control mode' });
+			var g = h('div', { class: 'pill-group', role: 'group', 'aria-label': ORION.t('weapons.controlMode', 'Control mode') });
 			['manual', 'auto'].forEach(function (k) { g.append(h('button', { type: 'button', class: 'pill', 'data-mode': k, 'aria-pressed': S.mode === k ? 'true' : 'false', text: k.toUpperCase() })); });
 			E.mode.append(g);
-			var note = f.id === 'gun' ? 'Fixed banks are MANUAL only; AUTO applies to turret mounts.' : f.id === 'laser' ? 'Turrets switch between MANUAL and AUTO.' : 'Launchers are MANUAL or AUTO.';
+			var note = f.id === 'gun' ? ORION.t('weapons.modeNoteGun', 'Fixed banks are MANUAL only; AUTO applies to turret mounts.') : f.id === 'laser' ? ORION.t('weapons.modeNoteLaser', 'Turrets switch between MANUAL and AUTO.') : ORION.t('weapons.modeNoteLauncher', 'Launchers are MANUAL or AUTO.');
 			E.mode.append(h('p', { class: 'small muted', text: note }));
 		} else if (m.auto) {
 			S.mode = 'auto';
-			E.mode.append(h('p', { class: 'weapons-only' }, [h('strong', { text: 'AUTOMATIC' }), h('span', { text: 'Point defence shoots hostile rockets by itself and is never on the trigger.' })]));
+			E.mode.append(h('p', { class: 'weapons-only' }, [h('strong', { text: ORION.t('weapons.automatic', 'AUTOMATIC') }), h('span', { text: ORION.t('weapons.automaticNote', 'Point defence shoots hostile rockets by itself and is never on the trigger.') })]));
 		} else {
 			S.mode = 'manual';
-			E.mode.append(h('p', { class: 'weapons-only' }, [h('strong', { text: 'MANUAL' }), h('span', { text: 'The pilot fires this mount. It has no AUTO mode.' })]));
+			E.mode.append(h('p', { class: 'weapons-only' }, [h('strong', { text: 'MANUAL' }), h('span', { text: ORION.t('weapons.manualNote', 'The pilot fires this mount. It has no AUTO mode.') })]));
 		}
 	}
 	function renderPosture() {
@@ -188,64 +210,69 @@
 		E.postureField.hidden = !show; if (!show) return; E.posture.textContent = '';
 		var labels = (DATA.weapons.postureLabels) || {};
 		f.postures.forEach(function (p) { E.posture.append(h('button', { type: 'button', class: 'pill', 'data-posture': p, 'aria-pressed': S.posture === p ? 'true' : 'false', text: p })); });
-		E.postureNote.textContent = (labels[S.posture] || S.posture) + ': the AUTO mount ' + (POSTURE_TXT[S.posture] || '') + '.';
+		E.postureNote.textContent = ORION.t('weapons.postureNote', '{label}: the AUTO mount {text}.', { label: labels[S.posture] || S.posture, text: postureTxt(S.posture) });
 	}
 	function renderTable() {
 		var f = curFam(), v = curVar(), st = curStats(), shipTxt = '';
-		var ids = shipsFor(v); if (ids.length && S.ship) shipTxt = ', as mounted on ' + (SHIPNAME[S.ship] || S.ship);
-		E.tcap.textContent = v.name + shipTxt;
+		var ids = shipsFor(v); var hasShip = ids.length && S.ship;
+		E.tcap.textContent = hasShip ? ORION.t('weapons.capShip', '{variant}, as mounted on {ship}', { variant: vName(v), ship: SHIPNAME[S.ship] || S.ship }) : vName(v);
 		E.tbody.textContent = '';
 		var rows = 0;
 		STAT_DEF.forEach(function (d) {
 			var val = st[d[0]]; if (val == null) return; rows++;
-			E.tbody.append(h('tr', { 'data-stat': d[0] }, [h('th', { scope: 'row', text: d[1] }), h('td', { class: 'num', text: d[2](val) })]));
+			E.tbody.append(h('tr', { 'data-stat': d[0] }, [h('th', { scope: 'row', text: d[1]() }), h('td', { class: 'num', text: d[2](val) })]));
 		});
-		if (!rows) E.tbody.append(h('tr', null, [h('td', { colspan: '2', text: 'The game defines no single value for this variant: the numbers depend on the ship that mounts it. Pick a ship above.' })]));
+		if (!rows) E.tbody.append(h('tr', null, [h('td', { colspan: '2', text: ORION.t('weapons.noSingleValue', 'The game defines no single value for this variant: the numbers depend on the ship that mounts it. Pick a ship above.') })]));
 		E.src.textContent = '';
 		var s = v.src; var srcTxt = typeof s === 'string' ? s : (s && (s['*'] || s.stats)) || '';
-		if (srcTxt) E.src.append(ORION.ui.src('Source: ' + srcTxt));
+		if (srcTxt) E.src.append(ORION.ui.src(ORION.t('common.sourceVar', 'Source: {path}', { path: srcTxt })));
+		void shipTxt;
 	}
 	function renderMounted() {
 		var v = curVar(); E.mounted.textContent = '';
 		(v.mountedOn || []).forEach(function (id) {
-			var a = h('a', { href: '#ships', 'data-ship': id, text: SHIPNAME[id] || id, 'aria-label': 'Show ' + (SHIPNAME[id] || id) + ' in the ships explorer' });
+			var a = h('a', { href: '#ships', 'data-ship': id, text: SHIPNAME[id] || id, 'aria-label': ORION.t('weapons.showInShips', 'Show {name} in the ships explorer', { name: SHIPNAME[id] || id }) });
 			E.mounted.append(h('li', null, a));
 		});
-		if (!(v.mountedOn || []).length) E.mounted.append(h('li', { class: 'muted', text: 'No ship mounts this variant in 0.6.1.' }));
+		if (!(v.mountedOn || []).length) E.mounted.append(h('li', { class: 'muted', text: ORION.t('weapons.noMounts', 'No ship mounts this variant in 0.6.1.') }));
 	}
 	function renderFacts() {
 		var f = curFam(); E.facts.textContent = '';
-		var ul = h('ul'); (f.summary || []).forEach(function (s) { var li = h('li', { text: s.text }); ul.append(li); });
+		var ul = h('ul'); (f.summary || []).forEach(function (s) { var li = h('li', { text: ORION.i18n.d(s.text) }); ul.append(li); });
 		E.facts.append(ul);
 	}
 	function renderCapture() {
 		var f = curFam(), m = ORION.media('feature.weapon.' + f.id); E.capture.textContent = '';
 		if (m && m.src) { E.capture.append(h('img', { src: m.src, width: m.w, height: m.h, alt: m.alt || '', loading: 'lazy', decoding: 'async' }), h('figcaption', { text: m.caption || '' })); }
-		else E.capture.append(h('figcaption', { text: 'No in-game capture of ' + f.name.toLowerCase() + ' yet.' }));
+		else E.capture.append(h('figcaption', { text: ORION.t('weapons.noCapture', 'No in-game capture of {family} yet.', { family: lc(ORION.i18n.d(f.name)) }) }));
 	}
 	function updateControls() {
-		var f = curFam(), m = curModes(), auto = S.mode === 'auto' && m.auto, label = 'FIRE', hint;
+		var f = curFam(), m = curModes(), auto = S.mode === 'auto' && m.auto, label = ORION.t('weapons.fire', 'FIRE'), hint;
 		E.charge.hidden = f.id !== 'rail';
-		E.deploy.setAttribute('aria-pressed', S.deployed ? 'true' : 'false'); E.deployState.textContent = S.deployed ? 'Deployed' : 'Retracted';
-		if (f.id === 'pd') { label = 'Launch incoming rockets'; hint = 'Press the button, or Space or Enter while the range has focus. Three hostile rockets come in and point defence shoots them down by itself.'; }
-		else if (auto && S.posture === 'HOLD') { label = 'Test AUTO (holds)'; hint = 'WEAPONS HOLD: the AUTO mount tracks the target and does not fire. Choose DEFEND or FREE to see it shoot.'; }
-		else if (auto && S.posture === 'DEFEND') { label = 'Provoke target'; hint = 'RETURN FIRE ONLY: the target fires at the mount, then the AUTO mount returns fire.'; }
-		else if (auto) { label = 'Run AUTO'; hint = 'WEAPONS FREE: the AUTO mount engages the target by itself for a few seconds.'; }
-		else if (f.id === 'rail') { label = 'FIRE (hold to charge)'; hint = 'Hold to charge and release at 50 % or more to fire, or use Charge and fire: no holding needed. Space or Enter works on the focused range.'; }
-		else if (f.id === 'rocket') { label = 'FIRE'; hint = 'The lock ring fills, then a volley of ' + VOLLEY + ' rockets launches in turn. One press does the whole volley.'; }
-		else if (f.id === 'gun') { label = 'FIRE'; hint = 'The barrels spin up to full rate. Hold to keep firing; one press gives a burst.'; }
-		else hint = 'Press FIRE, or Space or Enter while the range has focus. Holding is optional: one press always fires a full burst.';
+		E.deploy.setAttribute('aria-pressed', S.deployed ? 'true' : 'false'); E.deployState.textContent = S.deployed ? ORION.t('weapons.deployed', 'Deployed') : ORION.t('weapons.retracted', 'Retracted');
+		if (f.id === 'pd') { label = ORION.t('weapons.launchIncoming', 'Launch incoming rockets'); hint = ORION.t('weapons.hintPd', 'Press the button, or Space or Enter while the range has focus. Three hostile rockets come in and point defence shoots them down by itself.'); }
+		else if (auto && S.posture === 'HOLD') { label = ORION.t('weapons.testAuto', 'Test AUTO (holds)'); hint = ORION.t('weapons.hintHold', 'WEAPONS HOLD: the AUTO mount tracks the target and does not fire. Choose DEFEND or FREE to see it shoot.'); }
+		else if (auto && S.posture === 'DEFEND') { label = ORION.t('weapons.provoke', 'Provoke target'); hint = ORION.t('weapons.hintDefend', 'RETURN FIRE ONLY: the target fires at the mount, then the AUTO mount returns fire.'); }
+		else if (auto) { label = ORION.t('weapons.runAuto', 'Run AUTO'); hint = ORION.t('weapons.hintFree', 'WEAPONS FREE: the AUTO mount engages the target by itself for a few seconds.'); }
+		else if (f.id === 'rail') { label = ORION.t('weapons.fireHold', 'FIRE (hold to charge)'); hint = ORION.t('weapons.hintRail', 'Hold to charge and release at 50 % or more to fire, or use Charge and fire: no holding needed. Space or Enter works on the focused range.'); }
+		else if (f.id === 'rocket') { label = ORION.t('weapons.fire', 'FIRE'); hint = ORION.t('weapons.hintRocket', 'The lock ring fills, then a volley of {n} rockets launches in turn. One press does the whole volley.', { n: VOLLEY }); }
+		else if (f.id === 'gun') { label = ORION.t('weapons.fire', 'FIRE'); hint = ORION.t('weapons.hintGun', 'The barrels spin up to full rate. Hold to keep firing; one press gives a burst.'); }
+		else hint = ORION.t('weapons.hintDefault', 'Press FIRE, or Space or Enter while the range has focus. Holding is optional: one press always fires a full burst.');
 		E.fire.textContent = label; E.hint.textContent = hint;
 		E.fire.disabled = false;
 	}
+	function rangeLabel() { return ORION.t('weapons.rangeLabel', 'Firing range: {variant}, mount at the left, training buoy at the right', { variant: lc(vName(curVar())) }); }
+	function rangeCaption() {
+		return ORION.t('weapons.captionFull', 'Time and distance are compressed for display. Numbers are the game\'s own. {target} Mount and effects: illustration made for this site (procedural).', { target: S.model ? ORION.t('weapons.targetModel', 'Target: {model}.', { model: ORION.ui.modelCaption('buoy') }) : ORION.t('weapons.targetStandIn', 'Target: a stand-in shape (the buoy model did not load).') });
+	}
 	function renderAll() {
 		syncTabs(); renderVariants(); renderShip(); renderMode(); renderPosture(); renderTable(); renderMounted(); renderFacts(); renderCapture(); updateControls();
-		if (VIEWER) { var key = ORION.media('feature.weapon.' + S.fam) ? 'feature.weapon.' + S.fam : 'poster.weapons'; VIEWER.setPoster(key); VIEWER.setLabel('Firing range: ' + curVar().name.toLowerCase() + ', mount at the left, training buoy at the right'); }
+		if (VIEWER) { var key = ORION.media('feature.weapon.' + S.fam) ? 'feature.weapon.' + S.fam : 'poster.weapons'; VIEWER.setPoster(key); VIEWER.setLabel(rangeLabel()); }
 	}
 	function onWeaponChanged(reason) {
 		resetCounters(); meterLast = ''; setMeter('READY', 0, ''); setDial(null);
 		if (R) R.setWeapon();
-		setStatus('Ready: ' + curVar().name + '.', false); refreshReadout(true);
+		setStatus(ORION.t('weapons.readyVariant', 'Ready: {variant}.', { variant: vName(curVar()) }), false); refreshReadout(true);
 		if (reason) speak(reason);
 	}
 
@@ -428,35 +455,35 @@
 		function isRunning() { return !!seq; }
 		function endSeq(msg) { seq = null; if (gunGlow) gunGlow.visible = false; setDial(null); setMeter('READY', 0, ''); if (msg) setStatus(msg, false); E.stop.hidden = true; E.fire.classList.remove('is-held'); lockRing.set(0); chargeRing.set(0); updateRunUi(); }
 		function updateRunUi() { E.stop.hidden = !seq; }
-		function stopAll(msg) { if (seq) { var s = seq; seq = null; if (s.fam === 'pd') { pdRockets.forEach(function (r) { r.kill(true); }); pdRockets = []; } } endSeq(msg || 'Stopped.'); }
+		function stopAll(msg) { if (seq) { var s = seq; seq = null; if (s.fam === 'pd') { pdRockets.forEach(function (r) { r.kill(true); }); pdRockets = []; } } endSeq(msg || ORION.t('weapons.stopped', 'Stopped.')); }
 
 		function autoParams() { var m = curModes(); return S.mode === 'auto' && m.auto; }
 		function press(src) {
-			if (!S.deployed) { setStatus('The mount is retracted. Deploy it to fire.', true); return; }
+			if (!S.deployed) { setStatus(ORION.t('weapons.retractedFire', 'The mount is retracted. Deploy it to fire.'), true); return; }
 			if (reduced()) { stillFrame(); return; }
 			clearStill();
 			var f = S.fam, auto = autoParams() && f !== 'pd';
-			if (seq) { if (seq.fam === f && f !== 'rocket' && f !== 'pd' && f !== 'rail') { seq.held = src !== 'click'; if (src === 'click') seq.until = Math.max(seq.until || 0, clock + 900); } else setStatus('Already running. Press Stop to cancel.', false); return; }
+			if (seq) { if (seq.fam === f && f !== 'rocket' && f !== 'pd' && f !== 'rail') { seq.held = src !== 'click'; if (src === 'click') seq.until = Math.max(seq.until || 0, clock + 900); } else setStatus(ORION.t('weapons.alreadyRunning', 'Already running. Press Stop to cancel.'), false); return; }
 			var st = P();
-			if (auto && S.posture === 'HOLD') { setStatus('WEAPONS HOLD: the AUTO mount tracks the target and holds fire.', true); return; }
+			if (auto && S.posture === 'HOLD') { setStatus(ORION.t('weapons.statusHold', 'WEAPONS HOLD: the AUTO mount tracks the target and holds fire.'), true); return; }
 			var s = seq = { fam: f, t: 0, held: src === 'pointer' || src === 'key', src: src, until: 0, auto: auto };
-			if (auto) { if (S.posture === 'DEFEND') { setStatus('The target fires at the mount. Returning fire.', true); hostileShot(); s.until = clock + 3500; } else { s.until = clock + 4000; setStatus('AUTO, WEAPONS FREE: engaging the target.', true); } s.held = false; }
+			if (auto) { if (S.posture === 'DEFEND') { setStatus(ORION.t('weapons.statusDefend', 'The target fires at the mount. Returning fire.'), true); hostileShot(); s.until = clock + 3500; } else { s.until = clock + 4000; setStatus(ORION.t('weapons.statusFree', 'AUTO, WEAPONS FREE: engaging the target.'), true); } s.held = false; }
 			else if (src === 'click' && (f === 'laser' || f === 'gun')) s.until = clock + (f === 'gun' ? 1800 : 1300);
-			if (f === 'laser') { s.next = clock; if (!st.refireMs) { stopAll('This laser has no refire value in the data.'); return; } if (!auto) setStatus('Firing ' + (SHIPNAME[S.ship] || '') + ' ' + curVar().name.toLowerCase() + '.', false); }
-			else if (f === 'gun') { s.acc = 0; belt = 0; setStatus('Spinning up.', false); }
-			else if (f === 'rocket') { s.phase = 'lock'; s.p = 0; s.sent = 0; s.next = 0; s.alive = 0; s.t0 = clock; setStatus('Acquiring lock.', true); }
-			else if (f === 'rail') { s.phase = 'charge'; s.p = 0; s.fireOnFull = src === 'click' || src === 'chargefire'; s.held = src === 'pointer' || src === 'key'; setStatus('Charging.', false); }
-			else if (f === 'pd') { belt = 0; s.phase = 'run'; s.sent = 0; s.next = 0; s.done = 0; setStatus('Hostile rockets incoming.', true); }
+			if (f === 'laser') { s.next = clock; if (!st.refireMs) { stopAll(ORION.t('weapons.noRefire', 'This laser has no refire value in the data.')); return; } if (!auto) setStatus(ORION.t('weapons.firing', 'Firing {ship} {variant}.', { ship: SHIPNAME[S.ship] || '', variant: lc(vName(curVar())) }), false); }
+			else if (f === 'gun') { s.acc = 0; belt = 0; setStatus(ORION.t('weapons.spinningUp', 'Spinning up.'), false); }
+			else if (f === 'rocket') { s.phase = 'lock'; s.p = 0; s.sent = 0; s.next = 0; s.alive = 0; s.t0 = clock; setStatus(ORION.t('weapons.acquiring', 'Acquiring lock.'), true); }
+			else if (f === 'rail') { s.phase = 'charge'; s.p = 0; s.fireOnFull = src === 'click' || src === 'chargefire'; s.held = src === 'pointer' || src === 'key'; setStatus(ORION.t('weapons.charging', 'Charging.'), false); }
+			else if (f === 'pd') { belt = 0; s.phase = 'run'; s.sent = 0; s.next = 0; s.done = 0; setStatus(ORION.t('weapons.hostileIncoming', 'Hostile rockets incoming.'), true); }
 			E.stop.hidden = false; E.fire.classList.toggle('is-held', !!s.held);
 		}
 		function release() {
 			E.fire.classList.remove('is-held');
 			if (!seq) return; seq.held = false;
 			if (seq.fam === 'rail' && seq.phase === 'charge' && !seq.fireOnFull) {
-				if (seq.p >= 0.5) fireRail(); else { var tx = 'Released at ' + Math.round(seq.p * 100) + ' %, below 50 %: cancelled. Hold longer, or use Charge and fire.'; endSeq(tx); speak(tx); }
+				if (seq.p >= 0.5) fireRail(); else { var tx = ORION.t('weapons.releasedEarly', 'Released at {percent} %, below 50 %: cancelled. Hold longer, or use Charge and fire.', { percent: Math.round(seq.p * 100) }); endSeq(tx); speak(tx); }
 			}
 		}
-		function chargeFire() { if (!S.deployed) { setStatus('The mount is retracted. Deploy it to fire.', true); return; } if (reduced()) { stillFrame(); return; } if (seq) { setStatus('Already running. Press Stop to cancel.', false); return; } clearStill(); press('chargefire'); }
+		function chargeFire() { if (!S.deployed) { setStatus(ORION.t('weapons.retractedFire', 'The mount is retracted. Deploy it to fire.'), true); return; } if (reduced()) { stillFrame(); return; } if (seq) { setStatus(ORION.t('weapons.alreadyRunning', 'Already running. Press Stop to cancel.'), false); return; } clearStill(); press('chargefire'); }
 
 		function hostileShot() {
 			var from = new T.Vector3(TARGET_X - 3, target.position.y + 1, target.position.z), to = muzzleWorld(0, new T.Vector3());
@@ -464,8 +491,8 @@
 		}
 		/* laser */
 		function stepLaser(dt) {
-			var st = P(), s = seq, firing = s.held || clock < s.until; if (!firing) { endSeq('Ready.'); return; }
-			setMeter('FIRING', 1, st.refireMs ? (1000 / st.refireMs).toFixed(1) + ' shots/s' : '');
+			var st = P(), s = seq, firing = s.held || clock < s.until; if (!firing) { endSeq(ORION.t('weapons.ready', 'Ready.')); return; }
+			setMeter('FIRING', 1, st.refireMs ? ORION.t('weapons.shotsPerSecond', '{rate} shots/s', { rate: nn1(1000 / st.refireMs) }) : '');
 			while (clock >= s.next) {
 				var mi = C.shots % muzzles.length, from = muzzleWorld(mi, new T.Vector3()), to = surfacePoint(new T.Vector3()), dmg = st.damage;
 				var spd = (st.muzzleSpeedMs || 600) * K; C.shots++;
@@ -495,13 +522,13 @@
 		}
 		function stepGun(dt) {
 			var st = P(), s = seq, firing = (s.held || clock < s.until) && (!st.belt || belt < st.belt);
-			if (st.belt && belt >= st.belt && !s.reloading) { s.reloading = true; s.reloadAt = clock + RELOAD_DISPLAY_MS; setStatus('Belt empty. Reload is ' + ms(st.reloadMs || 0) + ' in the game; the lab reloads in ' + ms(RELOAD_DISPLAY_MS) + '.', true); }
+			if (st.belt && belt >= st.belt && !s.reloading) { s.reloading = true; s.reloadAt = clock + RELOAD_DISPLAY_MS; setStatus(ORION.t('weapons.beltEmpty', 'Belt empty. Reload is {game} in the game; the lab reloads in {lab}.', { game: ms(st.reloadMs || 0), lab: ms(RELOAD_DISPLAY_MS) }), true); }
 			if (s.reloading) { setMeter('RELOADING', 1 - (s.reloadAt - clock) / RELOAD_DISPLAY_MS, '', true); if (clock >= s.reloadAt) { belt = 0; s.reloading = false; s.until = 0; s.held = false; } }
 			var sp = gunStep(dt, firing && !s.reloading, function () { return surfacePoint(new T.Vector3()); }, function (p) { spriteFx(COLORS.gun, 1.1, 0.3, 280, 0.4, p); });
-			if (firing && sp >= 1 && !s.said) { s.said = true; setStatus('Full spin: ' + (st.rpm ? nn(st.rpm) + ' rpm' : '') + '.', false); }
+			if (firing && sp >= 1 && !s.said) { s.said = true; setStatus(ORION.t('weapons.fullSpin', 'Full spin: {rpm}.', { rpm: st.rpm ? nn(st.rpm) + ' rpm' : '' }), false); }
 			if (!s.reloading) setMeter('SPIN', sp, Math.round(sp * 100) + ' %' + (st.rpm ? ', ' + nn(Math.round(st.rpm * sp)) + ' rpm' : ''));
 			gunGlow.visible = firing && sp > 0.3 && !s.reloading; if (gunGlow.visible) { muzzleWorld(0, gunGlow.position); gunGlow.material.opacity = 0.45 * sp; }
-			if (!firing && sp <= 0 && !s.reloading) endSeq('Ready.');
+			if (!firing && sp <= 0 && !s.reloading) endSeq(ORION.t('weapons.ready', 'Ready.'));
 		}
 		/* rockets */
 		function launchRocket(i, guided) {
@@ -518,16 +545,16 @@
 			if (s.phase === 'lock') {
 				s.p = Math.min(1, (clock - s.t0) / (st.lockMs || 1500)); lockRing.set(s.p);
 				lockRing.line.material.color.setHex(s.p >= 1 ? 0xffffff : COLORS.rocket);
-				setMeter('LOCK', s.p, Math.round(s.p * 100) + ' % of ' + ms(st.lockMs || 0));
-				if (s.p >= 1) { s.phase = 'launch'; s.next = clock; setStatus('Locked. Launching a volley of ' + VOLLEY + '.', true); }
+				setMeter('LOCK', s.p, ORION.t('weapons.lockValue', '{percent} % of {time}', { percent: Math.round(s.p * 100), time: ms(st.lockMs || 0) }));
+				if (s.p >= 1) { s.phase = 'launch'; s.next = clock; setStatus(ORION.t('weapons.locked', 'Locked. Launching a volley of {n}.', { n: VOLLEY }), true); }
 			} else if (s.phase === 'launch') {
-				setMeter('VOLLEY', s.sent / VOLLEY, s.sent + ' of ' + VOLLEY);
+				setMeter('VOLLEY', s.sent / VOLLEY, ORION.t('weapons.volleyValue', '{sent} of {total}', { sent: s.sent, total: VOLLEY }));
 				while (s.sent < VOLLEY && clock >= s.next) { launchRocket(s.sent, true); s.sent++; s.next += st.refireMs || 500; }
 				if (s.sent >= VOLLEY) { s.phase = 'flight'; C.volleys++; }
 			} else if (s.phase === 'flight') {
-				setMeter('IN FLIGHT', 1, s.alive + ' rockets'); if (s.alive <= 0) { s.phase = 'reload'; s.rt = clock + RELOAD_DISPLAY_MS; lockRing.set(0); setStatus('Volley done. Reload is ' + ms(st.reloadMs || 0) + ' in the game; the lab reloads in ' + ms(RELOAD_DISPLAY_MS) + '.', true); }
+				setMeter('IN FLIGHT', 1, ORION.t('weapons.val.rockets', { one: '{value} rocket', other: '{value} rockets' }, { n: s.alive, value: s.alive })); if (s.alive <= 0) { s.phase = 'reload'; s.rt = clock + RELOAD_DISPLAY_MS; lockRing.set(0); setStatus(ORION.t('weapons.volleyDone', 'Volley done. Reload is {game} in the game; the lab reloads in {lab}.', { game: ms(st.reloadMs || 0), lab: ms(RELOAD_DISPLAY_MS) }), true); }
 			} else if (s.phase === 'reload') {
-				setMeter('RELOADING', 1 - (s.rt - clock) / RELOAD_DISPLAY_MS, '', true); if (clock >= s.rt) endSeq('Ready.');
+				setMeter('RELOADING', 1 - (s.rt - clock) / RELOAD_DISPLAY_MS, '', true); if (clock >= s.rt) endSeq(ORION.t('weapons.ready', 'Ready.'));
 			}
 		}
 		/* rails */
@@ -545,19 +572,19 @@
 				var k = (t - travel) / 1200; if (k >= 1) return false; if (k > 0) { mesh.material.opacity = 0.55 * (1 - k); core.material.opacity = (bright ? 1 : 0.4) * (1 - k) * (1 - k); } return true;
 			}, dispose: function () { removeObj(mesh); removeObj(core); mesh.material.dispose(); core.material.dispose(); } });
 			flash(from, 3.2, COLORS.rail, 300);
-			var m = 'Slug away: ' + nn(st.damage || 0) + ' damage. Game cooldown ' + ms(st.cooldownMs || 0) + '; the lab lets you fire again in ' + ms(COOL_DISPLAY_MS) + '.'; setStatus(m, true);
+			var m = ORION.t('weapons.slugAway', 'Slug away: {damage} damage. Game cooldown {game}; the lab lets you fire again in {lab}.', { damage: nn(st.damage || 0), game: ms(st.cooldownMs || 0), lab: ms(COOL_DISPLAY_MS) }); setStatus(m, true);
 		}
 		function stepRail(dt) {
 			var st = P(), s = seq, charge = st.chargeMs || 2000;
 			if (s.phase === 'charge') {
 				s.p = Math.min(1, s.p + dt / charge); chargeRing.set(s.p); muzzleWorld(0, chargeRing.line.position);
-				setMeter('CHARGE', s.p, Math.round(s.p * 100) + ' %' + (s.p >= 0.5 ? ', can fire' : ', hold to 50 %'));
-				if (s.p >= 1) { if (s.fireOnFull) fireRail(); else { s.phase = 'full'; s.fullAt = clock; setStatus('Fully charged. Release to fire; it discharges by itself after ' + ms(RAIL_HOLD_MS) + '.', true); } }
+				setMeter('CHARGE', s.p, s.p >= 0.5 ? ORION.t('weapons.chargeCan', '{percent} %, can fire', { percent: Math.round(s.p * 100) }) : ORION.t('weapons.chargeHold', '{percent} %, hold to 50 %', { percent: Math.round(s.p * 100) }));
+				if (s.p >= 1) { if (s.fireOnFull) fireRail(); else { s.phase = 'full'; s.fullAt = clock; setStatus(ORION.t('weapons.fullyCharged', 'Fully charged. Release to fire; it discharges by itself after {time}.', { time: ms(RAIL_HOLD_MS) }), true); } }
 			} else if (s.phase === 'full') {
-				setMeter('FULL', 1, 'auto discharge in ' + ((RAIL_HOLD_MS - (clock - s.fullAt)) / 1000).toFixed(1) + ' s'); muzzleWorld(0, chargeRing.line.position);
+				setMeter('FULL', 1, ORION.t('weapons.autoDischarge', 'auto discharge in {time} s', { time: nn1((RAIL_HOLD_MS - (clock - s.fullAt)) / 1000) })); muzzleWorld(0, chargeRing.line.position);
 				if (!s.held || clock - s.fullAt >= RAIL_HOLD_MS) fireRail();
 			} else if (s.phase === 'cool') {
-				var k = (clock - s.cool) / COOL_DISPLAY_MS; setMeter('COOLDOWN', 1 - k, 'game: ' + ms(st.cooldownMs || 0), true); if (k >= 1) endSeq('Ready.');
+				var k = (clock - s.cool) / COOL_DISPLAY_MS; setMeter('COOLDOWN', 1 - k, ORION.t('weapons.gameCooldown', 'game: {time}', { time: ms(st.cooldownMs || 0) }), true); if (k >= 1) endSeq(ORION.t('weapons.ready', 'Ready.'));
 			}
 		}
 		/* point defence */
@@ -566,7 +593,7 @@
 			if (s.sent < 3 && clock >= s.next) {
 				var from = new T.Vector3(TARGET_X - 3, target.position.y + (s.sent - 1) * 2.2, target.position.z + (s.sent - 1) * 2), idx = s.sent;
 				var rk = spawnRocket({ from: from, dirInit: new T.Vector3(-1, 0.25 * (idx - 1), 0.2 * (idx - 1)), speedU: spd, turnRad: 3, color: COLORS.hostile, deathRadius: 2.4, reach: 3, life: 9000,
-					aim: function (o) { return muzzleWorld(0, o); }, onExplode: function (p) { s.done++; explosion(p, 4, COLORS.hostile); setStatus('A rocket reached the mount.', true); } });
+					aim: function (o) { return muzzleWorld(0, o); }, onExplode: function (p) { s.done++; explosion(p, 4, COLORS.hostile); setStatus(ORION.t('weapons.rocketReached', 'A rocket reached the mount.'), true); } });
 				pdRockets.push(rk); addFx(rk); C.shots++; s.sent++; s.next = clock + 1700;
 			}
 			var alive = pdRockets.filter(function (r) { return r.alive; });
@@ -574,20 +601,20 @@
 			alive.forEach(function (r) { var d = r.pos.distanceTo(mpos); if (d < rangeU && d < best) { best = d; tgt = r; } });
 			var firing = !!tgt;
 			if (isLaser) {
-				setMeter('ENGAGING', alive.length ? 1 : 0, alive.length + ' incoming');
+				setMeter('ENGAGING', alive.length ? 1 : 0, ORION.t('weapons.incomingValue', '{n} incoming', { n: alive.length }));
 				if (!s.nextShot) s.nextShot = clock;
 				if (tgt && clock >= s.nextShot) {
 					s.nextShot = clock + (st.refireMs || 120);
 					var ft = best / ((st.muzzleSpeedMs || 1200) * K), lead = tgt.pos.clone().addScaledVector(tgt.vel, tgt.spec.speedU * ft), burst = st.burst || 3, targetRk = tgt;
 					spawnBolt(muzzleWorld(C.shots % muzzles.length, new T.Vector3()), lead, (st.muzzleSpeedMs || 1200) * K, COLORS.pd, 2, 0.15, function (p) {
-						if (!targetRk.alive) return; if (targetRk.pos.distanceTo(p) < 3.6) { targetRk.hits++; spriteFx(COLORS.pd, 1.2, 0.5, 260, 0.5, p); if (targetRk.hits >= burst) { targetRk.kill(); C.intercepts++; s.done++; speak('Rocket destroyed.'); } } });
+						if (!targetRk.alive) return; if (targetRk.pos.distanceTo(p) < 3.6) { targetRk.hits++; spriteFx(COLORS.pd, 1.2, 0.5, 260, 0.5, p); if (targetRk.hits >= burst) { targetRk.kill(); C.intercepts++; s.done++; speak(ORION.t('weapons.rocketDestroyed', 'Rocket destroyed.')); } } });
 				}
 			} else {
 				var sp = gunStep(dt, alive.length > 0, function () { return tgt ? tgt.pos.clone() : mpos.clone().add(new T.Vector3(10, 0, 0)); }, null, firing);
-				setMeter('SPIN', sp, Math.round(sp * 100) + ' %, ' + alive.length + ' incoming');
-				if (tgt && sp > 0.5 && clock - (s.lastHit || 0) > 130) { s.lastHit = clock; tgt.hits++; spriteFx(COLORS.pd, 1.1, 0.4, 240, 0.5, tgt.pos); if (tgt.hits >= 6) { tgt.kill(); C.intercepts++; s.done++; speak('Rocket destroyed.'); } }
+				setMeter('SPIN', sp, ORION.t('weapons.spinIncoming', '{percent} %, {n} incoming', { percent: Math.round(sp * 100), n: alive.length }));
+				if (tgt && sp > 0.5 && clock - (s.lastHit || 0) > 130) { s.lastHit = clock; tgt.hits++; spriteFx(COLORS.pd, 1.1, 0.4, 240, 0.5, tgt.pos); if (tgt.hits >= 6) { tgt.kill(); C.intercepts++; s.done++; speak(ORION.t('weapons.rocketDestroyed', 'Rocket destroyed.')); } }
 			}
-			if (s.sent >= 3 && !alive.length) { if (s.fin == null) s.fin = clock; if (clock - s.fin > 600 && (isLaser || spin <= 0.02)) { var tx = 'Done: ' + C.intercepts + ' of 3 rockets shot down.'; pdRockets = []; endSeq(tx); speak(tx); } }
+			if (s.sent >= 3 && !alive.length) { if (s.fin == null) s.fin = clock; if (clock - s.fin > 600 && (isLaser || spin <= 0.02)) { var tx = ORION.t('weapons.pdDone', 'Done: {n} of 3 rockets shot down.', { n: C.intercepts }); pdRockets = []; endSeq(tx); speak(tx); } }
 		}
 
 		/* ---- still frame for reduced motion: one effect frame, no animation ---- */
@@ -599,11 +626,11 @@
 			var f = S.fam, st = P(), from = muzzleWorld(0, new T.Vector3()), to = aimPoint(new T.Vector3()), txt = '';
 			function glow(p, size, color, op) { var g = kit.glowSprite(color, size, op); g.position.copy(p); scene.add(g); keep({ dispose: function () { removeObj(g); g.material.dispose(); } }); }
 			glow(from, 2.4, COLORS[f] || 0xffffff, 0.6); glow(to, 3.4, COLORS[f] || 0xffffff, 0.45);
-			if (f === 'laser') { [0.3, 0.55, 0.8].forEach(function (k) { stillBolt(COLORS.laser, 1.9 * sizeS, 0.2, from, to, k); }); txt = 'Still frame: laser bolts every ' + ms(st.refireMs || 0) + ', ' + nn(st.damage || 0) + ' damage each, ' + nn(st.muzzleSpeedMs || 0) + ' m/s.'; }
-			else if (f === 'rocket') { lockRing.set(1); lockRing.line.material.color.setHex(0xffffff); for (var i = 0; i < 6; i++) { var rm = makeRocketMesh(COLORS.rocket), k = (i + 1) / 7, p = from.clone().lerp(to, k); p.y += Math.sin(k * Math.PI) * 6; rm.g.position.copy(p); keep(rm); } txt = 'Still frame: lock complete (' + ms(st.lockMs || 0) + '), volley of ' + VOLLEY + ' rockets, ' + nn(st.damage || 0) + ' damage each, splash ' + nn(st.splashRadiusM || 0) + ' m.'; }
-			else if (f === 'rail') { var b = new T.Mesh(geos.box, mat(COLORS.rail, 0.55).clone()), d = from.distanceTo(to); b.scale.set(d, 0.7, 0.7); b.position.copy(from).lerp(to, 0.5); b.quaternion.setFromUnitVectors(X, to.clone().sub(from).normalize()); scene.add(b); keep({ dispose: function () { removeObj(b); b.material.dispose(); } }); chargeRing.set(1); chargeRing.line.position.copy(from); txt = 'Still frame: slug after a ' + ms(st.chargeMs || 0) + ' charge, ' + nn(st.damage || 0) + ' damage, ' + nn(st.muzzleSpeedMs || 0) + ' m/s.'; }
-			else if (f === 'gun') { for (var j = 1; j <= 8; j++) stillBolt(COLORS.gun, 1.6, 0.11, from, to, j / 9); txt = 'Still frame: tracers at ' + nn(st.rpm || 0) + ' rpm after ' + ms(st.spinUpMs || 0) + ' of spin-up.'; }
-			else { var rr = makeRocketMesh(COLORS.hostile); rr.g.position.copy(from).lerp(to, 0.45); keep(rr); stillBolt(COLORS.pd, 2, 0.15, from, rr.g.position, 0.9); glow(rr.g.position, 3.6, 0xffe2b0, 0.5); txt = 'Still frame: point defence shooting down a hostile rocket within ' + ORION.ui.fmt.len(st.rangeM || 0) + '.'; }
+			if (f === 'laser') { [0.3, 0.55, 0.8].forEach(function (k) { stillBolt(COLORS.laser, 1.9 * sizeS, 0.2, from, to, k); }); txt = ORION.t('weapons.stillLaser', 'Still frame: laser bolts every {time}, {damage} damage each, {speed} m/s.', { time: ms(st.refireMs || 0), damage: nn(st.damage || 0), speed: nn(st.muzzleSpeedMs || 0) }); }
+			else if (f === 'rocket') { lockRing.set(1); lockRing.line.material.color.setHex(0xffffff); for (var i = 0; i < 6; i++) { var rm = makeRocketMesh(COLORS.rocket), k = (i + 1) / 7, p = from.clone().lerp(to, k); p.y += Math.sin(k * Math.PI) * 6; rm.g.position.copy(p); keep(rm); } txt = ORION.t('weapons.stillRocket', 'Still frame: lock complete ({lock}), volley of {n} rockets, {damage} damage each, splash {splash} m.', { lock: ms(st.lockMs || 0), n: VOLLEY, damage: nn(st.damage || 0), splash: nn(st.splashRadiusM || 0) }); }
+			else if (f === 'rail') { var b = new T.Mesh(geos.box, mat(COLORS.rail, 0.55).clone()), d = from.distanceTo(to); b.scale.set(d, 0.7, 0.7); b.position.copy(from).lerp(to, 0.5); b.quaternion.setFromUnitVectors(X, to.clone().sub(from).normalize()); scene.add(b); keep({ dispose: function () { removeObj(b); b.material.dispose(); } }); chargeRing.set(1); chargeRing.line.position.copy(from); txt = ORION.t('weapons.stillRail', 'Still frame: slug after a {time} charge, {damage} damage, {speed} m/s.', { time: ms(st.chargeMs || 0), damage: nn(st.damage || 0), speed: nn(st.muzzleSpeedMs || 0) }); }
+			else if (f === 'gun') { for (var j = 1; j <= 8; j++) stillBolt(COLORS.gun, 1.6, 0.11, from, to, j / 9); txt = ORION.t('weapons.stillGun', 'Still frame: tracers at {rpm} rpm after {time} of spin-up.', { rpm: nn(st.rpm || 0), time: ms(st.spinUpMs || 0) }); }
+			else { var rr = makeRocketMesh(COLORS.hostile); rr.g.position.copy(from).lerp(to, 0.45); keep(rr); stillBolt(COLORS.pd, 2, 0.15, from, rr.g.position, 0.9); glow(rr.g.position, 3.6, 0xffe2b0, 0.5); txt = ORION.t('weapons.stillPd', 'Still frame: point defence shooting down a hostile rocket within {range}.', { range: ORION.ui.fmt.len(st.rangeM || 0) }); }
 			setStatus(txt, true); setMeter('STILL', 1, ''); ctx.requestRender();
 		}
 
@@ -621,7 +648,7 @@
 			var tgtK = S.deployed ? 1 : 0; if (full) deployK += (tgtK - deployK) * Math.min(1, dt / 90); else deployK = tgtK;
 			mount.scale.setScalar(Math.max(deployK, 0.001)); mount.visible = deployK > 0.02;
 			if (recoil > 0) { recoil = Math.max(0, recoil - dt / 500); mountInner.position.x = -recoil * 0.9 * sizeS; } else mountInner.position.x = 0;
-			if (seq && !full) { stopAll('Motion is off or paused: fire shows one still frame.'); }
+			if (seq && !full) { stopAll(ORION.t('weapons.motionOff', 'Motion is off or paused: fire shows one still frame.')); }
 			if (seq) {
 				animating = true;
 				switch (seq.fam) { case 'laser': stepLaser(dt); break; case 'gun': stepGun(dt); break; case 'rocket': stepRocket(dt); break; case 'rail': stepRail(dt); break; case 'pd': stepPd(dt); break; }
@@ -638,8 +665,8 @@
 		}
 		buildMount(); layoutCamera();
 		return {
-			update: update, dispose: dispose, step: step, press: press, release: release, chargeFire: chargeFire, stop: function () { stopAll('Stopped.'); }, still: stillFrame,
-			setWeapon: function () { stopAll(''); clearStill(); fxList.forEach(function (o) { o.dispose && o.dispose(); }); fxList = []; belt = 0; spin = 0; spinAcc = 0; pdRockets = []; buildMount(); setStatus('Ready: ' + curVar().name + '.', false); ctx.requestRender(); },
+			update: update, dispose: dispose, step: step, press: press, release: release, chargeFire: chargeFire, stop: function () { stopAll(ORION.t('weapons.stopped', 'Stopped.')); }, still: stillFrame,
+			setWeapon: function () { stopAll(''); clearStill(); fxList.forEach(function (o) { o.dispose && o.dispose(); }); fxList = []; belt = 0; spin = 0; spinAcc = 0; pdRockets = []; buildMount(); setStatus(ORION.t('weapons.readyVariant', 'Ready: {variant}.', { variant: vName(curVar()) }), false); ctx.requestRender(); },
 			beltUsed: beltUsed, running: isRunning, clock: function () { return clock; }, maxFlashWindow: maxFlashWindow, flashCount: function () { return flashDrawn.length; },
 			snapshot: function () { return { seq: seq ? seq.fam + ':' + (seq.phase || '') : null, fx: fxList.length, mountVisible: mount.visible, deployK: deployK }; },
 			counters: C
@@ -674,17 +701,17 @@
 		function selectFamily(id, focus) {
 			if (id === S.fam) { if (focus) $('#weapons-tab-' + id).focus(); return; }
 			var f = famById(id); if (!f) return; S.fam = id; S.variant = f.variants[0].id; S.ship = shipsFor(f.variants[0])[0] || S.ship;
-			S.mode = 'manual'; renderAll(); onWeaponChanged(f.name + ' selected.'); if (focus) $('#weapons-tab-' + id).focus();
+			S.mode = 'manual'; renderAll(); onWeaponChanged(ORION.t('weapons.selected', '{name} selected.', { name: ORION.i18n.d(f.name) })); if (focus) $('#weapons-tab-' + id).focus();
 		}
 		E.variants.addEventListener('click', function (e) {
 			var b = e.target.closest('[data-variant]'); if (!b || b.dataset.variant === S.variant) return;
 			var prevShip = S.ship; S.variant = b.dataset.variant; var ids = shipsFor(curVar()); if (ids.indexOf(prevShip) < 0) S.ship = ids[0] || null; S.mode = 'manual';
-			renderAll(); onWeaponChanged(curVar().name + ' selected.'); var nb = $('[data-variant="' + S.variant + '"]', E.variants); if (nb) nb.focus();
+			renderAll(); onWeaponChanged(ORION.t('weapons.selected', '{name} selected.', { name: vName(curVar()) })); var nb = $('[data-variant="' + S.variant + '"]', E.variants); if (nb) nb.focus();
 		});
-		E.ship.addEventListener('change', function () { S.ship = E.ship.value; renderTable(); onWeaponChanged('Mounted as on ' + (SHIPNAME[S.ship] || S.ship) + '.'); });
+		E.ship.addEventListener('change', function () { S.ship = E.ship.value; renderTable(); onWeaponChanged(ORION.t('weapons.mountedAs', 'Mounted as on {ship}.', { ship: SHIPNAME[S.ship] || S.ship })); });
 		E.mode.addEventListener('click', function (e) {
 			var b = e.target.closest('[data-mode]'); if (!b) return; S.mode = b.dataset.mode; renderMode(); renderPosture(); updateControls();
-			var nb = $('[data-mode="' + S.mode + '"]', E.mode); if (nb) nb.focus(); onWeaponChanged(S.mode.toUpperCase() + ' selected.');
+			var nb = $('[data-mode="' + S.mode + '"]', E.mode); if (nb) nb.focus(); onWeaponChanged(ORION.t('weapons.selected', '{name} selected.', { name: S.mode.toUpperCase() }));
 		});
 		E.posture.addEventListener('click', function (e) {
 			var b = e.target.closest('[data-posture]'); if (!b) return; S.posture = b.dataset.posture; renderPosture(); updateControls();
@@ -692,7 +719,7 @@
 		});
 		E.deploy.addEventListener('click', function () {
 			S.deployed = !S.deployed; if (!S.deployed && R) R.stop(); updateControls(); if (R) R.snapshot(); if (VIEWER) VIEWER.requestRender();
-			speak(S.deployed ? 'Mount deployed.' : 'Mount retracted. Retracted weapons are hidden and do not fire.'); setStatus(S.deployed ? 'Deployed.' : 'Retracted: hidden and not firing.', false);
+			speak(S.deployed ? ORION.t('weapons.mountDeployed', 'Mount deployed.') : ORION.t('weapons.mountRetracted', 'Mount retracted. Retracted weapons are hidden and do not fire.')); setStatus(S.deployed ? ORION.t('weapons.deployedDot', 'Deployed.') : ORION.t('weapons.retractedHidden', 'Retracted: hidden and not firing.'), false);
 		});
 		E.mounted.addEventListener('click', function (e) { var a = e.target.closest('a[data-ship]'); if (a) ORION.bus.emit('ship:select', { id: a.dataset.ship, from: 'weapons' }); });
 		ORION.bus.on('ship:select', function (p) { if (!p || p.from === 'weapons') return; if (shipsFor(curVar()).indexOf(p.id) >= 0 && S.ship !== p.id) { S.ship = p.id; renderShip(); renderTable(); } });
@@ -700,28 +727,28 @@
 
 		/* fire controls: hold is optional; a click from assistive tech is a full burst */
 		var suppressClickUntil = 0;
-		function press(src) { if (!R) { setStatus('The firing range needs 3D, which is not running here. The numbers below are the game\'s own.', false); return; } R.press(src); }
+		function press(src) { if (!R) { setStatus(ORION.t('weapons.needs3dNumbers', 'The firing range needs 3D, which is not running here. The numbers below are the game\'s own.'), false); return; } R.press(src); }
 		function release() { if (R) R.release(); }
 		E.fire.addEventListener('pointerdown', function (e) { if (e.button != null && e.button > 0) return; try { E.fire.setPointerCapture(e.pointerId); } catch (x) { /* ignore */ } press('pointer'); });
 		['pointerup', 'pointercancel', 'lostpointercapture'].forEach(function (ev) { E.fire.addEventListener(ev, function () { suppressClickUntil = performance.now() + 400; release(); }); });
 		E.fire.addEventListener('keydown', function (e) { if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); press('key'); } else if (e.key === ' ' || e.key === 'Enter') e.preventDefault(); });
 		E.fire.addEventListener('keyup', function (e) { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); suppressClickUntil = performance.now() + 400; release(); } });
 		E.fire.addEventListener('click', function () { if (performance.now() < suppressClickUntil) return; press('click'); setTimeout(release, 0); });
-		E.charge.addEventListener('click', function () { if (R) R.chargeFire(); else setStatus('The firing range needs 3D, which is not running here.', false); });
+		E.charge.addEventListener('click', function () { if (R) R.chargeFire(); else setStatus(ORION.t('weapons.needs3d', 'The firing range needs 3D, which is not running here.'), false); });
 		E.stop.addEventListener('click', function () { if (R) R.stop(); });
 
 		/* the viewer: non-interactive scene with its own keys (Space / Enter fire, Escape stops), click fires a burst */
 		var host = E.viewer; host.tabIndex = 0; host.setAttribute('aria-describedby', 'weapons-hint');
 		VIEWER = ORION.viewer(host, {
-			name: 'weapons', priority: 'section', label: 'Firing range', title: 'WEAPONS RANGE', posterKey: ORION.media('feature.weapon.laser') ? 'feature.weapon.laser' : 'poster.weapons', pausable: true, interactive: false, modelId: 'buoy',
+			name: 'weapons', priority: 'section', label: ORION.t('weapons.viewerLabel', 'Firing range'), title: ORION.t('weapons.viewerTitle', 'WEAPONS RANGE'), posterKey: ORION.media('feature.weapon.laser') ? 'feature.weapon.laser' : 'poster.weapons', pausable: true, interactive: false, modelId: 'buoy',
 			setup: async function (ctx) {
 				var model = null;
 				try { model = await ctx.loadModel('buoy'); } catch (e) { model = null; }
 				var ctrl = createRange(ctx, model);
-				R = ctrl; ctx.viewer.setCaption('Time and distance are compressed for display. Numbers are the game\'s own. ' + (model ? 'Target: ' + ORION.ui.modelCaption('buoy') + '. ' : 'Target: a stand-in shape (the buoy model did not load). ') + 'Mount and effects: illustration made for this site (procedural).');
-				ctx.viewer.setLabel('Firing range: ' + curVar().name.toLowerCase() + ', mount at the left, training buoy at the right');
-				setStatus('Ready: ' + curVar().name + '.', false);
-				return { update: function (dt, t) { return ctrl.update(dt * 1000, t); }, /* core.js passes seconds; the range works in ms */ dispose: function () { ctrl.dispose(); } };
+				R = ctrl; S.model = !!model; capRange = true; ctx.viewer.setCaption(rangeCaption());
+				ctx.viewer.setLabel(rangeLabel());
+				setStatus(ORION.t('weapons.readyVariant', 'Ready: {variant}.', { variant: vName(curVar()) }), false);
+								return { update: function (dt, t) { return ctrl.update(dt * 1000, t); }, /* core.js passes seconds; the range works in ms */ dispose: function () { ctrl.dispose(); } };
 			}
 		});
 		host.addEventListener('keydown', function (e) {
@@ -733,6 +760,15 @@
 		host.addEventListener('click', function (e) {
 			if (e.target.closest('.viewer__toolbar, .viewer__note, button, a')) return;
 			if (S.fam === 'rail' && R) R.chargeFire(); else { press('click'); setTimeout(release, 0); }
+		});
+
+		/* language switch (I18N.md 3.8): re-render every piece of text this section drew, keeping family, variant, ship, mode, posture and focus */
+		ORION.bus.on('lang', function () {
+			ORION.ui.keepFocus(E.tabs, function () { renderTabs(); syncTabs(); });
+			ORION.ui.keepFocus(E.panel, function () { renderAll(); });
+			meterLast = ''; setMeter.apply(null, meterArgs); refreshReadout(true);
+			if (!R || !R.running()) { var ik = idleKind; if (ik === 'variant') setStatus(ORION.t('weapons.readyVariant', 'Ready: {variant}.', { variant: vName(curVar()) }), false); else if (ik === 'ready') setStatus(ORION.t('weapons.ready', 'Ready.'), false); }
+			if (VIEWER) { VIEWER.setTexts({ label: R ? rangeLabel() : ORION.t('weapons.viewerLabel', 'Firing range'), title: ORION.t('weapons.viewerTitle', 'WEAPONS RANGE') }); if (R || capRange) VIEWER.setCaption(rangeCaption()); }
 		});
 
 		/* test and debug hooks */
@@ -768,8 +804,8 @@
 			function chk(fam, variant, stat, expect) { d.select(fam, variant); var got = cell(stat); var ok = got === expect; if (!ok) bad++; notes.push(fam + '/' + variant + '.' + stat + '=' + got + (ok ? '' : ' (want ' + expect + ')')); }
 			var rl = W_.families[1].variants[0].stats, rr = W_.families[2].variants[2].stats, gm = W_.families[3].variants[1].stats, pd = W_.families[4].variants[0].stats;
 			var f = ORION.ui.fmt;
-			chk('rocket', 'light', 'damage', f.num(rl.damage, 0)); chk('rocket', 'heavy', 'lockMs', '4 s'); chk('rail', 'heavy', 'damage', f.num(rr.damage, 0)); chk('rail', 'heavy', 'chargeMs', '4.5 s');
-			chk('gun', 'medium', 'rpm', f.num(gm.rpm, 0) + ' rpm'); chk('gun', 'medium', 'spinUpMs', '1 s'); chk('pd', 'laser_pd', 'refireMs', pd.refireMs + ' ms'); chk('pd', 'laser_pd', 'rangeM', '1.5 km');
+			chk('rocket', 'light', 'damage', f.num(rl.damage, 0)); chk('rocket', 'heavy', 'lockMs', ms(4000)); chk('rail', 'heavy', 'damage', f.num(rr.damage, 0)); chk('rail', 'heavy', 'chargeMs', ms(4500));
+			chk('gun', 'medium', 'rpm', f.num(gm.rpm, 0) + ' rpm'); chk('gun', 'medium', 'spinUpMs', ms(1000)); chk('pd', 'laser_pd', 'refireMs', ms(pd.refireMs)); chk('pd', 'laser_pd', 'rangeM', ORION.ui.fmt.len(1500));
 			var lc = []; ['laser', 'rocket', 'rail', 'gun', 'pd'].forEach(function (id) { var fam = W_.families.filter(function (x) { return x.id === id; })[0]; fam.variants.forEach(function (v) { var m = modesFor(fam, v); lc.push(id + '/' + v.id + ':' + (m.manual ? 'M' : '') + (m.auto ? 'A' : '')); }); });
 			d.select('laser', 'fixed');
 			var exp = 'laser/fixed:M,laser/turret_medium:MA,laser/turret_large:MA,rocket/light:MA,rocket/medium:MA,rocket/heavy:MA,rail/light:M,rail/medium:M,rail/heavy:M,rail/turret_medium:M,gun/light:MA,gun/medium:MA,gun/heavy:MA,pd/laser_pd:A,pd/ciws_medium:A,pd/ciws_heavy:A';

@@ -44,50 +44,110 @@
 		ui: {}, selftest: {}, __debug: {}
 	};
 	W.ORION = ORION;
-	ORION.media = function (key) { var m = W.ORION_MEDIA && W.ORION_MEDIA[key]; return m || null; };
+	/* media entries come back with alt and caption in the page language (copies; the manifest is never changed) */
+	ORION.media = function (key) {
+		var m = W.ORION_MEDIA && W.ORION_MEDIA[key]; if (!m) return null;
+		var c = Object.assign({}, m), d = ORION.i18n && ORION.i18n.d;
+		if (d) { if (c.alt) c.alt = d(c.alt); if (c.caption) c.caption = d(c.caption); }
+		return c;
+	};
+	/* 1b. i18n hooks (I18N.md 3.9). js/i18n.js replaces ORION.t and ORION.i18n before any section script runs; these stubs are English only. */
+	function interp(s, vars) { return String(s).replace(/\{([A-Za-z_]\w*)\}/g, function (m, k) { return vars && vars[k] != null ? String(vars[k]) : m; }); }
+	var stubPR = null;
+	function stubPlural(n) { try { stubPR = stubPR || new Intl.PluralRules('en-GB'); return stubPR.select(n); } catch (e) { return n === 1 ? 'one' : 'other'; } }
+	ORION.t = function (key, en, vars) {
+		var s = en;
+		if (en && typeof en === 'object') { var f = stubPlural(vars && vars.n); s = en[f] != null ? en[f] : en.other; }
+		return interp(s, vars);
+	};
+	function slotKids(str, nodes) {
+		var re = /<(\d+)\/>|<(\d+)>|<\/(\d+)>/g, root = { kids: [] }, stack = [root], cur = root, last = 0, m;
+		function text(t) { if (t) cur.kids.push(D.createTextNode(t)); }
+		while ((m = re.exec(str))) {
+			text(str.slice(last, m.index)); last = m.index + m[0].length;
+			if (m[1] != null) { if (nodes[+m[1]]) cur.kids.push(nodes[+m[1]]); }
+			else if (m[2] != null) { cur = { node: nodes[+m[2]], kids: [] }; stack.push(cur); }
+			else { var c = stack.pop(); cur = stack[stack.length - 1]; if (c.node) { c.node.textContent = ''; c.kids.forEach(function (k) { c.node.append(k); }); cur.kids.push(c.node); } else c.kids.forEach(function (k) { cur.kids.push(k); }); }
+		}
+		text(str.slice(last));
+		return root.kids;
+	}
+	var MONTHS_S = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+	ORION.i18n = {
+		lang: 'en', locale: 'en-GB-u-nu-latn', dir: 'ltr', script: 'Latn',
+		d: function (s) { return s; },
+		plural: stubPlural,
+		/* a prose date from an ISO string (YYYY-MM-DD, YYYY-MM or --MM-DD) in one of the formats d MMM y, d MMMM y, MMMM y, d MMM */
+		date: function (iso, fmt) {
+			var m = /^(?:(\d{4})|-)-(\d{2})(?:-(\d{2}))?$/.exec(iso); if (!m) return String(iso);
+			var y = m[1] ? +m[1] : 2000, mo = +m[2] - 1, d = m[3] ? +m[3] : 1, o = { timeZone: 'UTC' };
+			if (/d/.test(fmt)) o.day = 'numeric';
+			o.month = /MMMM/.test(fmt) ? 'long' : 'short'; if (/y/.test(fmt)) o.year = 'numeric';
+			try { return new Intl.DateTimeFormat(ORION.i18n.locale, o).format(new Date(Date.UTC(y, mo, d))); } catch (e) { return (m[3] ? d + ' ' : '') + MONTHS_S[mo] + (m[1] ? ' ' + y : ''); }
+		},
+		fill: function (host, key, en, nodes) {
+			var str = typeof en === 'string' ? en : en.other;
+			var kids = slotKids(str, nodes || []); host.textContent = ''; kids.forEach(function (k) { host.append(k); });
+			return host;
+		}
+	};
+	ORION.refreshBinds = function (root) { refreshBind(root || D); };
 	/* 2. small UI helpers (ORION.ui) */
 	var live = null;
 	function announce(text) {
 		if (!live) return;
+		var l0 = ORION.i18n && ORION.i18n.lang;
 		live.textContent = '';
-		setTimeout(function () { live.textContent = text; }, 30);
+		setTimeout(function () { if (!ORION.i18n || ORION.i18n.lang === l0) live.textContent = text; }, 30);   /* an announcement made just before a language switch is dropped, not read out in the old language */
 	}
-	var CHIP_LABEL = { built: 'Built', planned: 'Planned', future: 'Future', review: 'Under review', ai: 'AI-made' };
+	var CHIP_STATUS = ['built', 'planned', 'future', 'review', 'ai'];
+	function chipText(s) {
+		if (s === 'planned') return ['common.chip.planned', ORION.t('common.chip.planned', 'Planned')];
+		if (s === 'future') return ['common.chip.future', ORION.t('common.chip.future', 'Future')];
+		if (s === 'review') return ['common.chip.review', ORION.t('common.chip.review', 'Under review')];
+		if (s === 'ai') return ['common.chip.aiMade', ORION.t('common.chip.aiMade', 'AI-made')];
+		return ['common.chip.built', ORION.t('common.chip.built', 'Built')];
+	}
 	function chip(status, version) {
-		var s = CHIP_LABEL[status] ? status : 'built';
+		var s = CHIP_STATUS.indexOf(status) >= 0 ? status : 'built', ct = chipText(s);
 		var dots = el('span', { class: 'chip__dots', 'aria-hidden': 'true' }, [el('i'), el('i'), el('i')]);
-		var kids = [dots, el('span', { class: 'chip__t', text: CHIP_LABEL[s] })];
+		var kids = [dots, el('span', { class: 'chip__t', text: ct[1], 'data-i18n': ct[0] })];
 		if (version) kids.push(el('span', { class: 'chip__v', text: String(version) }));
 		return el('span', { class: 'chip chip--' + s }, kids);
 	}
 	var nf = {};
-	function numFmt(d) { return nf[d] || (nf[d] = new Intl.NumberFormat('en-GB', { minimumFractionDigits: d, maximumFractionDigits: d })); }
+	function numFmt(d) { var loc = ORION.i18n.locale, k = loc + '|' + d; return nf[k] || (nf[k] = new Intl.NumberFormat(loc, { minimumFractionDigits: d, maximumFractionDigits: d })); }
+	function numFmtMax(d) { var loc = ORION.i18n.locale, k = loc + '|max' + d; return nf[k] || (nf[k] = new Intl.NumberFormat(loc, { maximumFractionDigits: d })); }
 	var fmt = {
 		num: function (n, digits) { return (n == null || isNaN(n)) ? '' : numFmt(digits || 0).format(n); },
 		len: function (m) {
 			if (m == null || isNaN(m)) return '';
-			if (m >= 1000) return numFmt(m % 1000 ? 1 : 0).format(m / 1000).replace(/\.0$/, '') + ' km';
-			if (m < 10) return numFmt(1).format(m).replace(/\.0$/, '') + ' m';
+			if (m >= 1000) return numFmtMax(m % 1000 ? 1 : 0).format(m / 1000) + ' km';
+			if (m < 10) return numFmtMax(1).format(m) + ' m';
 			return numFmt(0).format(m) + ' m';
 		},
 		mass: function (t) {
 			if (t == null || isNaN(t)) return '';
 			if (t < 1) return numFmt(0).format(t * 1000) + ' kg';
-			return numFmt(t < 100 ? 1 : 0).format(t).replace(/\.0$/, '') + ' t';
+			return numFmtMax(t < 100 ? 1 : 0).format(t) + ' t';
 		}
 	};
-	function srcEl(path) { return el('span', { class: 'src', text: path == null ? '' : String(path) }); }
-	function fmtBytes(b) { return b >= 1048576 ? (b / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB'; }
+	function srcEl(path) { return el('span', { class: 'src', translate: 'no', lang: 'en', dir: 'ltr', text: path == null ? '' : String(path) }); }   /* a citation: quoted source text stays English (I18N.md 2.7) */
+	function fmtBytes(b) { return b >= 1048576 ? numFmt(1).format(b / 1048576) + ' MB' : numFmt(0).format(Math.max(1, Math.round(b / 1024))) + ' KB'; }
 	function modelCaption(id) {
 		var idx = W.ORION_MODEL_INDEX && W.ORION_MODEL_INDEX[id];
 		if (!idx) return '';
-		var lod = String(idx.lod || ''), ver = idx.version || '0.6.1', s = 'Real in-game model from version ' + ver;
-		if (/lod1$/.test(lod)) s += ', lower-detail level (LOD 1) for the web';
-		else if (/lod2$/.test(lod)) s += ', lower-detail level (LOD 2) for the web';
-		else s += ', converted for the web';
-		s += idx.atlas ? ', texture reduced to 512 px' : ', with a panel texture made for this site';
-		return s;
+		var lod = String(idx.lod || ''), ver = idx.version || '0.6.1', v = { version: ver };
+		if (/lod1$/.test(lod)) return idx.atlas ? ORION.t('viewer.model.lod1Atlas', 'Real in-game model from version {version}, lower-detail level (LOD 1) for the web, texture reduced to 512 px', v) : ORION.t('viewer.model.lod1Panel', 'Real in-game model from version {version}, lower-detail level (LOD 1) for the web, with a panel texture made for this site', v);
+		if (/lod2$/.test(lod)) return idx.atlas ? ORION.t('viewer.model.lod2Atlas', 'Real in-game model from version {version}, lower-detail level (LOD 2) for the web, texture reduced to 512 px', v) : ORION.t('viewer.model.lod2Panel', 'Real in-game model from version {version}, lower-detail level (LOD 2) for the web, with a panel texture made for this site', v);
+		return idx.atlas ? ORION.t('viewer.model.fullAtlas', 'Real in-game model from version {version}, converted for the web, texture reduced to 512 px', v) : ORION.t('viewer.model.fullPanel', 'Real in-game model from version {version}, converted for the web, with a panel texture made for this site', v);
 	}
+	/* runs fn (a re-render of the text inside root) and puts the focus back on the equivalent control afterwards (I18N.md 3.8) */
+	ORION.ui.keepFocus = function (root, fn) {
+		var sel = 'button, a[href], select, input, textarea, summary, [tabindex]', a = D.activeElement, list = root ? $$(sel, root) : [], i = (a && root && root.contains(a)) ? list.indexOf(a) : -1;
+		fn();
+		if (i >= 0) { var l2 = $$(sel, root); if (l2[i] && l2[i] !== D.activeElement) { try { l2[i].focus({ preventScroll: true }); } catch (e) { /* ignore */ } } }
+	};
 	ORION.ui.announce = announce; ORION.ui.chip = chip; ORION.ui.fmt = fmt; ORION.ui.src = srcEl; ORION.ui.modelCaption = modelCaption;
 	/* ---- lightbox ---- */
 	ORION.ui.lightbox = function (images, startIndex) {
@@ -99,17 +159,17 @@
 		var i = clamp(startIndex | 0, 0, list.length - 1), opener = D.activeElement;
 		var img = el('img', { class: 'lightbox__img', alt: '' });
 		var cap = el('p', { class: 'lightbox__cap' }), count = el('span', { class: 'lightbox__count', 'aria-hidden': 'true' });
-		var closeB = el('button', { type: 'button', class: 'btn btn--sm', text: 'Close' });
-		var prevB = el('button', { type: 'button', class: 'lightbox__nav lightbox__nav--prev', 'aria-label': 'Previous image', text: '‹' });
-		var nextB = el('button', { type: 'button', class: 'lightbox__nav lightbox__nav--next', 'aria-label': 'Next image', text: '›' });
-		var box = el('div', { class: 'lightbox', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Image viewer' }, [
+		var closeB = el('button', { type: 'button', class: 'btn btn--sm', text: ORION.t('lightbox.close', 'Close'), 'data-i18n': 'lightbox.close' });
+		var prevB = el('button', { type: 'button', class: 'lightbox__nav lightbox__nav--prev', 'aria-label': ORION.t('lightbox.prev', 'Previous image'), 'data-i18n-attr': 'aria-label:lightbox.prev', text: '‹' });
+		var nextB = el('button', { type: 'button', class: 'lightbox__nav lightbox__nav--next', 'aria-label': ORION.t('lightbox.next', 'Next image'), 'data-i18n-attr': 'aria-label:lightbox.next', text: '›' });
+		var box = el('div', { class: 'lightbox', role: 'dialog', 'aria-modal': 'true', 'aria-label': ORION.t('lightbox.label', 'Image viewer'), 'data-i18n-attr': 'aria-label:lightbox.label' }, [
 			el('div', { class: 'lightbox__top' }, [count, closeB]),
 			el('div', { class: 'lightbox__stage' }, [prevB, img, nextB]), cap]);
 		var inerted = [];
 		function show() {
 			var it = list[i]; img.src = it.src; img.alt = it.alt || ''; cap.textContent = it.caption || '';
 			count.textContent = (i + 1) + ' / ' + list.length; prevB.hidden = nextB.hidden = list.length < 2;
-			announce('Image ' + (i + 1) + ' of ' + list.length + (it.alt ? ': ' + it.alt : ''));
+			announce(it.alt ? ORION.t('lightbox.announceAlt', 'Image {n} of {total}: {alt}', { n: i + 1, total: list.length, alt: it.alt }) : ORION.t('lightbox.announce', 'Image {n} of {total}', { n: i + 1, total: list.length }));
 		}
 		function go(d) { i = (i + d + list.length) % list.length; show(); }
 		function close() {
@@ -137,7 +197,7 @@
 		var m = computeMotion(), changed = m !== state.motion;
 		state.motion = m; ROOT.dataset.motion = m;
 		var b = $('#motion-toggle');
-		if (b) { b.setAttribute('aria-pressed', m === 'full' ? 'true' : 'false'); var s = $('.bar__motion-state', b); if (s) s.textContent = m === 'full' ? 'on' : 'off'; }
+		if (b) { b.setAttribute('aria-pressed', m === 'full' ? 'true' : 'false'); var s = $('.bar__motion-state', b); if (s) s.textContent = m === 'full' ? ORION.t('motion.on', 'on') : ORION.t('motion.off', 'off'); }
 		if (changed) bus.emit('motion', state);
 	}
 	applyMotion();
@@ -147,7 +207,7 @@
 		applyMotion();
 		b.addEventListener('click', function () {
 			userMotion = state.motion === 'full' ? 'off' : 'on'; lsSet('orion.motion', userMotion); applyMotion();
-			announce('Motion ' + (state.motion === 'full' ? 'on' : 'off'));
+			announce(state.motion === 'full' ? ORION.t('motion.announceOn', 'Motion on') : ORION.t('motion.announceOff', 'Motion off'));
 		});
 	}
 	function resolvePath(obj, path) { return path.split('.').reduce(function (o, k) { return o == null ? undefined : o[k]; }, obj); }
@@ -155,7 +215,7 @@
 		$$('[data-bind]', root).forEach(function (n) {
 			var v = resolvePath(W.ORION_DATA, n.getAttribute('data-bind'));
 			if (v == null || typeof v === 'object') return;
-			n.textContent = (n.dataset.fmt === 'num' && typeof v === 'number') ? v.toLocaleString('en-GB') : String(v);
+			n.textContent = (n.dataset.fmt === 'num' && typeof v === 'number') ? fmt.num(v) : ORION.i18n.d(String(v));
 		});
 	}
 	var revealIO = null;
@@ -307,6 +367,7 @@
 	ORION.loadModel = function (id) {
 		var idx = W.ORION_MODEL_INDEX && W.ORION_MODEL_INDEX[id];
 		if (!idx) return Promise.reject(modelError('unknown model ' + id));
+		if (params.get('no3d') === 'model') return Promise.reject(modelError('?no3d=model test hook: every model fails, so each viewer shows its error note and Retry (I18N.md 2.8 cell 8)'));
 		if (decoded[id]) return Promise.resolve(decoded[id]);
 		if (pendingDec[id]) return pendingDec[id];
 		var p = loadFile(idx.file).then(function () {
@@ -351,16 +412,32 @@
 	function budget() { return BUDGET[state.tier] || 0; }
 	function liveCount() { return V.filter(function (v) { return v.renderer; }).length; }
 	function globalFailText() {
-		return boot.reason === 'user' ? 'Interactive 3D is switched off, so this is a still image.' : 'Interactive 3D could not load here, so this is a still image.';
+		return boot.reason === 'user' ? ORION.t('viewer.offByUser', 'Interactive 3D is switched off, so this is a still image.') : ORION.t('viewer.glFailed', 'Interactive 3D could not load here, so this is a still image.');
 	}
 	function footerNotice() {
 		var n = $('#orion-3d-notice'), want = state.webgl === 'failed' && boot.reason && boot.reason !== 'user';
 		if (!want) { if (n) n.remove(); return; }
-		var text = boot.reason === 'webgl' ? 'Interactive 3D is off: WebGL is not available here. Everything else works.' : 'Interactive 3D is off: the 3D library could not load. Everything else works.';
+		var text = boot.reason === 'webgl' ? ORION.t('shell.noWebgl', 'Interactive 3D is off: WebGL is not available here. Everything else works.') : ORION.t('shell.noCdn', 'Interactive 3D is off: the 3D library could not load. Everything else works.');
 		if (n) { n.textContent = text; return; }
 		n = el('p', { id: 'orion-3d-notice', class: 'notice', role: 'status', text: text });
 		var f = $('footer .wrap') || $('footer') || D.body, q = $('#footer-3d-quality', f);
 		if (q && q.parentNode === f) f.insertBefore(n, q); else f.insertBefore(n, f.firstChild);
+	}
+	/* the display name of a viewer inside an accessibility label: the English stays the id ("hero", "ships" ...), other languages translate it */
+	function vname(n) {
+		switch (n) {
+			case 'hero': return ORION.t('viewer.name.hero', 'hero'); case 'ships': return ORION.t('viewer.name.ships', 'ships');
+			case 'maps': return ORION.t('viewer.name.maps', 'maps'); case 'weapons': return ORION.t('viewer.name.weapons', 'weapons');
+			case 'build': return ORION.t('viewer.name.build', 'build'); case 'build-colour': return ORION.t('viewer.name.buildColour', 'build-colour');
+			case 'build-craft': return ORION.t('viewer.name.buildCraft', 'build-craft'); case 'styles': return ORION.t('viewer.name.styles', 'styles');
+			default: return n;
+		}
+	}
+	function failText(kind) {
+		if (kind === 'model') return ORION.t('viewer.modelFailed', 'The 3D model could not load, so this is a still image.');
+		if (kind === 'reset') return ORION.t('viewer.resetFailed', 'Interactive 3D stopped after repeated graphics resets, so this is a still image.');
+		if (kind === 'gl') return ORION.t('viewer.glFailed', 'Interactive 3D could not load here, so this is a still image.');
+		return String(kind);
 	}
 	function updateNotes() { V.forEach(function (v) { v.refreshNote(); }); footerNotice(); }
 	function setTier(t) { if (state.tier === t) return; state.tier = t; bus.emit('tier', state); }
@@ -398,21 +475,21 @@
 	/* ----- footer quality control ----- */
 	function setupQuality() {
 		var slot = $('#footer-3d-quality'); if (!slot || slot.dataset.ready) return; slot.dataset.ready = '1';
-		var fs = el('fieldset', { class: 'q-ctl' }, [el('legend', { text: '3D quality' })]), opts = el('div', { class: 'q-ctl__opts' });
-		[['auto', 'Auto'], ['low', 'Low'], ['off', 'Off']].forEach(function (o) {
+		var fs = el('fieldset', { class: 'q-ctl' }, [el('legend', { text: ORION.t('quality.legend', '3D quality'), 'data-i18n': 'quality.legend' })]), opts = el('div', { class: 'q-ctl__opts' });
+		[['auto', ORION.t('quality.auto', 'Auto'), 'quality.auto'], ['low', ORION.t('quality.low', 'Low'), 'quality.low'], ['off', ORION.t('quality.off', 'Off'), 'quality.off']].forEach(function (o) {
 			var inp = el('input', { type: 'radio', name: 'orion-q', value: o[0] }); if (qualityPref === o[0]) inp.checked = true;
 			if (tierOverride) inp.disabled = true;
 			inp.addEventListener('change', function () { setQuality(o[0]); });
-			opts.append(el('label', { class: 'q-ctl__opt' }, [inp, el('span', { text: o[1] })]));
+			opts.append(el('label', { class: 'q-ctl__opt' }, [inp, el('span', { text: o[1], 'data-i18n': o[2] })]));
 		});
-		fs.append(opts); if (tierOverride) fs.append(el('p', { class: 'q-ctl__note', text: 'Set by the address (?tier=' + tierOverride + ').' }));
+		fs.append(opts); if (tierOverride) fs.append(el('p', { class: 'q-ctl__note', text: ORION.t('quality.setByAddress', 'Set by the address (?tier={tier}).', { tier: tierOverride }) }));
 		slot.append(fs);
 	}
 	function setQuality(q) {
 		qualityPref = q; lsSet('orion.quality', q);
 		if (!boot.booted || tierOverride) return;
 		applyTierNow(detectTier(), state.webgl === 'failed');
-		announce('3D quality: ' + q);
+		announce(ORION.t('quality.announce', '3D quality: {mode}', { mode: q === 'low' ? ORION.t('quality.low', 'Low') : q === 'off' ? ORION.t('quality.off', 'Off') : ORION.t('quality.auto', 'Auto') }));
 	}
 	/* 7. the 3D kit (DESIGN.md 5.5), built at boot */
 	function buildKit(mods) {
@@ -647,7 +724,15 @@
 		zin: '<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.2-4.2M11 8.5v5M8.5 11h5"/>', zout: '<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.2-4.2M8.5 11h5"/>',
 		reset: '<circle cx="12" cy="12" r="3"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/>', pause: '<path d="M9 6v12M15 6v12"/>', play: '<path d="M8 5l11 7-11 7z"/>'
 	};
-	function tool(name, label, icon) { return el('button', { type: 'button', class: 'viewer__tool', 'data-tool': name, 'aria-label': label, title: label, html: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + icon + '</svg>' }); }
+	function toolLabel(name) {
+		switch (name) {
+			case 'left': return ORION.t('viewer.rotateLeft', 'Rotate left'); case 'right': return ORION.t('viewer.rotateRight', 'Rotate right');
+			case 'zin': return ORION.t('viewer.zoomIn', 'Zoom in'); case 'zout': return ORION.t('viewer.zoomOut', 'Zoom out');
+			case 'reset': return ORION.t('viewer.resetView', 'Reset view'); case 'play': return ORION.t('viewer.playMotion', 'Play motion');
+			default: return ORION.t('viewer.pauseMotion', 'Pause motion');
+		}
+	}
+	function tool(name, icon) { var label = toolLabel(name); return el('button', { type: 'button', class: 'viewer__tool', 'data-tool': name, 'aria-label': label, title: label, html: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + icon + '</svg>' }); }
 	function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
 	var isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent || '');
 	var coarseMQ = W.matchMedia ? W.matchMedia('(pointer: coarse)') : { matches: false };
@@ -664,7 +749,7 @@
 	}
 	function Viewer(host, opts) {
 		var self = this;
-		this.host = host; this.opts = opts; this.name = opts.name || ('viewer' + V.length); this.label = opts.label || ('3D viewer: ' + this.name);
+		this.host = host; this.opts = opts; this.name = opts.name || ('viewer' + V.length); this.label = opts.label || ORION.t('viewer.defaultLabel', '3D viewer: {name}', { name: vname(this.name) });
 		this.state = 'poster'; this.gen = 0; this.renderer = null; this.scene = null; this.camera = null; this.controls = null; this.api = null; this.canvas = null;
 		this.near = false; this.onScreen = false; this.lastVisible = now(); this.liveSince = 0; this.looping = false; this.dirty = false; this.idle = 0;
 		this.active = false; this.motionPaused = false; this.userStopped = false; this.failNote = null; this.canRetry = false; this.lossCount = 0;
@@ -672,24 +757,24 @@
 		this.counters = { mounts: 0, evicts: 0 }; this.mountT0 = 0; this.firstFrameMs = null; this.avg = 16; this.pr = 1; this.statT = 0; this.fastT = 0;
 		this.coarse = !!opts.interactive && coarseMQ.matches;
 		host.classList.add('viewer'); host.dataset.state = 'poster'; host.dataset.viewer = this.name;
-		host.setAttribute('role', 'group'); host.setAttribute('aria-label', opts.groupLabel || ('3D viewer: ' + this.name));
+		host.setAttribute('role', 'group'); host.setAttribute('aria-label', opts.groupLabel || ORION.t('viewer.defaultLabel', '3D viewer: {name}', { name: vname(this.name) }));
 		if (opts.interactive) host.classList.toggle('viewer--coarse', this.coarse);
 		this.posterEl = $('.viewer__poster', host) || el('img', { class: 'viewer__poster', alt: '', decoding: 'async' });
 		this.phEl = el('div', { class: 'viewer__ph', hidden: true });
 		this.noteEl = el('div', { class: 'viewer__note' });
-		this.statusEl = el('div', { class: 'viewer__status', 'aria-hidden': 'true' }, [el('span', { class: 'viewer__status-t', text: 'Loading 3D...' }), el('span', { class: 'viewer__bar' })]);
+		this.statusEl = el('div', { class: 'viewer__status', 'aria-hidden': 'true' }, [el('span', { class: 'viewer__status-t', text: ORION.t('viewer.loading', 'Loading 3D...') }), el('span', { class: 'viewer__bar' })]);
 		this.hintEl = el('div', { class: 'viewer__hint', 'aria-hidden': 'true' });
-		this.toolbar = el('div', { class: 'viewer__toolbar', role: 'group', 'aria-label': 'View controls: ' + this.name });
+		this.toolbar = el('div', { class: 'viewer__toolbar', role: 'group', 'aria-label': ORION.t('viewer.controls', 'View controls: {name}', { name: vname(this.name) }) });
 		var wantPause = opts.interactive || opts.pausable || (opts.controls && opts.controls.autoRotate);
 		if (opts.interactive) {
-			this.toolbar.append(tool('left', 'Rotate left', ICON.left), tool('right', 'Rotate right', ICON.right), tool('zin', 'Zoom in', ICON.zin), tool('zout', 'Zoom out', ICON.zout), tool('reset', 'Reset view', ICON.reset));
-			this.doneBtn = el('button', { type: 'button', class: 'viewer__tool viewer__tool--done', text: 'Done', hidden: true, 'aria-label': 'Done: let the page scroll again' });
+			this.toolbar.append(tool('left', ICON.left), tool('right', ICON.right), tool('zin', ICON.zin), tool('zout', ICON.zout), tool('reset', ICON.reset));
+			this.doneBtn = el('button', { type: 'button', class: 'viewer__tool viewer__tool--done', text: ORION.t('viewer.done', 'Done'), hidden: true, 'aria-label': ORION.t('viewer.doneLabel', 'Done: let the page scroll again') });
 		}
-		if (wantPause) { this.pauseBtn = tool('pause', 'Pause motion', ICON.pause); this.toolbar.append(this.pauseBtn); }
+		if (wantPause) { this.pauseBtn = tool('pause', ICON.pause); this.toolbar.append(this.pauseBtn); }
 		if (this.doneBtn) this.toolbar.append(this.doneBtn);
-		if (this.coarse) this.tapEl = el('button', { type: 'button', class: 'viewer__tap', 'aria-label': 'Tap to interact with the 3D view' }, [el('span', { text: 'Tap to interact' })]);
+		if (this.coarse) this.tapEl = el('button', { type: 'button', class: 'viewer__tap', 'aria-label': ORION.t('viewer.tapLabel', 'Tap to interact with the 3D view') }, [el('span', { text: ORION.t('viewer.tap', 'Tap to interact') })]);
 		if (opts.interactive) {
-			this.helpEl = el('span', { class: 'sr-only', id: 'vhelp-' + this.name, text: 'Arrow keys rotate, plus and minus zoom, 0 resets, space pauses motion, Escape releases scroll zoom.' });
+			this.helpEl = el('span', { class: 'sr-only', id: 'vhelp-' + this.name, text: ORION.t('viewer.help', 'Arrow keys rotate, plus and minus zoom, 0 resets, space pauses motion, Escape releases scroll zoom.') });
 			host.removeAttribute('tabindex'); host.removeAttribute('aria-describedby');
 		}
 		if (!this.posterEl.parentNode) host.insertBefore(this.posterEl, host.firstChild);
@@ -722,18 +807,37 @@
 			ph.hidden = true;
 		} else {
 			p.hidden = true; p.removeAttribute('src'); ph.hidden = false; ph.textContent = '';
-			ph.append(el('strong', { text: this.opts.title || this.name.toUpperCase() }), el('span', { text: 'Image to come' }));
+			ph.append(el('strong', { text: this.opts.title || this.name.toUpperCase() }), el('span', { text: ORION.t('viewer.imageToCome', 'Image to come'), 'data-i18n': 'viewer.imageToCome' }));
 		}
 	};
 	VP.refreshNote = function () {
 		var n = null, e = this.noteEl, self = this;
-		if (this.failNote) n = { text: this.failNote, retry: this.canRetry };
+		if (this.failNote) n = { text: failText(this.failNote), retry: this.canRetry };
 		else if (state.webgl === 'failed' && !this.renderer) n = { text: globalFailText() };
-		else if (!boot.booted && boot.slow && state.webgl !== 'failed') n = { text: 'Loading 3D...', info: true };
+		else if (!boot.booted && boot.slow && state.webgl !== 'failed') n = { text: ORION.t('viewer.loading', 'Loading 3D...'), info: true };
 		e.textContent = '';
 		if (!n) { e.className = 'viewer__note'; return; }
 		e.className = 'viewer__note is-on' + (n.info ? ' is-info' : ''); e.append(el('span', { text: n.text }));
-		if (n.retry) { var b = el('button', { type: 'button', class: 'btn btn--sm', text: 'Retry' }); b.addEventListener('click', function () { self.retry(); }); e.append(b); }
+		if (n.retry) { var b = el('button', { type: 'button', class: 'btn btn--sm', text: ORION.t('viewer.retry', 'Retry') }); b.addEventListener('click', function () { self.retry(); }); e.append(b); }
+	};
+	/* I18N.md 3.8: re-writes every piece of text the viewer chrome owns; sections call setTexts for their own label, group label and title */
+	VP.relabel = function () {
+		var self = this;
+		$$('[data-tool]', this.toolbar).forEach(function (b) { var l = toolLabel(b.dataset.tool === 'pause' && self.motionPaused ? 'play' : b.dataset.tool); b.setAttribute('aria-label', l); b.title = l; });
+		this.toolbar.setAttribute('aria-label', ORION.t('viewer.controls', 'View controls: {name}', { name: vname(this.name) }));
+		if (this.doneBtn) { this.doneBtn.textContent = ORION.t('viewer.done', 'Done'); this.doneBtn.setAttribute('aria-label', ORION.t('viewer.doneLabel', 'Done: let the page scroll again')); }
+		if (this.tapEl) { this.tapEl.setAttribute('aria-label', ORION.t('viewer.tapLabel', 'Tap to interact with the 3D view')); if (this.tapEl.firstChild) this.tapEl.firstChild.textContent = ORION.t('viewer.tap', 'Tap to interact'); }
+		if (this.helpEl) this.helpEl.textContent = ORION.t('viewer.help', 'Arrow keys rotate, plus and minus zoom, 0 resets, space pauses motion, Escape releases scroll zoom.');
+		this.setStatusText(this.statusId);
+		if (this.opts.posterKey && this.posterEl) { var pm = ORION.media(this.opts.posterKey); if (pm && pm.alt) this.posterEl.alt = pm.alt; }   /* the poster's alt text follows the language (English: the same media alt as at construction) */
+		if (!this.opts.groupLabel) this.host.setAttribute('aria-label', ORION.t('viewer.defaultLabel', '3D viewer: {name}', { name: vname(this.name) }));
+		this.refreshNote();
+	};
+	VP.setTexts = function (t) {
+		t = t || {};
+		if (t.label != null) this.setLabel(t.label);
+		if (t.groupLabel != null) { this.opts.groupLabel = t.groupLabel; this.host.setAttribute('aria-label', t.groupLabel); }
+		if (t.title != null) { this.opts.title = t.title; if (!this.phEl.hidden && this.phEl.firstChild && this.phEl.firstChild.tagName === 'STRONG') this.phEl.firstChild.textContent = t.title; }
 	};
 	VP.retry = function () { this.failNote = null; this.canRetry = false; this.setState('poster'); this.refreshNote(); maybeMount(this); };
 	VP.isLive = function () { return !!this.renderer && (this.state === 'live' || this.state === 'paused'); };
@@ -762,7 +866,7 @@
 	VP.applyAutoRotate = function () {
 		if (this.controls) this.controls.autoRotate = !!(this.opts.controls && this.opts.controls.autoRotate) && this.effectiveMotion() === 'full' && !this.userStopped;
 		if (this.pauseBtn) {
-			var paused = this.motionPaused; this.pauseBtn.setAttribute('aria-label', paused ? 'Play motion' : 'Pause motion'); this.pauseBtn.title = paused ? 'Play motion' : 'Pause motion';
+			var paused = this.motionPaused, pl = toolLabel(paused ? 'play' : 'pause'); this.pauseBtn.setAttribute('aria-label', pl); this.pauseBtn.title = pl;
 			this.pauseBtn.firstChild.innerHTML = paused ? ICON.play : ICON.pause;
 		}
 		if (typeof this.opts.onMotion === 'function') { try { this.opts.onMotion(this.effectiveMotion()); } catch (e) { errlog(e); } }
@@ -770,7 +874,7 @@
 	};
 	VP.userAct = function () { if (!this.userStopped) { this.userStopped = true; this.applyAutoRotate(); } };
 	VP.setMotionPaused = function (p) { this.motionPaused = !!p; if (!p) this.userStopped = false; this.applyAutoRotate(); };
-	VP.toggleMotion = function () { this.setMotionPaused(!this.motionPaused); announce(this.motionPaused ? 'Motion paused' : 'Motion playing'); };
+	VP.toggleMotion = function () { this.setMotionPaused(!this.motionPaused); announce(this.motionPaused ? ORION.t('viewer.announcePaused', 'Motion paused') : ORION.t('viewer.announcePlaying', 'Motion playing')); };
 	VP.setHome = function () { if (this.camera) this.home = { pos: this.camera.position.clone(), target: this.controls ? this.controls.target.clone() : new ORION.three.THREE.Vector3() }; };
 	VP.distance = function () { return this.camera ? this.camera.position.distanceTo(this.controls ? this.controls.target : new ORION.three.THREE.Vector3()) : 0; };
 	VP.setActive = function (a) {
@@ -780,7 +884,7 @@
 		if (this.doneBtn) this.doneBtn.hidden = !(a && this.coarse);
 	};
 	VP.showHint = function () {
-		var h = this.hintEl, self = this; h.textContent = this.coarse ? 'Tap to interact' : 'Use ' + (isMac ? 'Cmd' : 'Ctrl') + ' + scroll to zoom';
+		var h = this.hintEl, self = this; h.textContent = this.coarse ? ORION.t('viewer.tap', 'Tap to interact') : ORION.t('viewer.hintScroll', 'Use {key} + scroll to zoom', { key: isMac ? 'Cmd' : 'Ctrl' });
 		h.classList.add('is-on'); clearTimeout(this._hintT); this._hintT = setTimeout(function () { self.hintEl.classList.remove('is-on'); }, 1500);
 	};
 	VP.orbitBy = function (dAz, dPol) {
@@ -860,7 +964,7 @@
 		this.setState('loading'); this.setStatusText(typeof o.modelId === 'function' ? o.modelId() : o.modelId);
 		var renderer;
 		try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: state.tier === 'high' ? 'high-performance' : 'default' }); }
-		catch (e) { errlog('WebGL renderer failed for ' + this.name, e); this.unmount('failed', 'Interactive 3D could not load here, so this is a still image.', false); return Promise.resolve(); }
+		catch (e) { errlog('WebGL renderer failed for ' + this.name, e); this.unmount('failed', 'gl', false); return Promise.resolve(); }
 		this.renderer = renderer; this.canvas = renderer.domElement;
 		renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0; renderer.setClearColor(0x000000, 0);
 		this.canvas.className = 'viewer__canvas'; this.canvas.setAttribute('role', 'img'); this.canvas.setAttribute('aria-label', this.label);
@@ -869,7 +973,7 @@
 		this.pr = Math.min(W.devicePixelRatio || 1, PRCAP[state.tier] || 1.25); renderer.setPixelRatio(this.pr); renderer.setSize(this.size.w, this.size.h, false);
 		this.canvas.addEventListener('webglcontextlost', function (e) {
 			e.preventDefault(); if (self.renderer !== renderer) return; self.lossCount++; warn('WebGL context lost: ' + self.name);
-			if (self.lossCount > 3) self.unmount('failed', 'Interactive 3D stopped after repeated graphics resets, so this is a still image.', true);
+			if (self.lossCount > 3) self.unmount('failed', 'reset', true);
 			else { self.unmount('evicted'); setTimeout(pump, 600); }
 		});
 		var scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(co.fov || 35, this.size.w / this.size.h, 0.1, 5000), pos = co.position || [3, 2, 6];
@@ -903,12 +1007,13 @@
 		}).catch(function (e) {
 			if (gen !== self.gen) return; errlog('viewer setup failed: ' + self.name, e);
 			var isModel = e && e.kind === 'model';
-			self.unmount('failed', isModel ? 'The 3D model could not load, so this is a still image.' : 'Interactive 3D could not load here, so this is a still image.', isModel);
+			self.unmount('failed', isModel ? 'model' : 'gl', isModel);
 		});
 	};
 	VP.setStatusText = function (id) {
+		this.statusId = id;
 		var t = this.statusEl.firstChild, idx = id && W.ORION_MODEL_INDEX && W.ORION_MODEL_INDEX[id];
-		t.textContent = idx && idx.bytes ? 'Loading 3D model, ' + fmtBytes(idx.bytes) : 'Loading 3D...';
+		t.textContent = idx && idx.bytes ? ORION.t('viewer.loadingModel', 'Loading 3D model, {size}', { size: fmtBytes(idx.bytes) }) : ORION.t('viewer.loading', 'Loading 3D...');
 	};
 	VP.unmount = function (toState, failNote, canRetry) {
 		this.gen++; this.stopLoop(); if (this.active) this.setActive(false);
@@ -1016,6 +1121,11 @@
 	};
 	ORION.selftest.add = function (name, fn) { (ORION.selftest._extra = ORION.selftest._extra || []).push({ name: name, fn: fn }); };
 	/* 10. debug hooks */
+	bus.on('lang', function () {
+		if (live) live.textContent = '';   /* an announcement made in the previous language must not linger in the live region */
+		applyMotion(); V.forEach(function (v) { v.relabel(); }); footerNotice();
+		var q = $('#footer-3d-quality'); if (q && q.dataset.ready) { q.textContent = ''; delete q.dataset.ready; setupQuality(); }
+	});
 	ORION.__debug.liveContexts = liveCount;
 	ORION.__debug.budget = budget;
 	ORION.__debug.viewers = function () { return V.map(function (v) { return { name: v.name, state: v.state, liveSinceMs: v.renderer ? Math.round(now() - v.liveSince) : null }; }); };
@@ -1098,11 +1208,58 @@
 			for (var xi = 0; xi < (ORION.selftest._extra || []).length; xi++) {
 				var ex = ORION.selftest._extra[xi]; try { var rr = await ex.fn(); rec('section: ' + ex.name, rr && rr.ok, rr && rr.note); } catch (e) { rec('section: ' + ex.name, false, 'threw ' + (e && e.message)); }
 			}
+			if (ORION.i18n && ORION.i18n._test && !params.has('noi18nsteps')) await i18nSteps(rec);
 			rec('no console errors', !stErrors.length, stErrors.join(' | '));
 		} catch (e) { rec('selftest crashed', false, e && e.stack || e); }
 		var fails = steps.filter(function (x) { return !x.ok; }).length;
 		pre.textContent = J({ result: fails ? 'FAIL' : 'PASS', failures: fails, url: location.search, ua: navigator.userAgent.replace(/^Mozilla\/5.0 /, ''), final: snap(), counters: ORION.__debug.counters(), resourceErrors: stRes.slice(0, 20), errors: stErrors, steps: steps }, null, 1);
 		D.title = fails ? 'SELFTEST FAIL ' + fails : 'SELFTEST PASS';
+	}
+	/* ?selftest i18n steps (ORI-1323, I18N.md 6.1): picker, three switching cycles en -> x-pseudo -> x-pseudo-rtl -> en without a reload, the frozen peak, the section steps once more */
+	async function i18nSteps(rec) {
+		var I = ORION.i18n, J = JSON.stringify, T = I._test, text = function () {
+			var o = [], w = D.createTreeWalker(D.body, NodeFilter.SHOW_TEXT, { acceptNode: function (n) { var p = n.parentElement; return !p || p.closest('script,style,noscript,template,.lang,#orion-selftest') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT; } });
+			while (w.nextNode()) o.push(w.currentNode.nodeValue); return o.join('').replace(/\s+/g, '');
+		};
+		var atRight = function (b) { var m = 0; $$('#bar a, #bar button').forEach(function (e) { if (!e.closest('.lang')) { var q = e.getBoundingClientRect(); if (q.width) m = Math.max(m, q.right); } }); return b.right >= m - 1 && b.right <= W.innerWidth; };   /* the bar is centred (76 rem), so "top right" means: the rightmost item of the bar */
+		var pick = $('#lang'), r = pick && pick.getBoundingClientRect(), mark = W.__stNoReload = Math.random();
+		rec('i18n: picker is the rightmost item of the bar at the top, English, no x-* pack applied', !!r && atRight(r) && r.top < 80 && I.lang === 'en' && !ROOT.hasAttribute('data-i18n-boot'), r && J({ right: Math.round(r.right), top: Math.round(r.top), w: W.innerWidth }));
+		await I.set('en', { force: true }); await sleep(100);   /* English re-rendered once by the handlers: state-driven text that a section had not refreshed (a stale status line) is brought up to date, so the baseline is what every later English render must give */
+		var base = text(), times = {}, bad = [], miss = 0, codes = ['x-pseudo', 'x-pseudo-rtl', 'en'];
+		for (var cy = 0; cy < 3; cy++) for (var ci = 0; ci < codes.length; ci++) {
+			var c = codes[ci], t0 = now(); await I.set(c); await sleep(60); times[c] = Math.max(times[c] || 0, Math.round(now() - t0));
+			var want = c === 'en' ? ['en-GB', 'ltr'] : ['en', c === 'x-pseudo-rtl' ? 'rtl' : 'ltr'], r2 = pick.getBoundingClientRect();
+			if (ROOT.lang !== want[0] || ROOT.dir !== want[1] || I.lang !== c) bad.push(c + ': lang ' + ROOT.lang + '/' + ROOT.dir + '/' + I.lang);
+			if (W.__stNoReload !== mark) bad.push(c + ': page reloaded');
+			if (!atRight(r2) || r2.top > 80) bad.push(c + ': picker at ' + Math.round(r2.right) + ',' + Math.round(r2.top));
+			if (D.documentElement.scrollWidth > W.innerWidth + 1) bad.push(c + ': horizontal overflow ' + D.documentElement.scrollWidth);
+			if (c !== 'en' && text() === base) bad.push(c + ': text unchanged');
+			if (c !== 'en') miss += I.misses.size;
+			if (c === 'en') { var tn = text(); if (tn !== base) { var di = 0; while (di < base.length && base[di] === tn[di]) di++; bad.push('en: text differs from the baseline after cycle ' + (cy + 1) + ' at ' + di + ': "' + base.slice(Math.max(0, di - 25), di + 35) + '" => "' + tn.slice(Math.max(0, di - 25), di + 35) + '"'); } }
+		}
+		rec('i18n: 3 cycles en -> x-pseudo -> x-pseudo-rtl -> en: no reload, lang and dir set, picker stays top right, no overflow, English restored exactly', !bad.length, bad.slice(0, 4).join(' | ') + ' slowest swap ms ' + J(times));
+		rec('i18n: no missed key while in x-pseudo and x-pseudo-rtl (ORION.i18n.misses empty)', !miss, miss ? J(Array.from(I.misses).slice(0, 8)) : '');
+		/* the frozen peak: every non-whitespace text node of every zone carries a shadow and a transparent fill */
+		var red = ROOT.dataset.motion === 'reduced' || (W.matchMedia && W.matchMedia('(prefers-reduced-motion: reduce)').matches);
+		T.freeze(1, 'after'); var pr = I.set('x-pseudo'); await until(function () { return T.held() === 'after'; }, 15000);
+		var zs = $$('.i18n-zone'), nodes = 0, nogood = [], glow = I.stats.lastMode === 'glow';
+		if (T.held() === 'after' && glow) {
+			zs.forEach(function (z) {
+				var w = D.createTreeWalker(z, NodeFilter.SHOW_TEXT, null), n, cs, a;
+				while ((n = w.nextNode())) {
+					if (!/\S/.test(n.nodeValue) || n.parentElement.closest('script,style,noscript,template,.lang,canvas,svg title,svg desc')) continue; nodes++;
+					cs = getComputedStyle(n.parentElement); a = (cs.webkitTextFillColor || '').match(/[\d.]+/g) || [];
+					var svg = !!n.parentElement.closest('svg'), alpha = /\/\s*0\)|, 0\)$|transparent/.test(cs.webkitTextFillColor || ''), sh = cs.textShadow && cs.textShadow !== 'none';
+					if (svg ? (cs.filter === 'none' && +cs.opacity > 0.01) : (!sh || !alpha)) nogood.push((n.parentElement.tagName + '.' + n.parentElement.className).slice(0, 40) + ' fill=' + cs.webkitTextFillColor + ' shadow=' + String(cs.textShadow).slice(0, 20));
+				}
+			});
+		}
+		rec('i18n: at the frozen peak every text node in every zone has a text-shadow and a transparent fill', red ? true : (T.held() === 'after' && glow && nodes > 0 && !nogood.length), (red ? 'skipped: reduced motion (fade only). ' : '') + J({ held: T.held(), mode: I.stats.lastMode, zones: zs.length, textNodes: nodes, bad: nogood.slice(0, 3), nBad: nogood.length }));
+		T.release(); await pr; await I.set('en'); await sleep(100);
+		var ex = ORION.selftest._extra || [], again = 0, fl = [];
+		for (var xi = 0; xi < ex.length; xi++) { try { var rr = await ex[xi].fn(); if (rr && rr.ok) again++; else fl.push(ex[xi].name + ': ' + (rr && rr.note)); } catch (e) { fl.push(ex[xi].name + ' threw ' + (e && e.message)); } }
+		rec('i18n: the ' + ex.length + ' section steps pass again after the cycles (English)', !fl.length, again + ' of ' + ex.length + (fl.length ? ' | FAIL ' + fl.slice(0, 3).join(' || ') : ''));
+		rec('i18n: still no reload after the section steps', W.__stNoReload === mark && I.lang === 'en', '');
 	}
 	async function viewerChecks(v, rec) {
 		var J = JSON.stringify, n = 'viewer ' + v.name + ': ', c = v.camera, ctl = v.controls; if (!c || !ctl) return rec(n + 'keys and wheel', true, 'skipped: no controls');

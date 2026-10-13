@@ -1,0 +1,208 @@
+/* orion-81.io: css/i18n.css (ORI-1321, I18N.md section 3). Language picker, swap animation, boot failsafe, per-script fonts, RTL.
+   Sections: 1 boot and reserved space - 2 picker - 3 swap animation - 4 compact bar - 5 fonts and typography per script - 6 right to left - 7 forced colours */
+
+/* ---------- 1. boot, failsafe and the picker's reserved space (3.1, 3.10) ---------- */
+:root.js { --lang-w: clamp(7.5ch, 18vw, 12.5rem); }
+/* below 700 px the closed field needs more than 7.5ch to show an autonym next to the globe, below 480 px the bar has just enough room (mark, Menu, Motion): measured at 320 to 520 px */
+@media (max-width: 699.98px) { :root.js { --lang-w: clamp(6.5rem, 18vw, 9rem); } }
+@media (max-width: 479.98px) { :root.js { --lang-w: clamp(4.5rem, calc(100vw - 246px), 7.5rem); } }
+:root.js:not(.i18n-ready) #bar .bar__inner::after { content: ""; flex: 0 0 var(--lang-w); min-block-size: 44px; }
+:root[data-i18n-boot="pending"] :is(#main, #footer, #bar .bar__inner > :not(.lang)) { visibility: hidden; animation: i18n-boot-reveal 0s linear 2s forwards; }
+@keyframes i18n-boot-reveal { to { visibility: visible; } }
+:root.i18n-reveal :is(#main, #footer, #bar .bar__inner > :not(.lang)) { animation: i18n-fade-in 200ms ease-out; }
+@keyframes i18n-fade-in { from { opacity: 0; } }
+/* the picker takes 200 px of the bar: at 1440 px the ten chapter links (709 px) would no longer fit the 72rem bar, so the bar itself is 76rem wide (from the first paint, so nothing shifts) */
+@media (min-width: 480px) { :root.js .bar__inner { width: min(76rem, 100% - 2rem); } }
+
+/* ---------- 2. the picker ---------- */
+.lang { position: relative; flex: 0 0 var(--lang-w); inline-size: var(--lang-w); min-block-size: 44px; text-transform: none; letter-spacing: normal; }
+:root[dir="rtl"] .lang { order: -1; }
+.lang [hidden] { display: none !important; }
+.lang__field {
+	position: relative; box-sizing: border-box; display: flex; align-items: center; gap: .35rem; inline-size: 100%; min-block-size: 44px;
+	padding-inline: .7rem .3rem; border: 1px solid var(--line-strong); border-radius: var(--radius-pill); background: rgba(5, 7, 11, .6); color: var(--text-2);
+}
+.lang__field:hover { border-color: var(--glow); color: var(--star); }
+.lang__field:focus-within { border-color: var(--glow); color: var(--star); outline: 3px solid var(--glow); outline-offset: 3px; box-shadow: 0 0 0 6px rgba(5, 7, 11, .85); }
+.lang input.lang__input[type="text"] {
+	flex: 1 1 auto; min-inline-size: 0; inline-size: 100%; min-block-size: 40px; margin: 0; padding: 0; border: 0; background: transparent; color: inherit; outline: none; box-shadow: none;
+	font-family: var(--font-body); font-size: .875rem; font-weight: 500; letter-spacing: normal; text-transform: none; text-overflow: ellipsis; cursor: text;
+}
+.lang input.lang__input[type="text"]:focus, .lang input.lang__input[type="text"]:focus-visible { outline: none; box-shadow: none; }
+.lang__globe, .lang__spin, .lang__chev { flex: none; inline-size: 1rem; block-size: 1rem; }
+.lang__globe { cursor: pointer; }
+.lang__spin { display: none; }
+.lang--busy .lang__globe { display: none; }
+.lang--busy .lang__spin { display: block; color: var(--glow); animation: i18n-spin .9s linear infinite; }
+@keyframes i18n-spin { to { transform: rotate(360deg); } }
+.lang__open { flex: none; display: grid; place-items: center; inline-size: 2rem; block-size: 2.25rem; margin: 0; padding: 0; border: 0; border-radius: var(--radius-pill); background: transparent; color: inherit; cursor: pointer; }
+.lang__open[aria-expanded="true"] .lang__chev { transform: rotate(180deg); }
+.lang__pop {
+	position: absolute; inset-block-start: calc(100% + 4px); right: 0; z-index: 3; box-sizing: border-box; display: flex; flex-direction: column; inline-size: min(22rem, calc(100vw - 16px)); max-block-size: min(60vh, 28rem);
+	border: 1px solid var(--line-strong); border-radius: var(--radius); background: #0a0f17; box-shadow: 0 18px 50px rgba(0, 0, 0, .6), var(--glow-shadow); overflow: hidden;
+}
+.lang__list { flex: 1 1 auto; min-block-size: 0; margin: 0; padding: .3rem; list-style: none; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.lang__list li { display: flex; align-items: center; min-block-size: 44px; box-sizing: border-box; margin: 0; padding: .35rem .7rem; border-radius: 10px; color: var(--text); font-size: .9375rem; line-height: 1.3; cursor: pointer; }
+.lang__list li:hover { background: var(--space-2); }
+.lang__list li[aria-selected="true"] { background: var(--space-3); box-shadow: inset 0 0 0 1px var(--glow); }
+.lang__auto { font-weight: 600; }
+.lang__sep { white-space: pre; color: var(--text-3); }
+.lang__en { color: var(--text-3); }
+.lang__tick { display: none; flex: none; inline-size: 1rem; block-size: 1rem; margin-inline-start: auto; padding-inline-start: .5rem; box-sizing: content-box; color: var(--glow); }
+.lang__list li[data-current] .lang__tick { display: block; }
+.lang__empty { margin: 0; padding: .9rem 1rem; color: var(--text-3); font-size: .875rem; }
+.lang__note { flex: none; margin: 0; padding: .6rem .85rem; border-top: 1px solid var(--line); color: var(--text-3); font-size: .75rem; line-height: 1.45; }
+.lang__msg {
+	position: absolute; inset-block-start: calc(100% + 4px); inset-inline-end: 0; z-index: 3; box-sizing: border-box; inline-size: max-content; max-inline-size: min(22rem, calc(100vw - 16px)); margin: 0; padding: .4rem .75rem;
+	border: 1px solid var(--danger); border-radius: 10px; background: rgba(5, 7, 11, .97); color: var(--text); font-size: .8125rem; line-height: 1.4;
+}
+.lang *, .lang { text-transform: none; letter-spacing: normal; }
+/* the picker stays crisp in the swap: it inherits from the bar zone, so its own fill and shadow are reset */
+.lang, .lang * { -webkit-text-fill-color: currentcolor; text-shadow: none; }
+/* the chevron is a second way to open the list; below 900 px the closed field keeps the room for the autonym (the globe stays: it is the one cue every visitor recognises) */
+@media (max-width: 899.98px) { .lang__open { display: none; } .lang__field { padding-inline: .65rem; } .lang--open .lang__open { display: grid; } .lang--open .lang__field { padding-inline: .7rem .3rem; } }
+@media (max-width: 479.98px) { .bar__menu, .bar__motion { max-inline-size: 6.5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }
+/* iOS zooms a focused field whose text is smaller than 16 px */
+@media (pointer: coarse) { .lang input.lang__input[type="text"] { font-size: 1rem; } }
+/* open: on wide viewports the field grows leftwards from the right edge, below 600 px it overlays the whole bar (3.1) */
+.lang--open .lang__field { position: absolute; inset-block-start: 0; right: 0; inline-size: min(22rem, calc(100vw - 16px)); z-index: 4; background: #070b12; border-color: var(--glow); }
+@media (max-width: 599.98px) {
+	.lang--open .lang__field { position: fixed; inset-block-start: 6px; left: 8px; right: 8px; inline-size: auto; }
+	.lang__pop { position: fixed; inset-block-start: 56px; left: 8px; right: 8px; inline-size: auto; max-block-size: min(70vh, 32rem); }
+	.lang__msg { position: fixed; inset-block-start: 56px; right: 8px; }
+}
+
+/* ---------- 3. the swap animation (3.5). Two shadow layers, not four: measured on an RX 7900 XTX every extra blurred layer costs about 3 ms per frame, four layers gave p95 30-60 ms ---------- */
+@property --i18n-g { syntax: '<number>'; inherits: true; initial-value: 0; }
+.i18n-zone { --i18n-t-out: 440ms; --i18n-t-in: 640ms; }
+.i18n-zone.i18n-out { animation: i18n-up var(--i18n-t-out) cubic-bezier(.55, .06, .68, .19) forwards; }
+.i18n-zone.i18n-peak { --i18n-g: 1; }
+.i18n-zone.i18n-in { animation: i18n-down var(--i18n-t-in) cubic-bezier(.22, .61, .36, 1) forwards; }
+@keyframes i18n-up { from { --i18n-g: 0; } to { --i18n-g: 1; } }
+@keyframes i18n-down { from { --i18n-g: 1; } to { --i18n-g: 0; } }
+.i18n-zone:is(.i18n-out, .i18n-peak, .i18n-in),
+.i18n-zone:is(.i18n-out, .i18n-peak, .i18n-in) *:not(svg, svg *, canvas, img, video, .lang, .lang *) {
+	--i18n-w: clamp(0, var(--i18n-g) / .55, 1);
+	--i18n-a: clamp(0, (1 - var(--i18n-g)) / .35, 1);
+	-webkit-text-fill-color: color-mix(in oklab, color-mix(in oklab, currentColor, #f4f8ff calc(var(--i18n-w) * 100%)) calc(var(--i18n-a) * 100%), transparent) !important;
+	text-shadow:
+		0 0 calc(var(--i18n-g) * .14em) rgb(244 248 255 / calc(var(--i18n-g) * var(--i18n-a))),
+		0 0 calc(.2em + var(--i18n-g) * 1.5em) rgb(120 185 250 / calc(var(--i18n-g) * .9)) !important;
+}
+.i18n-zone:is(.i18n-out, .i18n-peak, .i18n-in) svg text {
+	opacity: clamp(0, (1 - var(--i18n-g)) / .35, 1);
+	filter: drop-shadow(0 0 calc(var(--i18n-g) * 6px) rgb(244 248 255 / var(--i18n-g)));
+}
+/* reduced: no glow, no whitening, a short fade of the text (reduced-motion media query, the Motion toggle, or the frame-budget downgrade) */
+.i18n-zone.i18n-reduced { --i18n-t-out: 120ms; --i18n-t-in: 180ms; }
+.i18n-zone.i18n-reduced:is(.i18n-out, .i18n-in) { animation-timing-function: linear; }
+.i18n-zone.i18n-reduced:is(.i18n-out, .i18n-peak, .i18n-in),
+.i18n-zone.i18n-reduced:is(.i18n-out, .i18n-peak, .i18n-in) *:not(svg, svg *, canvas, img, video, .lang, .lang *) {
+	text-shadow: none !important;
+	-webkit-text-fill-color: color-mix(in oklab, currentColor calc((1 - var(--i18n-g)) * 100%), transparent) !important;
+}
+.i18n-zone.i18n-reduced:is(.i18n-out, .i18n-peak, .i18n-in) svg text { filter: none; opacity: calc(1 - var(--i18n-g)); }
+/* the site's reduced-motion rules set every animation to .001ms; the short fade is the one animation that stays (specificity wins) */
+html .i18n-zone.i18n-reduced.i18n-out { animation-duration: var(--i18n-t-out) !important; }
+html .i18n-zone.i18n-reduced.i18n-in { animation-duration: var(--i18n-t-in) !important; }
+
+/* ---------- 4. compact bar: the Menu-button mode of base.css (below 992 px) also when a translation overflows the links (3.1) ---------- */
+.js .bar--compact .bar__menu { display: inline-flex; align-items: center; }
+.js .bar--compact .bar__nav { justify-content: flex-end; position: static; }
+.js .bar--compact .bar__links {
+	display: none; position: absolute; left: 0; right: 0; top: 100%; flex-direction: column; flex-wrap: nowrap; justify-content: flex-start; gap: 0; padding: .5rem 1rem 1rem;
+	background: rgba(5, 7, 11, .97); border-bottom: 1px solid var(--line); max-height: calc(100vh - var(--bar-h)); overflow-y: auto;
+}
+.js .bar--compact .bar__links.is-open { display: flex; }
+.js .bar--compact .bar__links a { width: 100%; min-height: 48px; font-size: .8125rem; border-bottom: 1px solid var(--line); }
+.js .bar--compact .bar__links a[aria-current]::after { left: 0; right: auto; width: 24px; bottom: 8px; }
+.bar--compact .bar__inner { gap: var(--s-2); }
+
+/* ---------- 5. fonts and typography per script (3.6): the site stacks stay first for Latin, the script's system font follows ---------- */
+:root[data-script="Arab"] { --i18n-fb: "Segoe UI", "Geeza Pro", "Noto Sans Arabic"; }
+:root[data-script="Hebr"] { --i18n-fb: "Segoe UI", "Arial Hebrew", "Noto Sans Hebrew"; }
+:root[data-script="Deva"] { --i18n-fb: "Nirmala UI", "Kohinoor Devanagari", "Noto Sans Devanagari"; }
+:root[data-script="Beng"] { --i18n-fb: "Nirmala UI", "Kohinoor Bangla", "Noto Sans Bengali"; }
+:root[data-script="Guru"] { --i18n-fb: "Nirmala UI", "Gurmukhi MN", "Noto Sans Gurmukhi"; }
+:root[data-script="Gujr"] { --i18n-fb: "Nirmala UI", "Gujarati Sangam MN", "Noto Sans Gujarati"; }
+:root[data-script="Orya"] { --i18n-fb: "Nirmala UI", "Oriya Sangam MN", "Noto Sans Oriya"; }
+:root[data-script="Taml"] { --i18n-fb: "Nirmala UI", "Tamil Sangam MN", "Noto Sans Tamil"; }
+:root[data-script="Telu"] { --i18n-fb: "Nirmala UI", "Kohinoor Telugu", "Noto Sans Telugu"; }
+:root[data-script="Knda"] { --i18n-fb: "Nirmala UI", "Kannada Sangam MN", "Noto Sans Kannada"; }
+:root[data-script="Mlym"] { --i18n-fb: "Nirmala UI", "Malayalam Sangam MN", "Noto Sans Malayalam"; }
+:root[data-script="Sinh"] { --i18n-fb: "Nirmala UI", "Sinhala Sangam MN", "Noto Sans Sinhala"; }
+:root[data-script="Thai"] { --i18n-fb: "Leelawadee UI", "Thonburi", "Noto Sans Thai"; }
+:root[data-script="Laoo"] { --i18n-fb: "Leelawadee UI", "Lao Sangam MN", "Noto Sans Lao"; }
+:root[data-script="Khmr"] { --i18n-fb: "Leelawadee UI", "Khmer Sangam MN", "Noto Sans Khmer"; }
+:root[data-script="Mymr"] { --i18n-fb: "Myanmar Text", "Myanmar Sangam MN", "Noto Sans Myanmar"; }
+:root[data-script="Tibt"] { --i18n-fb: "Microsoft Himalaya", "Kailasa", "Noto Serif Tibetan"; }
+:root[data-script="Ethi"] { --i18n-fb: "Ebrima", "Kefa", "Noto Sans Ethiopic"; }
+:root[data-script="Armn"] { --i18n-fb: "Segoe UI", "Noto Sans Armenian"; }
+:root[data-script="Geor"] { --i18n-fb: "Segoe UI", "Noto Sans Georgian"; }
+:root[data-script="Jpan"] { --i18n-fb: "Yu Gothic UI", "Hiragino Sans", "Meiryo", "Noto Sans JP"; }
+:root[data-script="Kore"] { --i18n-fb: "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR"; }
+:root[data-script="Hans"] { --i18n-fb: "Microsoft YaHei UI", "PingFang SC", "Noto Sans SC"; }
+:root[data-script="Cans"] { --i18n-fb: "Gadugi", "Euphemia UCAS", "Noto Sans Canadian Aboriginal"; }
+:root[data-script="Thaa"] { --i18n-fb: "MV Boli", "Noto Sans Thaana"; }
+:root[data-script="Yiii"] { --i18n-fb: "Microsoft Yi Baiti", "Noto Sans Yi"; }
+:root[data-script="Avst"] { --i18n-fb: "Noto Sans Avestan", "Segoe UI Historic"; }
+:root[data-script]:not([data-script="Latn"], [data-script="Cyrl"], [data-script="Grek"]) {
+	--font-body: var(--i18n-fb, "Segoe UI"), system-ui, sans-serif;
+	--font-display: "Oxanium", var(--i18n-fb, "Segoe UI"), system-ui, sans-serif;
+	--font-mono: "JetBrains Mono", var(--i18n-fb, "Segoe UI"), ui-monospace, monospace;
+}
+/* scripts without case or with joined letters: no upper-casing and no letter spacing, which would break Arabic joining and look wrong in Indic and CJK scripts */
+:root[data-script]:not([data-script="Latn"], [data-script="Cyrl"], [data-script="Grek"], [data-script="Armn"]) :where(*):not(.lang, .lang *) { text-transform: none !important; letter-spacing: normal !important; }
+/* taller scripts get more leading */
+:root:is([data-script="Deva"], [data-script="Beng"], [data-script="Guru"], [data-script="Gujr"], [data-script="Orya"], [data-script="Taml"], [data-script="Telu"], [data-script="Knda"], [data-script="Mlym"], [data-script="Sinh"], [data-script="Thai"], [data-script="Laoo"], [data-script="Khmr"], [data-script="Mymr"], [data-script="Tibt"], [data-script="Ethi"]) body { line-height: 1.75; }
+:root:is([data-script="Deva"], [data-script="Beng"], [data-script="Guru"], [data-script="Gujr"], [data-script="Orya"], [data-script="Taml"], [data-script="Telu"], [data-script="Knda"], [data-script="Mlym"], [data-script="Sinh"], [data-script="Thai"], [data-script="Laoo"], [data-script="Khmr"], [data-script="Mymr"], [data-script="Tibt"], [data-script="Ethi"]) :is(h1, h2, h3, h4) { line-height: 1.35; }
+:root:is([data-script="Arab"], [data-script="Thaa"]) body { line-height: 1.8; }
+:root[lang^="ko"] body { word-break: keep-all; }
+:root:not([lang^="en"]) :is(h1, h2, h3, h4, button, .btn, .chip, .pill, [role="tab"], th, td) { overflow-wrap: anywhere; }
+:root:not([lang^="en"]) :is(p, li, dd) { hyphens: auto; }
+:root[data-script="Jpan"] :where(em, i), :root[data-script="Hans"] :where(em, i), :root[data-script="Kore"] :where(em, i) { font-style: normal; }
+
+/* ---------- 6. right to left (3.7): mirrored flows, left-to-right islands ---------- */
+:root[dir="rtl"] :is(.viewer, .hero__stage, .ships-ladder__scroll, .eco-svg, .pipe__svg, .meter, .weapons-meter__bar, .maps-viewer, .src, [translate="no"]) { direction: ltr; unicode-bidi: isolate; }
+:root[dir="rtl"] :is(.viewer, .hero__stage, .maps-viewer) :is([data-i18n], [data-i18n-d]) { unicode-bidi: plaintext; }
+:root[dir="rtl"] ul, :root[dir="rtl"] ol { padding-left: 0; padding-right: 1.25rem; }
+:root[dir="rtl"] .skip-link { left: auto; right: 1rem; }
+:root[dir="rtl"] .q-ctl > legend { float: right; margin-right: 0; margin-left: .75rem; }
+:root[dir="rtl"] select { padding-right: .75rem; padding-left: 2rem; background-position: 1.1rem 55%, calc(1.1rem + 5px) 55%; }
+:root[dir="rtl"] .js .bar--compact .bar__links a[aria-current]::after { left: auto; right: 0; }
+@media (max-width: 991.98px) { :root[dir="rtl"] .js .bar__links a[aria-current]::after { left: auto; right: 0; } }
+:root[dir="rtl"] .lightbox__nav--prev { left: auto; right: 0; }
+:root[dir="rtl"] .lightbox__nav--next { right: auto; left: 0; }
+:root[dir="rtl"] .lightbox__nav { transform: scaleX(-1); }
+:root[dir="rtl"] #build .build-chips__t { margin-right: 0; margin-left: var(--s-3); }
+:root[dir="rtl"] #build .build-delta { margin-left: 0; margin-right: .5rem; }
+:root[dir="rtl"] #build .build-segs { padding-left: 0; padding-right: 1.25rem; }
+:root[dir="rtl"] #build .build-segs__k { margin-right: 0; margin-left: .5rem; }
+:root[dir="rtl"] #build .build-mod__core { right: auto; left: .75rem; }
+:root[dir="rtl"] .maps-facts ul, :root[dir="rtl"] .maps-features, :root[dir="rtl"] .weapons-facts ul, :root[dir="rtl"] .phase ul { padding-left: 0; padding-right: 1.1rem; }
+:root[dir="rtl"] .ships-ratio { border-left-width: 1px; border-right: 3px solid var(--glow); }
+:root[dir="rtl"] .ships-key { margin-right: 0; margin-left: .75rem; }
+:root[dir="rtl"] .hero__disclosure { padding-left: 0; padding-right: .85rem; border-left: 0; border-right: 2px solid var(--glow); }
+:root[dir="rtl"] .mission__pct { margin-left: 0; margin-right: .5rem; }
+:root[dir="rtl"] .ai__origins { border-left-width: 1px; border-right: 2px solid var(--amber); }
+:root[dir="rtl"] .timeline__list { padding: 0 1.25rem 0 0; border-left: 0; border-right: 1px solid var(--line-strong); }
+:root[dir="rtl"] .timeline__item::before { left: auto; right: calc(-1.25rem - 4.5px); }
+:root[dir="rtl"] .timeline__date { margin-right: 0; margin-left: .5rem; }
+:root[dir="rtl"] .timeline__nav .mono-label { margin-left: 0; margin-right: auto; }
+:root[dir="rtl"] .ver > summary::before { transform: rotate(135deg); }
+:root[dir="rtl"] .ver[open] > summary::before { transform: rotate(45deg); }
+:root[dir="rtl"] .risks li::before { left: auto; right: 1rem; }
+:root[dir="rtl"] .why__context li { padding-left: 0; padding-right: 1rem; border-left: 0; border-right: 2px solid var(--line-strong); }
+:root[dir="rtl"] .faq__item > summary::after { right: auto; left: 1.1rem; }
+:root[dir="rtl"] .styles-fights li { padding: 0 var(--s-4) var(--s-3) 0; border-left: 0; border-right: 2px solid var(--line); }
+:root[dir="rtl"] .economy-today__list li { padding-left: 0; padding-right: var(--s-4); border-left: 0; border-right: 2px solid var(--line); }
+:root[dir="rtl"] .chip--sm { margin-left: 0; margin-right: .4rem; }
+:root[dir="rtl"] .weapons-state { margin-left: 0; margin-right: .5rem; }
+
+/* ---------- 7. forced colours: the picker follows the site's own block ---------- */
+@media (forced-colors: active) {
+	.lang__field, .lang__pop, .lang__msg { border: 1px solid CanvasText; background: Canvas; color: CanvasText; }
+	.lang__list li[aria-selected="true"] { background: Highlight; color: HighlightText; box-shadow: none; }
+	.lang__list li[aria-selected="true"] :is(.lang__en, .lang__sep, .lang__tick) { color: HighlightText; }
+	.lang__field:focus-within { outline: 3px solid Highlight; box-shadow: none; }
+}

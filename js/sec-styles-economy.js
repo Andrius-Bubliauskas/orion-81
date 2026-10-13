@@ -15,16 +15,21 @@
 
 	/* per-class viewer facts: model ids shown, poster key, label, short scene description */
 	var SCENE = {
-		small: { poster: 'poster.styles.small', models: ['kestrel', 'needle'], names: 'KESTREL and NEEDLE',
-			label: '3D scene: a KESTREL and a NEEDLE fighter in a turning fight, with laser fire. Scripted illustration, rotatable.',
-			what: 'The chase, the banking and the laser fire are a scripted illustration made for this site, not game footage.' },
-		medium: { poster: 'poster.styles.medium', models: ['anvil', 'needle'], names: 'ANVIL and NEEDLE',
-			label: '3D scene: the ANVIL destroyer with its NEEDLE wing leaving the hangar bay. Scripted illustration, rotatable.',
-			what: 'The launch sequence is a scripted illustration made for this site, not game footage; the bay positions come from the ANVIL model.' },
-		large: { poster: 'poster.styles.large', models: ['ironclad'], names: 'IRONCLAD',
-			label: '3D scene: the IRONCLAD dreadnought with turret tracer fire and point defence shooting down incoming rockets. Scripted illustration, rotatable.',
-			what: 'The tracers, incoming rockets and point-defence fire are a scripted illustration made for this site, not game footage; the turret positions come from the IRONCLAD model.' }
+		small: { poster: 'poster.styles.small', models: ['kestrel', 'needle'], names: ['KESTREL', 'NEEDLE'] },
+		medium: { poster: 'poster.styles.medium', models: ['anvil', 'needle'], names: ['ANVIL', 'NEEDLE'] },
+		large: { poster: 'poster.styles.large', models: ['ironclad'], names: ['IRONCLAD'] }
 	};
+	function sceneNames(cls) { var n = SCENE[cls].names; return n.length === 2 ? O.t('ships.namesAnd', '{a} and {b}', { a: n[0], b: n[1] }) : n[0]; }
+	function sceneLabel(cls) {
+		if (cls === 'small') return O.t('styles.scene.smallLabel', '3D scene: a KESTREL and a NEEDLE fighter in a turning fight, with laser fire. Scripted illustration, rotatable.');
+		if (cls === 'medium') return O.t('styles.scene.mediumLabel', '3D scene: the ANVIL destroyer with its NEEDLE wing leaving the hangar bay. Scripted illustration, rotatable.');
+		return O.t('styles.scene.largeLabel', '3D scene: the IRONCLAD dreadnought with turret tracer fire and point defence shooting down incoming rockets. Scripted illustration, rotatable.');
+	}
+	function sceneWhat(cls) {
+		if (cls === 'small') return O.t('styles.scene.smallWhat', 'The chase, the banking and the laser fire are a scripted illustration made for this site, not game footage.');
+		if (cls === 'medium') return O.t('styles.scene.mediumWhat', 'The launch sequence is a scripted illustration made for this site, not game footage; the bay positions come from the ANVIL model.');
+		return O.t('styles.scene.largeWhat', 'The tracers, incoming rockets and point-defence fire are a scripted illustration made for this site, not game footage; the turret positions come from the IRONCLAD model.');
+	}
 
 	/* ====================================================================== 3D vignettes ====================================================================== */
 	function disposeObj(o) {
@@ -171,25 +176,26 @@
 	/* ====================================================================== section state ====================================================================== */
 	var st = { cls: 'small', viewer: null, sceneApi: null, chapter: null, measure: 'turnDegS' };
 
+	function lowerFirst(c) { return O.i18n.lang === 'en' ? c.charAt(0).toLowerCase() + c.slice(1) : c; }
 	function liveCaption(cls) {
 		var sc = SCENE[cls], groups = {}, order = [];
-		sc.models.forEach(function (id) { var c = O.ui.modelCaption(id) || 'Real in-game model from version 0.6.1, converted for the web'; if (!groups[c]) { groups[c] = []; order.push(c); } groups[c].push(id.toUpperCase().replace('ORION1', 'ORION-1')); });
-		var parts = order.map(function (c) { return groups[c].join(' and ') + ': ' + c.charAt(0).toLowerCase() + c.slice(1); });
-		return 'Live 3D scene. ' + parts.join('; ') + '. ' + sc.what;
+		sc.models.forEach(function (id) { var c = O.ui.modelCaption(id) || O.t('styles.modelFallback', 'Real in-game model from version 0.6.1, converted for the web'); if (!groups[c]) { groups[c] = []; order.push(c); } groups[c].push(id.toUpperCase().replace('ORION1', 'ORION-1')); });
+		var parts = order.map(function (c) { var g = groups[c]; return O.t('styles.livePart', '{names}: {caption}', { names: g.length === 2 ? O.t('ships.namesAnd', '{a} and {b}', { a: g[0], b: g[1] }) : g.join(', '), caption: lowerFirst(c) }); });
+		return O.t('styles.live', 'Live 3D scene. {parts}. {what}', { parts: parts.join('; '), what: sceneWhat(cls) });
 	}
-	function staticCaption(cls) { var m = O.media(SCENE[cls].poster); return 'Still image. ' + (m && m.caption ? m.caption + '.' : 'An in-game capture.'); }
+	function staticCaption(cls) { var m = O.media(SCENE[cls].poster); return m && m.caption ? O.t('styles.still', 'Still image. {caption}.', { caption: m.caption }) : O.t('styles.stillFallback', 'Still image. An in-game capture.'); }
 	function applyViewerText(cls) {
 		var sc = SCENE[cls], v = st.viewer; if (!sc) return;
 		var cl = $('#styles-caption-live'), cs = $('#styles-caption-static');
 		if (cl) cl.textContent = liveCaption(cls); if (cs) cs.textContent = staticCaption(cls);
-		if (v) { v.setPoster(sc.poster); v.setLabel(sc.label); var pm = O.media(sc.poster); if (v.posterEl && pm && pm.alt) v.posterEl.alt = pm.alt; }
+		if (v) { v.setPoster(sc.poster); v.setLabel(sceneLabel(cls)); var pm = O.media(sc.poster); if (v.posterEl && pm && pm.alt) v.posterEl.alt = pm.alt; }
 	}
 
 	function makeViewer() {
 		var host = $('#styles-viewer'); if (!host || !O.viewer) return;
 		var sc = SCENE.small;
 		st.viewer = O.viewer(host, {
-			name: 'styles', priority: 'section', label: sc.label, groupLabel: 'Scripted 3D scene for the selected size class. Drag to orbit.', posterKey: sc.poster, interactive: true,
+			name: 'styles', priority: 'section', label: sceneLabel('small'), groupLabel: O.t('styles.viewerGroup', 'Scripted 3D scene for the selected size class. Drag to orbit.'), posterKey: sc.poster, interactive: true,
 			controls: { autoRotate: false, minDistance: 5, maxDistance: 8000 },
 			async setup(ctx) {
 				var T = ctx.THREE, kit = ctx.kit, seq = 0, cur = null, built = {}, clock = 0, shown = null, stars = null;
@@ -250,12 +256,12 @@
 		else if (v) {
 			applyViewerText(cls);
 			if (v.renderer && st.sceneApi) {
-				st.sceneApi.show(cls).catch(function (e) { O.fallback && console.warn('[orion] styles scene failed', e); v.unmount('failed', 'The 3D model could not load, so this is a still image.', true); });
+				st.sceneApi.show(cls).catch(function (e) { O.fallback && console.warn('[orion] styles scene failed', e); v.unmount('failed', 'model', true); });
 			} else if (!v.renderer && v.state !== 'failed') v.rebuild();
 		}
 		if (opts.focus) { var t = $('#styles-tab-' + cls); if (t) t.focus(); }
 		if (prev !== cls) {
-			O.ui.announce(future ? 'Colossal class selected. This class is a future idea and is not designed yet.' : CLS[cls].label + ' ships, classes ' + CLS[cls].range[0] + ' to ' + CLS[cls].range[1] + '. The 3D scene shows ' + SCENE[cls].names + '.');
+			O.ui.announce(future ? O.t('styles.announceColossal', 'Colossal class selected. This class is a future idea and is not designed yet.') : O.t('styles.announceClass', '{label} ships, classes {from} to {to}. The 3D scene shows {names}.', { label: O.i18n.d(CLS[cls].label), from: CLS[cls].range[0], to: CLS[cls].range[1], names: sceneNames(cls) }));
 			O.bus.emit('styles:class', cls);
 		}
 	}
@@ -270,14 +276,28 @@
 			if (n >= 0) { e.preventDefault(); select(ids[n], { focus: true }); }
 		});
 		$$('.styles-ship', st.chapter).forEach(function (a) { a.addEventListener('click', function () { O.bus.emit('ship:select', { id: a.dataset.ship, from: 'styles' }); }); });
+		labelShips();
+	}
+	function titleCase(r) { return O.i18n.lang === 'en' ? String(r).toLowerCase().replace(/\b\w/g, function (c) { return c.toUpperCase(); }) : String(r); }
+	function labelShips() {
+		$$('.styles-ship', st.chapter).forEach(function (a) {
+			var f = FLEET[a.dataset.ship]; if (!f) return;
+			a.setAttribute('aria-label', O.t('styles.shipLink', '{name}, {role}: open in the ships explorer', { name: f.name, role: titleCase(O.i18n.d(f.role)) }));
+		});
 	}
 
 	/* ====================================================================== compare bars ====================================================================== */
+	function measureLabel(k) {
+		switch (k) {
+			case 'turnDegS': return O.t('ships.spec.turn', 'Turn rate'); case 'cruiseMs': return O.t('ships.spec.cruise', 'Cruise speed'); case 'lengthM': return O.t('ships.spec.length', 'Length');
+			case 'massT': return O.t('ships.spec.mass', 'Mass'); case 'hullShield': return O.t('styles.spec.hullShield', 'Hull + shield'); default: return O.t('styles.spec.dps', 'Damage per second');
+		}
+	}
 	var MEASURES = [
-		{ k: 'turnDegS', l: 'Turn rate', u: ' deg/s', log: false }, { k: 'cruiseMs', l: 'Cruise speed', u: ' m/s', log: false }, { k: 'lengthM', l: 'Length', u: ' m', log: true },
-		{ k: 'massT', l: 'Mass', u: ' t', log: true }, { k: 'hullShield', l: 'Hull + shield', u: '', log: true }, { k: 'dps', l: 'Damage per second', u: '', log: false }
+		{ k: 'turnDegS', u: ' deg/s', log: false }, { k: 'cruiseMs', u: ' m/s', log: false }, { k: 'lengthM', u: ' m', log: true },
+		{ k: 'massT', u: ' t', log: true }, { k: 'hullShield', u: '', log: true }, { k: 'dps', u: '', log: false }
 	];
-	function nfmt(v) { return v >= 1000 ? v.toLocaleString('en-GB') : (v % 1 ? String(Math.round(v * 10) / 10) : String(v)); }
+	function nfmt(v) { return v >= 1000 ? O.ui.fmt.num(v) : (v % 1 ? O.ui.fmt.num(Math.round(v * 10) / 10, 1).replace(/[.,]0$/, '') : String(v)); }
 	function renderBars() {
 		var ul = $('#styles-bars'); if (!ul) return;
 		var m = MEASURES.filter(function (x) { return x.k === st.measure; })[0] || MEASURES[0], built = CLASSES.filter(function (c) { return c.status === 'built' && c.ranges; });
@@ -286,27 +306,27 @@
 		ul.textContent = '';
 		CLASSES.forEach(function (c) {
 			var li = D.createElement('li'); li.dataset.class = c.id; if (c.id === st.cls) li.className = 'is-on'; if (c.status !== 'built') li.classList.add('is-future');
-			var name = D.createElement('span'); name.className = 'styles-bars__name'; name.textContent = c.label;
+			var name = D.createElement('span'); name.className = 'styles-bars__name'; name.textContent = O.i18n.d(c.label);
 			var track = D.createElement('span'); track.className = 'styles-bars__track'; track.setAttribute('aria-hidden', 'true');
 			var val = D.createElement('span'); val.className = 'styles-bars__val';
 			if (c.status === 'built' && c.ranges) {
 				var a = c.ranges[m.k][0], b = c.ranges[m.k][1], l = (f(a) - lo) / span * 100, w = Math.max(1.5, (f(b) - f(a)) / span * 100);
 				var fill = D.createElement('span'); fill.className = 'styles-bars__fill'; fill.style.left = Math.min(l, 98.5) + '%'; fill.style.width = Math.min(w, 100 - Math.min(l, 98.5)) + '%'; track.appendChild(fill);
-				val.textContent = nfmt(a) + ' to ' + nfmt(b) + m.u;
-			} else val.textContent = 'Not designed yet';
+				val.textContent = O.t('styles.range', '{from} to {to}{unit}', { from: nfmt(a), to: nfmt(b), unit: m.u });
+			} else val.textContent = O.t('styles.notDesigned', 'Not designed yet');
 			li.append(name, track, val); ul.appendChild(li);
 		});
-		var cap = $('#styles-compare .muted'); if (cap) cap.textContent = 'Each bar spans the smallest to the largest value among the ships of that class' + (m.log ? ' (log scale, so the small classes stay visible)' : '') + '. Pick a measure.';
+		var cap = $('#styles-compare .muted'); if (cap) cap.textContent = m.log ? O.t('styles.barsCapLog', 'Each bar spans the smallest to the largest value among the ships of that class (log scale, so the small classes stay visible). Pick a measure.') : O.t('styles.barsCap', 'Each bar spans the smallest to the largest value among the ships of that class. Pick a measure.');
 	}
 	function wireBars() {
 		var box = $('#styles-compare'), grp = $('#styles-measure'); if (!box || !grp) return;
 		MEASURES.forEach(function (m) {
-			var b = D.createElement('button'); b.type = 'button'; b.className = 'pill'; b.textContent = m.l; b.dataset.k = m.k; b.setAttribute('aria-pressed', m.k === st.measure ? 'true' : 'false'); grp.appendChild(b);
+			var b = D.createElement('button'); b.type = 'button'; b.className = 'pill'; b.textContent = measureLabel(m.k); b.dataset.k = m.k; b.setAttribute('aria-pressed', m.k === st.measure ? 'true' : 'false'); grp.appendChild(b);
 		});
 		grp.addEventListener('click', function (e) {
 			var b = e.target.closest('button'); if (!b) return; st.measure = b.dataset.k;
 			$$('button', grp).forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
-			renderBars(); O.ui.announce('Comparing the classes by ' + b.textContent.toLowerCase());
+			renderBars(); O.ui.announce(O.t('styles.comparingBy', 'Comparing the classes by {measure}', { measure: O.i18n.lang === 'en' ? b.textContent.toLowerCase() : b.textContent }));
 		});
 		box.hidden = false; renderBars();
 	}
@@ -317,7 +337,7 @@
 		fs.hidden = false;
 		fs.addEventListener('change', function (e) {
 			var r = e.target; if (!r || r.name !== 'economy-path') return; dia.dataset.path = r.value;
-			O.ui.announce(r.value === 'earn' ? 'Showing the earn path.' : r.value === 'buy' ? 'Showing the buy path.' : 'Showing both paths.');
+			O.ui.announce(r.value === 'earn' ? O.t('economy.sayEarn', 'Showing the earn path.') : r.value === 'buy' ? O.t('economy.sayBuy', 'Showing the buy path.') : O.t('economy.sayBoth', 'Showing both paths.'));
 		});
 	}
 
@@ -353,7 +373,7 @@
 			var bad = [], n = 0;
 			$$('[data-bind]', D).filter(function (e) { return st.chapter.contains(e) || e.closest('#economy'); }).forEach(function (e) {
 				n++; var v = e.getAttribute('data-bind').split('.').reduce(function (o, k) { return o == null ? undefined : o[k]; }, W.ORION_DATA);
-				var want = (e.dataset.fmt === 'num' && typeof v === 'number') ? v.toLocaleString('en-GB') : String(v);
+				var want = (e.dataset.fmt === 'num' && typeof v === 'number') ? O.ui.fmt.num(v) : (typeof v === 'string' ? O.i18n.d(v) : String(v));
 				if (v == null || typeof v === 'object' || e.textContent !== want) bad.push(e.getAttribute('data-bind') + ' = ' + e.textContent + ' (data ' + want + ')');
 			});
 			return { ok: bad.length === 0 && n > 20, note: n + ' bound values checked' + (bad.length ? '; mismatches: ' + bad.slice(0, 4).join(' | ') : '') };
@@ -361,11 +381,11 @@
 		O.selftest.add('economy: PLANNED, fairness line, path highlight', async function () {
 			var ec = $('#economy'), notes = [], ok = true;
 			function chk(c, m) { if (!c) { ok = false; notes.push(m); } }
-			chk(!!$('.chip--planned', ec), 'PLANNED chip'); chk(/Nothing in this section is built yet\./.test(ec.textContent), 'nothing-built line');
+			chk(!!$('.chip--planned', ec), 'PLANNED chip'); chk(O.i18n.lang !== 'en' || /Nothing in this section is built yet\./.test(ec.textContent), 'nothing-built line');
 			var fair = ec.querySelector('.economy-fair__t'), want = W.ORION_DATA.economy.fairness.text;
 			chk(!!fair && fair.textContent === want, 'fairness line equals data');
 			var dia = $('#economy-diagram'); chk(!!fair && dia.compareDocumentPosition(fair) & Node.DOCUMENT_POSITION_FOLLOWING, 'fairness line is below the diagram');
-			chk(!/cosmetics?[- ]only/i.test(ec.textContent), 'says cosmetics only');
+			chk(O.i18n.lang !== 'en' || !/cosmetics?[- ]only/i.test(ec.textContent), 'says cosmetics only');
 			['earn', 'buy', 'both'].forEach(function (v) { var r = $('input[value="' + v + '"]', ec); r.click(); chk(dia.dataset.path === v, 'path ' + v); });
 			chk($$('.economy-today__list li .chip--built', ec).length === W.ORION_DATA.economy.builtToday.length, 'built-today chips');
 			return { ok: ok, note: ok ? 'PLANNED chip, fairness line under the diagram, radio highlight earn/buy/both, built-today chips' : notes.join('; ') };
@@ -377,6 +397,14 @@
 		init: function () {
 			st.chapter = $('#styles'); if (!st.chapter) return;
 			wireTabs(); wireBars(); initEconomy(); makeViewer(); applyViewerText('small'); addSelftests();
+			/* language switch (I18N.md 3.8): re-render every piece of text this section drew, keeping the selected class and measure */
+			O.bus.on('lang', function () {
+				labelShips();
+				var grp = $('#styles-measure'); if (grp) $$('button', grp).forEach(function (b) { b.textContent = measureLabel(b.dataset.k); });
+				renderBars();
+				if (st.cls !== 'colossal') applyViewerText(st.cls); else applyViewerText('small');
+				if (st.viewer) st.viewer.setTexts({ label: sceneLabel(st.cls === 'colossal' ? 'small' : st.cls), groupLabel: O.t('styles.viewerGroup', 'Scripted 3D scene for the selected size class. Drag to orbit.') });
+			});
 		}
 	});
 })();

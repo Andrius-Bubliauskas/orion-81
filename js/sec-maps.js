@@ -26,11 +26,13 @@
 	function maps() { return (ORION.data && ORION.data.maps) || []; }
 	function mapById(id) { return maps().filter(function (m) { return m.id === id; })[0] || null; }
 	function trimNum(n, d) { return String(parseFloat(Number(n).toFixed(d))); }
+	function locN(n, d) { return new Intl.NumberFormat(ORION.i18n.locale, { maximumFractionDigits: d }).format(n); }
 	function shortName(m) { return m.title.split(',')[0].replace(/ ASTEROID FIELD$/, ''); }
 	function gravityText(m) {
 		if (m.gravityMs2 == null) return '';
-		if (m.gravityMs2 === 0) return '0 m/s², free fall';
-		return trimNum(m.gravityMs2, 2) + ' m/s² · ' + (m.gravityG == null ? '' : trimNum(m.gravityG, 3) + ' g');
+		if (m.gravityMs2 === 0) return ORION.t('maps.gravityFree', '0 m/s², free fall');
+		if (m.gravityG == null) return ORION.t('maps.gravityOnly', '{ms2} m/s²', { ms2: locN(m.gravityMs2, 2) });
+		return ORION.t('maps.gravity', '{ms2} m/s² · {g} g', { ms2: locN(m.gravityMs2, 2), g: locN(m.gravityG, 3) });
 	}
 	function mediaFor(m) { return (m.mediaKeys || []).filter(function (k) { return ORION.media(k); }); }
 	function warn() { console.warn.apply(console, ['[maps]'].concat([].slice.call(arguments))); }
@@ -489,19 +491,19 @@
 	}
 
 	/* ------------------------------------------------------------------ section UI */
-	var NOTE = {
-		earth_orbit: 'Earth, clouds, city lights and debris are drawn for this site. Nothing here is a model from the game.',
-		luna: 'Terrain and Earth are drawn for this site. In the game Earth hangs about 68 degrees up; here it sits lower so it fits the frame.',
-		sol: 'The Sun is drawn for this site, about 29 degrees across when first shown, as the game gives it. The surface detail is invented.'
-	};
 	function captionText() {
 		var v = S.v, st = v ? v.host.dataset.state : 'poster', live = st === 'live' || st === 'paused', cur = S.cur;
 		if (S.galleryFor) { var gk = galKeys(S.galleryFor), gm = ORION.media(gk[S.galI] || gk[0]); return gm ? gm.caption : ''; }
 		if (!live) { var pm = v && v.opts.posterKey ? ORION.media(v.opts.posterKey) : null; return pm ? pm.caption : ''; }
-		if (!cur) return 'Schematic, not to scale. Illustration made for this site (procedural): sizes and distances are not real.';
-		var tail = NOTE[cur] || '';
-		if (cur === 'theta7') tail = ORION.ui.modelCaption('rock1').replace(/^Real in-game model/, 'Rocks: real in-game models') + '. Their placement is random.';
-		return 'Illustration made for this site (procedural). ' + tail;
+		if (!cur) return ORION.t('maps.capChart', 'Schematic, not to scale. Illustration made for this site (procedural): sizes and distances are not real.');
+		if (cur === 'theta7') {
+			var idx = W.ORION_MODEL_INDEX && W.ORION_MODEL_INDEX.rock1;
+			return ORION.t('maps.capTheta7', 'Illustration made for this site (procedural). Rocks: real in-game models from version {version}, lower-detail level (LOD 2) for the web, texture reduced to 512 px. Their placement is random.', { version: (idx && idx.version) || '0.6.1' });
+		}
+		if (cur === 'earth_orbit') return ORION.t('maps.capEarthOrbit', 'Illustration made for this site (procedural). Earth, clouds, city lights and debris are drawn for this site. Nothing here is a model from the game.');
+		if (cur === 'luna') return ORION.t('maps.capLuna', 'Illustration made for this site (procedural). Terrain and Earth are drawn for this site. In the game Earth hangs about 68 degrees up; here it sits lower so it fits the frame.');
+		if (cur === 'sol') return ORION.t('maps.capSol', 'Illustration made for this site (procedural). The Sun is drawn for this site, about 29 degrees across when first shown, as the game gives it. The surface detail is invented.');
+		return ORION.t('maps.capGeneric', 'Illustration made for this site (procedural).');
 	}
 	function galKeys(id) { var m = mapById(id); return m ? mediaFor(m) : []; }
 
@@ -512,12 +514,13 @@
 		if (!host || !listEl || !detail) return;
 		S.markers = {};
 
+		function tagsText(m) { return (m.tags || []).map(function (t) { return ORION.i18n.d(t); }).join(' · '); }
 		/* list (the keyboard path and the fallback) */
 		var itemBtns = S.itemBtns = {};
 		data.forEach(function (m) {
 			var b = el('button', { type: 'button', class: 'maps-item', 'data-map': m.id, 'aria-describedby': 'maps-howto' }, [
-				el('span', { class: 'maps-item__title', text: m.title }), el('span', { class: 'maps-item__go', 'aria-hidden': 'true', text: 'Enter' }),
-				el('span', { class: 'maps-item__tags', text: (m.tags || []).join(' · ') })]);
+				el('span', { class: 'maps-item__title', text: m.title }), el('span', { class: 'maps-item__go', 'aria-hidden': 'true', text: ORION.t('maps.enter', 'Enter') }),
+				el('span', { class: 'maps-item__tags', text: tagsText(m) })]);
 			b.addEventListener('click', function () { select(S.cur === m.id ? S.cur : m.id, { opener: b }); });
 			b.addEventListener('pointerenter', function () { setHot(m.id); }); b.addEventListener('pointerleave', function () { setHot(null); });
 			b.addEventListener('focus', function () { setHot(m.id); }); b.addEventListener('blur', function () { setHot(null); });
@@ -525,20 +528,26 @@
 		});
 
 		/* viewer layer: markers, badge, readout, loading note, Glasgow gallery */
-		var hud = el('div', { class: 'maps-hud' }), badge = el('p', { class: 'maps-badge', text: 'Illustration · made for this site' }), readout = el('p', { class: 'maps-readout', hidden: true }), loading = el('p', { class: 'maps-loading', text: 'Loading rocks...', hidden: true });
+		var hud = el('div', { class: 'maps-hud' }), badge = el('p', { class: 'maps-badge', text: ORION.t('maps.badge', 'Illustration · made for this site') }), readout = el('p', { class: 'maps-readout', hidden: true }), loading = el('p', { class: 'maps-loading', text: ORION.t('maps.loadingRocks', 'Loading rocks...'), hidden: true });
 		data.forEach(function (m) {
-			var b = el('button', { type: 'button', class: 'maps-marker', 'data-map': m.id, 'aria-label': 'Fly in to ' + m.title }, [el('span', { class: 'maps-marker__dot', 'aria-hidden': 'true' }), el('span', { class: 'maps-marker__label', 'aria-hidden': 'true', text: shortName(m) })]);
+			var b = el('button', { type: 'button', class: 'maps-marker', 'data-map': m.id, 'aria-label': ORION.t('maps.flyIn', 'Fly in to {title}', { title: m.title }) }, [el('span', { class: 'maps-marker__dot', 'aria-hidden': 'true' }), el('span', { class: 'maps-marker__label', 'aria-hidden': 'true', text: shortName(m) })]);
 			b.addEventListener('click', function () { select(m.id, { opener: b }); });
 			b.addEventListener('pointerenter', function () { setHot(m.id); }); b.addEventListener('pointerleave', function () { setHot(null); });
 			b.addEventListener('focus', function () { setHot(m.id); }); b.addEventListener('blur', function () { setHot(null); });
 			S.markers[m.id] = b; hud.append(b);
 		});
 		hud.append(badge, readout, loading);
-		var gal = { box: el('div', { class: 'maps-gallery', hidden: true }), main: el('button', { type: 'button', class: 'maps-gallery__main' }), img: el('img', { alt: '', decoding: 'async' }), thumbs: el('div', { class: 'maps-gallery__thumbs', role: 'group', 'aria-label': 'Captures' }), badge: el('p', { class: 'maps-badge', text: '' }) };
+		var gal = { box: el('div', { class: 'maps-gallery', hidden: true }), main: el('button', { type: 'button', class: 'maps-gallery__main' }), img: el('img', { alt: '', decoding: 'async' }), thumbs: el('div', { class: 'maps-gallery__thumbs', role: 'group', 'aria-label': ORION.t('maps.capturesGroup', 'Captures') }), badge: el('p', { class: 'maps-badge', text: '' }) };
 		gal.main.append(gal.img); gal.box.append(gal.main, gal.thumbs, gal.badge);
 		gal.main.addEventListener('click', function () { var ks = galKeys(S.galleryFor || S.cur); if (ks.length) ORION.ui.lightbox(ks, S.galI); });
 
-		S.loading = function (on) { loading.hidden = !on; loading.textContent = 'Loading ' + (S.cur === 'theta7' ? 'rocks' : 'view') + '...'; };
+		var loadRocks = true;   /* which of the two texts the (hidden) loading note carries; kept across a language switch so the English text is restored exactly */
+		function paintLoading() { loading.textContent = loadRocks ? ORION.t('maps.loadingRocks', 'Loading rocks...') : ORION.t('maps.loadingView', 'Loading view...'); }
+		S.loading = function (on) { loading.hidden = !on; loadRocks = S.cur === 'theta7'; paintLoading(); };
+		function paintReadout() {
+			var sm = mapById('sol'); readout.textContent = '';
+			if (S.lastView === 'sol' && sm && sm.hazards && sm.hazards[0]) readout.append(el('b', { text: ORION.t('maps.hazard', 'Hazard') + ' ' }), ORION.i18n.d(sm.hazards[0]));
+		}
 		S.sceneFailed = function (id) { S.galleryFor = id; refreshGallery(); refreshCaption(); };
 		S.viewArrived = function (view) {
 			badge.hidden = false; readout.hidden = view !== 'sol';
@@ -555,16 +564,21 @@
 					if (S.itemBtns[pf]) S.itemBtns[pf].focus({ preventScroll: true });
 				}());
 			}
-			var sm = mapById('sol'); readout.textContent = ''; if (view === 'sol' && sm && sm.hazards && sm.hazards[0]) readout.append(el('b', { text: 'Hazard ' }), sm.hazards[0]);
+			S.lastView = view; paintReadout();
 		};
 
 		/* viewer */
+		function viewLabel(id) {
+			var m = id ? mapById(id) : null;
+			if (!m) return ORION.t('maps.viewLabelChart', '3D chart of the five map locations: the Sun, Earth with the Moon, and the THETA-7 asteroid field. Schematic, not to scale.');
+			return id === 'glasgow' ? ORION.t('maps.viewLabelGlasgow', 'In-game captures of {title}', { title: m.title }) : ORION.t('maps.viewLabelIllustration', '3D illustration of {title}, made for this site', { title: m.title });
+		}
 		var v = null;
 		try {
 			v = ORION.viewer(host, {
-				name: 'maps', title: 'MAPS', label: '3D chart of the five map locations: the Sun, Earth with the Moon, and the THETA-7 asteroid field. Schematic, not to scale.',
-				groupLabel: 'Maps chart and location views', priority: 'section', posterKey: 'poster.maps', interactive: true,
-				caption: capEl ? capEl.textContent : 'Schematic, not to scale. Illustration made for this site.',
+				name: 'maps', title: ORION.t('maps.viewerTitle', 'MAPS'), label: viewLabel(null),
+				groupLabel: ORION.t('maps.viewerGroup', 'Maps chart and location views'), priority: 'section', posterKey: 'poster.maps', interactive: true,
+				caption: capEl ? capEl.textContent : ORION.t('maps.captionStatic', 'Schematic, not to scale. Illustration made for this site.'),
 				controls: { position: [14, 40, 100], target: [0, 0, -4], minDistance: 30, maxDistance: 260 }, setup: setupScene
 			});
 			S.v = v; v.layer().append(hud);
@@ -576,11 +590,11 @@
 			var id = S.galleryFor, ks = id ? galKeys(id) : [];
 			gal.box.hidden = !ks.length; if (!ks.length) return;
 			S.galI = clamp(S.galI, 0, ks.length - 1);
-			var me = ORION.media(ks[S.galI]); gal.img.src = me.src; gal.img.alt = me.alt || ''; gal.main.setAttribute('aria-label', 'Open capture ' + (S.galI + 1) + ' of ' + ks.length + ' full size: ' + (me.alt || ''));
-			gal.badge.textContent = 'In-game capture · version ' + (me.version || '');
+			var me = ORION.media(ks[S.galI]); gal.img.src = me.src; gal.img.alt = me.alt || ''; gal.main.setAttribute('aria-label', ORION.t('maps.openCaptureFull', 'Open capture {n} of {total} full size: {alt}', { n: S.galI + 1, total: ks.length, alt: me.alt || '' }));
+			gal.badge.textContent = ORION.t('maps.galleryBadge', 'In-game capture · version {version}', { version: me.version || '' });
 			gal.thumbs.textContent = '';
 			ks.forEach(function (k, i) {
-				var mt = ORION.media(k), tb = el('button', { type: 'button', class: 'maps-gallery__thumb', 'aria-pressed': i === S.galI ? 'true' : 'false', 'aria-label': 'Show capture ' + (i + 1) + ' of ' + ks.length }, [el('img', { src: mt.src, alt: '', loading: 'lazy', decoding: 'async' })]);
+				var mt = ORION.media(k), tb = el('button', { type: 'button', class: 'maps-gallery__thumb', 'aria-pressed': i === S.galI ? 'true' : 'false', 'aria-label': ORION.t('maps.showCapture', 'Show capture {n} of {total}', { n: i + 1, total: ks.length }) }, [el('img', { src: mt.src, alt: '', loading: 'lazy', decoding: 'async' })]);
 				tb.addEventListener('click', function () { S.galI = i; refreshGallery(); refreshCaption(); });
 				gal.thumbs.append(tb);
 			});
@@ -598,30 +612,33 @@
 			var m = S.cur ? mapById(S.cur) : null;
 			detail.textContent = '';
 			if (!m) {
-				detail.append(el('h3', { id: 'maps-detail-title', tabindex: '-1', text: 'Choose a place' }),
-					el('p', { class: 'maps-empty', text: 'Click a marker on the chart or pick a place from the list. You will see the game\'s own description, its gravity and hazards, and real captures from the game.' }),
-					el('p', { class: 'maps-note', text: 'Five maps are built: ' + data.map(shortName).join(', ') + '.' }));
+				detail.append(el('h3', { id: 'maps-detail-title', tabindex: '-1', text: ORION.t('maps.choose', 'Choose a place') }),
+					el('p', { class: 'maps-empty', text: ORION.t('maps.chooseHelp', 'Click a marker on the chart or pick a place from the list. You will see the game\'s own description, its gravity and hazards, and real captures from the game.') }),
+					el('p', { class: 'maps-note', text: ORION.t('maps.fiveBuilt', 'Five maps are built: {names}.', { names: data.map(shortName).join(', ') }) }));
 				return;
 			}
-			var ver = m.since === 'v0' ? 'v0' : m.since;
-			var tags = el('div', { class: 'cluster' }, [ORION.ui.chip('built', ver)].concat((m.tags || []).map(function (t) { return el('span', { class: 'maps-tag', text: t }); })));
+			var ver = m.since === 'v0' ? 'v0' : m.since, D2 = ORION.i18n.d;
+			var tags = el('div', { class: 'cluster' }, [ORION.ui.chip('built', ver)].concat((m.tags || []).map(function (t) { return el('span', { class: 'maps-tag', text: D2(t) }); })));
 			var facts = el('dl', { class: 'maps-facts' });
-			var gt = gravityText(m); if (gt) facts.append(el('dt', { text: 'Gravity' }), el('dd', null, [D.createTextNode(gt), ORION.ui.src(m.src && (m.src.gravityMs2 || m.src['*']))]));
-			if (m.hazards && m.hazards.length) facts.append(el('dt', { text: 'Hazards' }), el('dd', null, el('ul', null, m.hazards.map(function (h) { return el('li', { text: h }); }))));
-			if (m.modes && m.modes.length) facts.append(el('dt', { text: 'Modes' }), el('dd', null, [el('ul', null, m.modes.map(function (h) { return el('li', { text: h }); })), ORION.ui.src(m.src && m.src.modes)]));
-			var feats = el('ul', { class: 'maps-features' }, (m.features || []).map(function (f) { return el('li', null, [D.createTextNode(f.text), ORION.ui.src(f.src)]); }));
+			var gt = gravityText(m); if (gt) facts.append(el('dt', { text: ORION.t('maps.gravityLabel', 'Gravity') }), el('dd', null, [D.createTextNode(gt), ORION.ui.src(m.src && (m.src.gravityMs2 || m.src['*']))]));
+			if (m.hazards && m.hazards.length) facts.append(el('dt', { text: ORION.t('maps.hazards', 'Hazards') }), el('dd', null, el('ul', null, m.hazards.map(function (h) { return el('li', { text: D2(h) }); }))));
+			if (m.modes && m.modes.length) facts.append(el('dt', { text: ORION.t('maps.modes', 'Modes') }), el('dd', null, [el('ul', null, m.modes.map(function (h) { return el('li', { text: D2(h) }); })), ORION.ui.src(m.src && m.src.modes)]));
+			var feats = el('ul', { class: 'maps-features' }, (m.features || []).map(function (f) { return el('li', null, [D.createTextNode(D2(f.text)), ORION.ui.src(f.src)]); }));
 			var ks = mediaFor(m), caps = el('ul', { class: 'maps-caps' });
 			ks.forEach(function (k, i) {
-				var me = ORION.media(k), b = el('button', { type: 'button', class: 'maps-cap', 'aria-label': 'Open capture ' + (i + 1) + ' of ' + ks.length + ': ' + (me.alt || '') }, [
-					el('img', { src: me.src, alt: '', loading: 'lazy', decoding: 'async', width: me.w, height: me.h }), el('span', { class: 'maps-cap__t', text: 'In-game capture, version ' + (me.version || '') })]);
+				var me = ORION.media(k), b = el('button', { type: 'button', class: 'maps-cap', 'aria-label': ORION.t('maps.openCapture', 'Open capture {n} of {total}: {alt}', { n: i + 1, total: ks.length, alt: me.alt || '' }) }, [
+					el('img', { src: me.src, alt: '', loading: 'lazy', decoding: 'async', width: me.w, height: me.h }), el('span', { class: 'maps-cap__t', text: ORION.t('maps.captureLabel', 'In-game capture, version {version}', { version: me.version || '' }) })]);
 				b.addEventListener('click', function () { S.galI = i; ORION.ui.lightbox(ks, i); });
 				caps.append(el('li', null, b));
 			});
-			detail.append(el('h3', { id: 'maps-detail-title', tabindex: '-1', text: m.title }), tags, el('p', { text: m.blurb }), facts, feats,
-				el('p', { class: 'maps-note', text: 'Online multiplayer is not built yet. Single-player and LAN modes are.' }),
-				el('h4', { class: 'maps-h', text: ks.length ? 'Real captures' : 'Captures' }), ks.length ? caps : el('p', { class: 'maps-empty', text: 'No capture for this place yet.' }));
+			detail.append(el('h3', { id: 'maps-detail-title', tabindex: '-1', text: m.title }), tags, el('p', { text: D2(m.blurb) }), facts, feats,
+				el('p', { class: 'maps-note', text: ORION.t('maps.onlineNote', 'Online multiplayer is not built yet. Single-player and LAN modes are.') }),
+				el('h4', { class: 'maps-h', text: ks.length ? ORION.t('maps.realCaptures', 'Real captures') : ORION.t('maps.captures', 'Captures') }), ks.length ? caps : el('p', { class: 'maps-empty', text: ORION.t('maps.noCapture', 'No capture for this place yet.') }));
 		}
 
+		function paintCrumb(id) {
+			var m = id ? mapById(id) : null; crumb.textContent = ''; crumb.append(ORION.t('maps.chart', 'Chart')); if (m) crumb.append(' / ', el('b', { text: shortName(m) }));
+		}
 		/* selection */
 		function select(id, o) {
 			o = o || {};
@@ -631,12 +648,12 @@
 			var m = id ? mapById(id) : null;
 			host.dataset.view = id || 'chart';
 			S.galleryFor = id === 'glasgow' ? id : null; S.galI = id === 'glasgow' ? 1 : 0; /* lead with the clearer second capture (clamped if there is only one) */ refreshGallery();
-			back.hidden = !id; crumb.textContent = ''; crumb.append('Chart'); if (id) crumb.append(' / ', el('b', { text: shortName(m) }));
-			if (v) { v.setPoster(id ? (ORION.media('map.' + id + '.1') ? 'map.' + id + '.1' : 'poster.maps') : 'poster.maps'); v.setLabel(id ? (id === 'glasgow' ? 'In-game captures of ' + m.title : '3D illustration of ' + m.title + ', made for this site') : v.label); }
+			back.hidden = !id; paintCrumb(id);
+			if (v) { v.setPoster(id ? (ORION.media('map.' + id + '.1') ? 'map.' + id + '.1' : 'poster.maps') : 'poster.maps'); v.setLabel(viewLabel(id)); }
 			renderDetail(); refreshCaption();
 			if (S.view3d) S.view3d.go(id, !!o.instant);
 			if (!o.quiet) {
-				ORION.ui.announce(id ? m.title + '. ' + (id === 'glasgow' ? 'In-game captures.' : 'Illustration made for this site.') + ' Press Escape or Back to chart to return.' : 'Back to the chart.');
+				ORION.ui.announce(id ? (id === 'glasgow' ? ORION.t('maps.announceGlasgow', '{title}. In-game captures. Press Escape or Back to chart to return.', { title: m.title }) : ORION.t('maps.announceIllustration', '{title}. Illustration made for this site. Press Escape or Back to chart to return.', { title: m.title })) : ORION.t('maps.announceBack', 'Back to the chart.'));
 				var t = $('#maps-detail-title', detail);
 				if (id) { if (t) t.focus({ preventScroll: true }); }
 				else if (prev) { if (S.openerKind === 'marker' && v && v.isLive() && S.view3d) S.pendingFocus = prev; else if (itemBtns[prev]) itemBtns[prev].focus({ preventScroll: true }); }
@@ -652,6 +669,20 @@
 		}, true);
 
 		renderDetail(); refreshCaption();
+		/* language switch (I18N.md 3.8): re-render everything this section drew, keeping the selected place, gallery position and focus */
+		ORION.bus.on('lang', function () {
+			data.forEach(function (m) {
+				var b = itemBtns[m.id]; b.querySelector('.maps-item__go').textContent = ORION.t('maps.enter', 'Enter'); b.querySelector('.maps-item__tags').textContent = tagsText(m);
+				S.markers[m.id].setAttribute('aria-label', ORION.t('maps.flyIn', 'Fly in to {title}', { title: m.title }));
+			});
+			badge.textContent = ORION.t('maps.badge', 'Illustration \u00b7 made for this site');
+			paintLoading();
+			gal.thumbs.setAttribute('aria-label', ORION.t('maps.capturesGroup', 'Captures'));
+			paintCrumb(S.cur); paintReadout(); refreshGallery();
+			ORION.ui.keepFocus(detail, function () { renderDetail(); });
+			refreshCaption();
+			if (v) v.setTexts({ label: viewLabel(S.cur), groupLabel: ORION.t('maps.viewerGroup', 'Maps chart and location views'), title: ORION.t('maps.viewerTitle', 'MAPS') });
+		});
 		root.classList.add('maps-ready');
 		var q = new URLSearchParams(location.search).get('maps');
 		if (q && mapById(q)) select(q, { instant: true, quiet: true });
@@ -681,11 +712,11 @@
 			if (!title || title.textContent !== m.title) bad.push(m.id + ': panel title');
 			if (backB.hidden) bad.push(m.id + ': back hidden');
 			if (D.activeElement !== title) bad.push(m.id + ': focus not on heading');
-			if (m.gravityMs2 > 0 && $('#maps-detail', root).textContent.indexOf(trimNum(m.gravityMs2, 2)) < 0) bad.push(m.id + ': gravity text');
+			if (m.gravityMs2 > 0 && $('#maps-detail', root).textContent.indexOf(locN(m.gravityMs2, 2)) < 0) bad.push(m.id + ': gravity text');
 			if (m.id === 'glasgow') { if ($('.maps-gallery', root).hidden) bad.push('glasgow: captures not shown'); }
 			else if (S.v && S.v.isLive()) { var settled = await until(function () { return S.view3d && S.view3d.view() === m.id; }, 6000); if (!settled) bad.push(m.id + ': camera did not arrive'); }
 			var cap = ($('#maps-caption', root) || {}).textContent || '';
-			if (!/Illustration made for this site|In-game capture/.test(cap)) bad.push(m.id + ': caption not labelled');
+			if (ORION.i18n.lang === 'en' && !/Illustration made for this site|In-game capture/.test(cap)) bad.push(m.id + ': caption not labelled');
 			backB.click();
 			await new Promise(function (r) { setTimeout(r, 50); });
 			if (S.cur !== null || !backB.hidden) bad.push(m.id + ': back did not return to chart');
