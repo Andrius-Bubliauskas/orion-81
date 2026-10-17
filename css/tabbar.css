@@ -1,0 +1,113 @@
+/* (c) 2026 Andrius Bubliauskas. All rights reserved.
+   Shared colour tokens, the page base, the tab bar (.o81-tabs*) and the Orion POC frame page (.o81-poc*). */
+
+:root {
+  --o81-bg: #0b0e14;
+  --o81-panel: #121722;
+  --o81-fg: #e6e9ef;
+  --o81-muted: #9aa3b2;
+  --o81-line: #263041;
+  --o81-accent: #6cc3ff;
+  --o81-done: #5fd38d;
+  --o81-now: #ffc65c;
+  --o81-next: #9aa8ff;
+  --o81-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --o81-mono: ui-monospace, "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+  color-scheme: dark;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--o81-bg);
+  color: var(--o81-fg);
+  font-family: var(--o81-font);
+}
+
+/* The tab bar: two links, sticky at the top, one row at every width. */
+.o81-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 4px;
+  box-sizing: border-box;
+  height: 44px;
+  padding: 0 16px;
+  background: var(--o81-panel);
+  border-bottom: 1px solid var(--o81-line);
+  font-family: var(--o81-font);
+  font-size: 15px;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.o81-tab {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  height: 44px;
+  padding: 2px 12px 0;
+  color: var(--o81-muted);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+
+.o81-tab:hover {
+  color: var(--o81-fg);
+}
+
+.o81-tab[aria-current="page"] {
+  color: var(--o81-fg);
+  border-bottom-color: var(--o81-accent);
+}
+
+.o81-tab:focus-visible {
+  outline: 2px solid var(--o81-accent);
+  outline-offset: -4px;
+  border-radius: 4px;
+}
+
+.o81-tabs-note {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-left: 8px;
+  color: var(--o81-muted);
+  font-size: 13px;
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 599.98px) {
+  .o81-tabs {
+    padding: 0 8px;
+  }
+  .o81-tabs-note {
+    display: none;
+  }
+}
+
+/* The Orion POC page: the bar and one frame filling the rest of the viewport. */
+html:has(body.o81-poc),
+body.o81-poc {
+  height: 100%;
+  overflow: hidden;
+}
+
+.o81-poc-frame {
+  display: block;
+  width: 100%;
+  height: calc(100vh - 44px);
+  height: calc(100dvh - 44px);
+  margin: 0;
+  border: 0;
+  background: var(--o81-bg);
+}

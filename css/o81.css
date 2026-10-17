@@ -1,0 +1,213 @@
+/* The Orion-81 page (site/index.html): page layout and text only.
+   (c) 2026 Andrius Bubliauskas. All rights reserved.
+   Uses the --o81-* tokens defined in css/tabbar.css. Never styles .o81-tabs* or .o81-tests*.
+   No images, no web fonts, no animation. */
+
+:root {
+  --pg-gutter: 16px;
+  --pg-measure: 68ch;
+  --pg-dot: 14px;
+  --pg-rail: 2px;
+}
+
+.pg-main,
+.pg-footer {
+  box-sizing: border-box;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 var(--pg-gutter);
+  overflow-wrap: break-word;
+}
+
+.pg-main {
+  line-height: 1.6;
+  font-size: 1.0625rem;
+}
+
+.pg-main section {
+  padding: 40px 0 8px;
+  border-top: 1px solid var(--o81-line);
+}
+
+/* In-page links (#road, #tests and so on) stop below the sticky 44 px tab bar, with a 12 px gap. */
+section[id] {
+  scroll-margin-top: 56px;
+}
+
+.pg-main section:first-child {
+  border-top: 0;
+}
+
+.pg-main p,
+.pg-main li {
+  max-width: var(--pg-measure);
+}
+
+.pg-main h2 {
+  margin: 0 0 16px;
+  font-size: 1.5rem;
+  line-height: 1.25;
+}
+
+.pg-main h3 {
+  margin: 0 0 4px;
+  font-size: 1.0625rem;
+  line-height: 1.35;
+}
+
+.pg-main p {
+  margin: 0 0 16px;
+}
+
+.pg-main a {
+  color: var(--o81-accent);
+}
+
+/* Hero: the text wordmark in bold, letter-spaced capitals */
+.pg-hero {
+  padding-top: 56px;
+}
+
+.pg-wordmark {
+  margin: 0 0 20px;
+  font-size: 2.75rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.pg-logo {
+  display: block;
+  width: 144px;
+  height: auto;
+  margin: 0 0 20px;
+  border-radius: 12px;
+}
+
+.pg-lead {
+  font-size: 1.1875rem;
+}
+
+.pg-status-line {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 8px 14px;
+  border: 1px solid var(--o81-line);
+  border-left: 4px solid var(--o81-now);
+  border-radius: 4px;
+  background: var(--o81-panel);
+}
+
+/* Plain lists */
+.pg-list {
+  margin: 0 0 16px;
+  padding-left: 1.25em;
+}
+
+.pg-list li {
+  margin: 0 0 8px;
+}
+
+/* The road: a vertical timeline, a dot per milestone, the status as text beside it */
+.pg-road {
+  position: relative;
+  margin: 24px 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.pg-road::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: calc((var(--pg-dot) - var(--pg-rail)) / 2);
+  width: var(--pg-rail);
+  background: var(--o81-line);
+}
+
+.pg-step {
+  --pg-colour: var(--o81-next);
+  position: relative;
+  margin: 0 0 24px;
+  padding-left: calc(var(--pg-dot) + 18px);
+}
+
+.pg-step::before {
+  content: "";
+  position: absolute;
+  top: 0.4em;
+  left: 0;
+  box-sizing: border-box;
+  width: var(--pg-dot);
+  height: var(--pg-dot);
+  border: 2px solid var(--pg-colour);
+  border-radius: 50%;
+  background: var(--o81-bg);
+}
+
+.pg-step.is-done { --pg-colour: var(--o81-done); }
+.pg-step.is-now { --pg-colour: var(--o81-now); }
+.pg-step.is-next,
+.pg-step.is-later { --pg-colour: var(--o81-next); }
+
+.pg-step.is-done::before,
+.pg-step.is-now::before {
+  background: var(--pg-colour);
+}
+
+.pg-status {
+  display: inline-block;
+  margin: 0 0 4px;
+  padding: 1px 8px;
+  border: 1px solid var(--pg-colour);
+  border-radius: 3px;
+  color: var(--pg-colour);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.pg-step p {
+  margin: 0;
+  color: var(--o81-muted);
+}
+
+.pg-quiet {
+  color: var(--o81-muted);
+  font-size: 0.9375rem;
+}
+
+/* Footer */
+.pg-footer {
+  margin-top: 48px;
+  padding-top: 24px;
+  padding-bottom: 40px;
+  border-top: 1px solid var(--o81-line);
+  color: var(--o81-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.pg-footer p {
+  margin: 0 0 8px;
+}
+
+/* Visible focus for the page's own links and controls */
+.pg-main a:focus-visible,
+.pg-footer a:focus-visible,
+.pg-main section:focus-visible {
+  outline: 2px solid var(--o81-accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+  .pg-main { font-size: 1rem; }
+  .pg-hero { padding-top: 32px; }
+  .pg-wordmark { font-size: 2rem; letter-spacing: 0.1em; }
+  .pg-logo { width: 112px; margin-bottom: 16px; border-radius: 10px; }
+  .pg-lead { font-size: 1.0625rem; }
+  .pg-main section { padding-top: 32px; }
+  .pg-main h2 { font-size: 1.3125rem; }
+}

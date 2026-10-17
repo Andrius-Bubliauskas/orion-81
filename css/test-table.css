@@ -1,0 +1,243 @@
+/* (c) 2026 Andrius Bubliauskas. All rights reserved.
+   The test table component (.o81-tests*): controls, table, cards on phones, the probe list. */
+
+.o81-tests {
+  font-size: 15px;
+  line-height: 1.45;
+  min-width: 0;
+}
+
+.o81-tests-source {
+  margin: 0 0 12px;
+  color: var(--o81-muted);
+  font-size: 14px;
+}
+
+.o81-tests-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px 12px;
+  margin: 0 0 12px;
+}
+
+.o81-tests-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.o81-tests-field-search {
+  flex: 1 1 260px;
+}
+
+.o81-tests-field-area {
+  flex: 0 1 auto;
+  max-width: 100%;
+}
+
+.o81-tests-label {
+  color: var(--o81-muted);
+  font-size: 13px;
+}
+
+.o81-tests-search,
+.o81-tests-area {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-height: 38px;
+  padding: 6px 10px;
+  color: var(--o81-fg);
+  background: var(--o81-panel);
+  border: 1px solid var(--o81-line);
+  border-radius: 6px;
+  font: inherit;
+}
+
+.o81-tests-search:focus-visible,
+.o81-tests-area:focus-visible {
+  outline: 2px solid var(--o81-accent);
+  outline-offset: 1px;
+}
+
+.o81-tests-count {
+  flex: 0 0 auto;
+  padding: 0 0 9px;
+  color: var(--o81-muted);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.o81-tests-wrap {
+  border: 1px solid var(--o81-line);
+  border-radius: 8px;
+  min-width: 0;
+}
+
+.o81-tests-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.o81-tests-table th {
+  position: sticky;
+  top: 44px;
+  z-index: 1;
+  padding: 8px 10px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--o81-muted);
+  background: var(--o81-panel);
+  border-bottom: 1px solid var(--o81-line);
+}
+
+.o81-tests-table td {
+  padding: 7px 10px;
+  vertical-align: top;
+  border-top: 1px solid var(--o81-line);
+  overflow-wrap: anywhere;
+}
+
+.o81-tests-table tbody tr:first-child td {
+  border-top: 0;
+}
+
+.o81-tests-table tr[hidden] {
+  display: none;
+}
+
+.o81-tests-num {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  color: var(--o81-muted);
+}
+
+.o81-tests-table th.o81-tests-num {
+  text-align: right;
+}
+
+.o81-tests-ref {
+  min-width: 9em;
+  color: var(--o81-accent);
+  overflow-wrap: break-word;
+  font-variant-numeric: tabular-nums;
+}
+
+.o81-tests-areacell {
+  color: var(--o81-muted);
+  min-width: 8em;
+}
+
+.o81-tests-where {
+  font-family: var(--o81-mono);
+  font-size: 12.5px;
+  color: var(--o81-muted);
+  overflow-wrap: anywhere;
+}
+
+.o81-tests-table td.o81-tests-where {
+  overflow-wrap: break-word;
+}
+
+.o81-tests-empty td {
+  padding: 16px 10px;
+  text-align: center;
+  color: var(--o81-muted);
+}
+
+.o81-tests-probes {
+  margin: 20px 0 0;
+}
+
+.o81-tests-probes-h {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+
+.o81-tests-probes-note {
+  margin: 0 0 8px;
+  color: var(--o81-muted);
+  font-size: 14px;
+}
+
+.o81-tests-probes-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.o81-tests-probes-list li {
+  margin: 0 0 6px;
+  overflow-wrap: anywhere;
+}
+
+/* Phones: every row becomes a card. */
+@media (max-width: 719.98px) {
+  .o81-tests-wrap {
+    border: 0;
+  }
+  .o81-tests-table,
+  .o81-tests-table tbody {
+    display: block;
+  }
+  .o81-tests-table thead {
+    display: none;
+  }
+  .o81-tests-table tr {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 2px 8px;
+    margin: 0 0 8px;
+    padding: 10px 12px;
+    background: var(--o81-panel);
+    border: 1px solid var(--o81-line);
+    border-radius: 8px;
+  }
+  .o81-tests-table td {
+    display: block;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+  .o81-tests-table .o81-tests-num {
+    grid-column: 1;
+    grid-row: 1;
+    text-align: left;
+  }
+  .o81-tests-table .o81-tests-num::before {
+    content: "#";
+  }
+  .o81-tests-table .o81-tests-ref {
+    grid-column: 2;
+    grid-row: 1;
+    white-space: normal;
+  }
+  .o81-tests-table .o81-tests-check {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .o81-tests-table .o81-tests-areacell {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    min-width: 0;
+    font-family: var(--o81-mono);
+    font-size: 12.5px;
+  }
+  .o81-tests-table td.o81-tests-where {
+    grid-column: 1 / -1;
+    grid-row: 4;
+    overflow-wrap: anywhere;
+  }
+  .o81-tests-table .o81-tests-empty {
+    display: block;
+  }
+  .o81-tests-table .o81-tests-empty[hidden] {
+    display: none;
+  }
+  .o81-tests-count {
+    padding: 0;
+  }
+}
