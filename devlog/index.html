@@ -18,6 +18,7 @@
 <nav class="o81-tabs" aria-label="Site">
   <a class="o81-tab" data-tab="home" data-clean="../" href="../index.html">Home</a>
   <a class="o81-tab" data-tab="devlog" data-clean="./" href="index.html" aria-current="page">Orion-81 devlog</a>
+  <a class="o81-tab" data-tab="progress" data-clean="progress.html" href="progress.html">Progress</a>
   <a class="o81-tab" data-tab="poc" data-clean="../poc/" href="../poc/index.html">Orion POC</a>
 </nav>
 <main class="pg-main">
@@ -31,7 +32,26 @@
   <p class="pg-lead">Orion-81 is a space combat game with six degrees of freedom: you move and turn freely along every axis. You pilot a single heavy ship and point its nose with the mouse. The pace is unhurried, yet the controls answer at once: every input takes effect from the next 8 millisecond step, and a big ship simply takes longer to come round.</p>
   <p>It has a purpose beyond play. Its revenue is meant to help support software engineers and graphic designers whose work has been affected by artificial intelligence.</p>
   <p class="pg-status-line"><strong>In development.</strong> Built so far: the rules core (M2) and the demo's rules (M2.1). Ships as machines (M2.2) is under way and paused at a checkpoint, 20 October 2026.</p>
-  <p class="pg-links"><a href="progress.html">Interactive progress chart</a></p>
+</section>
+
+<section id="glance" aria-labelledby="glance-h">
+  <h2 id="glance-h">At a glance</h2>
+  <a class="pg-feature" href="progress.html">
+    <span class="pg-feature-kicker">Interactive progress chart</span>
+    <span class="pg-feature-h">Every branch, wave and work item since 14 October</span>
+    <span class="pg-feature-p">Zoom, filter and search the whole build. The road ahead is drawn as dashed estimates.</span>
+    <span class="pg-feature-go">Open the chart <span aria-hidden="true">&rarr;</span></span>
+  </a>
+  <h3 class="pg-sub">The AI effort to get there: estimate of <span data-o81-stat="est_date">19 October 2026</span></h3>
+  <ul class="pg-stats">
+    <li class="pg-stat"><span class="pg-stat-num">about <span data-o81-stat="tokens_bn">77</span> billion</span><span class="pg-stat-cap">tokens of AI work to go on the whole remaining road, within a range of <span data-o81-stat="tokens_low_bn">43</span> to <span data-o81-stat="tokens_high_bn">152</span> billion</span></li>
+    <li class="pg-stat"><span class="pg-stat-num">about <span data-o81-stat="weeks">11</span> weeks</span><span class="pg-stat-cap">of AI work at the current pace, within a range of <span data-o81-stat="weeks_low">6</span> to <span data-o81-stat="weeks_high">22</span> weeks</span></li>
+    <li class="pg-stat"><span class="pg-stat-num">about <span data-o81-stat="weeks_free">1.8</span> weeks</span><span class="pg-stat-cap">of that is engine-free work</span></li>
+    <li class="pg-stat"><span class="pg-stat-num">about <span data-o81-stat="weeks_engine">8.9</span> weeks</span><span class="pg-stat-cap">of that is engine work, with a wider range because none of it has been measured yet</span></li>
+    <li class="pg-stat"><span class="pg-stat-num"><span data-o81-stat="finish">around 20 January 2027</span></span><span class="pg-stat-cap">for the last planned milestone, between <span data-o81-stat="finish_low">late December 2026</span> and <span data-o81-stat="finish_high">late March 2027</span></span></li>
+    <li class="pg-stat"><span class="pg-stat-num"><span data-o81-stat="used_bn">7.4</span> billion</span><span class="pg-stat-cap">tokens used so far, from <span data-o81-stat="used_from">14 October 2026</span> to <span data-o81-stat="used_to">19 October 2026</span></span></li>
+  </ul>
+  <p class="pg-quiet">Effort is counted in tokens, the small pieces of text the AI reads and writes. These are totals only.</p>
 </section>
 
 <section id="devlog" aria-labelledby="devlog-h">
@@ -144,36 +164,8 @@
     <li><strong>M4 to M11.</strong> The clean v0 demo (M4); multiplayer on a local network (M5); the look (M6) and capture the flag (M6.1); the full fleet (M7); loadout and hangar (M8) and assigned-ship co-op (M8.1); team battle (M9); more worlds (M10) and invasion and defence (M10.1); economy and unlocks (M11). All need the engine.</li>
   </ol>
 
-  <h3 class="pg-sub">Estimate of 19 October 2026</h3>
-  <p>Orion-81 is built by AI, so the effort is counted in tokens: the small pieces of text the AI reads and writes. For everything above, the estimate is <strong>about 77 billion tokens, within a range of 43 to 152 billion</strong>. At the current pace of AI work that is <strong>about 11 weeks, within a range of 6 to 22 weeks</strong>.</p>
-  <div class="pg-table-wrap">
-    <table class="pg-table">
-      <caption>Estimated tokens per milestone, in billions</caption>
-      <thead><tr><th scope="col">Milestone</th><th scope="col">Engine</th><th scope="col">Low</th><th scope="col">Likely</th><th scope="col">High</th></tr></thead>
-      <tbody>
-        <tr><th scope="row">M2.2, the rest</th><td>No engine needed</td><td>0.9</td><td><strong>1.4</strong></td><td>2.3</td></tr>
-        <tr><th scope="row">M3a</th><td>No engine needed</td><td>1.5</td><td><strong>2.2</strong></td><td>3.3</td></tr>
-        <tr><th scope="row">M2.3</th><td>No engine needed</td><td>3.1</td><td><strong>4.7</strong></td><td>7.1</td></tr>
-        <tr><th scope="row">M2.4</th><td>No engine needed</td><td>2.4</td><td><strong>3.7</strong></td><td>5.6</td></tr>
-        <tr><th scope="row">M3b</th><td>Needs the engine</td><td>1.9</td><td><strong>3.5</strong></td><td>6.9</td></tr>
-        <tr><th scope="row">M4</th><td>Needs the engine</td><td>4.1</td><td><strong>7.4</strong></td><td>14.8</td></tr>
-        <tr><th scope="row">M5</th><td>Needs the engine</td><td>3.5</td><td><strong>6.4</strong></td><td>12.9</td></tr>
-        <tr><th scope="row">M6</th><td>Needs the engine</td><td>2.7</td><td><strong>4.9</strong></td><td>9.9</td></tr>
-        <tr><th scope="row">M6.1</th><td>Needs the engine</td><td>2.5</td><td><strong>4.5</strong></td><td>8.9</td></tr>
-        <tr><th scope="row">M7</th><td>Needs the engine</td><td>4.1</td><td><strong>7.4</strong></td><td>14.8</td></tr>
-        <tr><th scope="row">M8</th><td>Needs the engine</td><td>2.5</td><td><strong>4.5</strong></td><td>8.9</td></tr>
-        <tr><th scope="row">M8.1</th><td>Needs the engine</td><td>1.5</td><td><strong>2.7</strong></td><td>5.4</td></tr>
-        <tr><th scope="row">M9</th><td>Needs the engine</td><td>2.0</td><td><strong>3.7</strong></td><td>7.4</td></tr>
-        <tr><th scope="row">M10</th><td>Needs the engine</td><td>3.5</td><td><strong>6.4</strong></td><td>12.9</td></tr>
-        <tr><th scope="row">M10.1</th><td>Needs the engine</td><td>3.3</td><td><strong>5.9</strong></td><td>11.9</td></tr>
-        <tr><th scope="row">M11</th><td>Needs the engine</td><td>2.0</td><td><strong>3.7</strong></td><td>7.4</td></tr>
-        <tr class="pg-total"><th scope="row">Whole road, with a margin for side work</th><td></td><td>42.6</td><td><strong>76.7</strong></td><td>151.6</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <p class="pg-quiet">Rows are rounded, so they do not add up exactly to the total.</p>
-  <p><strong>How it is estimated.</strong> The estimate is measured from the work so far: each engine-free milestone is judged from what the same kind of work has already cost. The engine milestones have no measured basis yet, so they are judged by size and their range is wider.</p>
-  <p><strong>Used so far.</strong> From the start on 14 October to 19 October 2026, the work used about 7.4 billion tokens in all, of which about 37 million were written by the AI and the rest was the AI reading the project.</p>
+  <h3 class="pg-sub">How the estimate is made</h3>
+  <p>The totals are at the top of this page. The estimate is measured from the work so far: each engine-free milestone is judged from what the same kind of work has already cost. The engine milestones have no measured basis yet, so they are judged by size and their range is wider.</p>
 </section>
 
 <section id="built" aria-labelledby="built-h">
@@ -211,11 +203,13 @@
   <p>&copy; 2026 Andrius Bubliauskas. All rights reserved.</p>
   <p>Anthropic, Claude and Claude Code are trademarks of Anthropic, PBC. Orion-81 is not affiliated with, sponsored or endorsed by Anthropic.</p>
   <p>No trackers, no cookies, nothing loaded from other sites.</p>
-  <p>Site version 2.1.1, updated 20 October 2026.</p>
+  <p>Site version 2.2.0, updated 20 October 2026.</p>
 </footer>
 <script src="../assets/data/test-index.js"></script>
+<script src="../assets/data/progress-stats.js"></script>
 <script src="../js/tabbar.js"></script>
 <script src="../js/test-table.js"></script>
+<script src="../js/stats.js"></script>
 <script src="../js/o81-selftest.js"></script>
 </body>
 </html>

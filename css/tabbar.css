@@ -89,6 +89,11 @@ body {
 @media (max-width: 599.98px) {
   .o81-tabs {
     padding: 0 8px;
+    gap: 0;
+  }
+  .o81-tab {
+    padding: 2px 9px 0;
+    font-size: 14px;
   }
   .o81-tabs-note {
     display: none;

@@ -40,25 +40,39 @@
     var order = Array.prototype.map.call(links, function (a) { return a.getAttribute('data-tab') + '=' + a.textContent.trim(); });
     var cur = Array.prototype.filter.call(links, function (a) { return a.getAttribute('aria-current') === 'page'; })
       .map(function (a) { return a.getAttribute('data-tab'); });
-    check('tab bar: three links, Home, Orion-81 devlog, Orion POC',
+    check('tab bar: four links, Home, Orion-81 devlog, Progress, Orion POC',
       nav && nav.getAttribute('aria-label') === 'Site' &&
-      order.join('|') === 'home=Home|devlog=Orion-81 devlog|poc=Orion POC', order);
+      order.join('|') === 'home=Home|devlog=Orion-81 devlog|progress=Progress|poc=Orion POC', order);
     var hrefs = Array.prototype.map.call(links, function (a) { return a.getAttribute('href'); });
-    check('tab bar: every link ends in index.html (or is a clean address over http)',
-      hrefs.length === 3 && hrefs.every(function (h) { return /index\.html$/.test(h) || /\/$/.test(h); }), hrefs);
+    check('tab bar: every link ends in .html (or is a clean address over http)',
+      hrefs.length === 4 && hrefs.every(function (h) { return /\.html$/.test(h) || /\/$/.test(h); }), hrefs);
     check('tab bar: current tab is ' + current, cur.length === 1 && cur[0] === current, cur);
     var bar = nav ? nav.getBoundingClientRect() : null;
     check('tab bar: one row, 44 px high', bar && Math.abs(bar.height - 44) < 1, bar ? bar.height : null);
     return nav;
   }
 
+  function checkStats(min) {
+    var S = window.O81_STATS;
+    var bad = [];
+    if (S) S.before.forEach(function (b) { if (S.values[b.key] !== b.text) bad.push(b.key + ': page "' + b.text + '", data "' + S.values[b.key] + '"'); });
+    check('every stat on the page equals the data', !!S && S.before.length >= min && bad.length === 0,
+      { bound: S ? S.before.length : 0, bad: bad });
+  }
+
   function homePage() {
     barCheck('home');
-    var doors = document.querySelectorAll('a.pg-door');
-    var names = Array.prototype.map.call(doors, function (a) { return a.querySelector('.pg-door-h').textContent.trim(); });
-    check('two doors: Orion-81 devlog and Orion POC (archived)',
-      names.join('|') === 'Orion-81 devlog|Orion POC (archived)', names);
-    var notice = document.querySelector('.pg-notice');
+    var cta = document.querySelectorAll('a.fp-btn');
+    var names = Array.prototype.map.call(cta, function (a) { return a.textContent.trim(); });
+    check('two calls to action: Read the devlog, See the progress chart',
+      names.join('|') === 'Read the devlog|See the progress chart', names);
+    var door = document.querySelectorAll('a.fp-door .fp-door-h');
+    check('a door to Orion POC (archived)', door.length === 1 && door[0].textContent.trim() === 'Orion POC (archived)');
+    check('the progress chart card links to the chart', document.querySelectorAll('a.fp-feature[href$="progress.html"]').length === 1);
+    checkStats(4);
+    var strip = document.querySelectorAll('.fp-stat');
+    check('stat strip: four stats', strip.length === 4, strip.length);
+    var notice = document.querySelector('.pg-notice, .fp-notice');
     check('notice: independent, not affiliated with, endorsed by or funded by Anthropic', !!notice &&
       notice.textContent.indexOf('independent and is not affiliated with, endorsed by or funded by Anthropic') !== -1);
     var ext = document.querySelectorAll('a[href^="https://www.anthropic.com/news/public-benefit-fund"]');
@@ -72,7 +86,11 @@
     var T = window.O81_TABLE;
     barCheck('devlog');
     var prog = document.querySelectorAll('a[href="progress.html"]');
-    check('link to the interactive progress chart', prog.length >= 1, prog.length);
+    check('link to the interactive progress chart, with the card near the top', prog.length >= 2 &&
+      !!document.querySelector('#glance a.pg-feature[href="progress.html"]'), prog.length);
+    check('estimate totals near the top: six cards', document.querySelectorAll('#glance .pg-stat').length === 6);
+    check('no per-milestone estimate table', document.querySelectorAll('table.pg-table').length === 0);
+    checkStats(10);
     var entries = document.querySelectorAll('.pg-entry');
     check('devlog: dated entries, newest first', entries.length >= 5 &&
       /20/.test(entries[0].querySelector('.pg-date').textContent) && /14 October/.test(entries[entries.length - 1].querySelector('.pg-date').textContent),

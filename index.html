@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Orion-81</title>
-<meta name="description" content="Orion-81 is a space combat game in development. Made with AI, and meant to give something back as society adjusts to the impacts of artificial intelligence.">
+<meta name="description" content="Orion-81 is a space combat game in development. Its revenue is meant to help support software engineers and graphic designers whose work is being reshaped by artificial intelligence.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/img/logo/favicon-32.png">
 <link rel="icon" type="image/png" sizes="180x180" href="assets/img/logo/favicon-180.png">
@@ -12,56 +12,103 @@
 <!-- (c) 2026 Andrius Bubliauskas. All rights reserved. -->
 <link rel="stylesheet" href="css/tabbar.css">
 <link rel="stylesheet" href="css/o81.css">
+<link rel="stylesheet" href="css/front.css">
 </head>
-<body data-o81-page="home">
+<body data-o81-page="home" class="fp-body">
 <nav class="o81-tabs" aria-label="Site">
   <a class="o81-tab" data-tab="home" data-clean="./" href="index.html" aria-current="page">Home</a>
   <a class="o81-tab" data-tab="devlog" data-clean="devlog/" href="devlog/index.html">Orion-81 devlog</a>
+  <a class="o81-tab" data-tab="progress" data-clean="devlog/progress.html" href="devlog/progress.html">Progress</a>
   <a class="o81-tab" data-tab="poc" data-clean="poc/" href="poc/index.html">Orion POC</a>
 </nav>
-<main class="pg-main">
+<main class="fp-main">
 
-<section id="top" class="pg-hero" aria-labelledby="top-h">
+<section id="top" class="fp-hero" aria-labelledby="top-h">
   <picture>
-    <source type="image/webp" srcset="assets/img/logo/logo-128.webp 128w, assets/img/logo/logo-512.webp 512w" sizes="(max-width: 600px) 112px, 144px">
-    <img class="pg-logo" src="assets/img/logo/logo-512.png" srcset="assets/img/logo/logo-128.png 128w, assets/img/logo/logo-512.png 512w" sizes="(max-width: 600px) 112px, 144px" width="512" height="367" alt="Orion-81 logo">
+    <source type="image/webp" srcset="assets/img/logo/logo-128.webp 128w, assets/img/logo/logo-512.webp 512w" sizes="(max-width: 600px) 96px, 120px">
+    <img class="fp-logo" src="assets/img/logo/logo-512.png" srcset="assets/img/logo/logo-128.png 128w, assets/img/logo/logo-512.png 512w" sizes="(max-width: 600px) 96px, 120px" width="512" height="367" alt="Orion-81 logo">
   </picture>
-  <h1 id="top-h" class="pg-wordmark">Orion-81</h1>
-  <p class="pg-lead">Orion-81 is a space combat game, still in development. It also has a purpose beyond play: its revenue is meant to help support software engineers and graphic designers whose work is being reshaped by artificial intelligence.</p>
-  <p class="pg-status-line"><strong>In development.</strong> Nothing to play or buy yet.</p>
+  <p class="fp-eyebrow">A space combat game, in development</p>
+  <h1 id="top-h" class="fp-title">Orion-81</h1>
+  <p class="fp-lead">Its revenue is meant to help support software engineers and graphic designers whose work is being reshaped by artificial intelligence.</p>
+  <div class="fp-cta">
+    <a class="fp-btn fp-btn-primary" href="devlog/index.html" data-clean="devlog/">Read the devlog</a>
+    <a class="fp-btn fp-btn-secondary" href="devlog/progress.html" data-clean="devlog/progress.html">See the progress chart</a>
+  </div>
+  <p class="fp-fine">Nothing to play or buy yet.</p>
 </section>
 
-<section id="doors" aria-labelledby="doors-h">
-  <h2 id="doors-h">Where to go</h2>
-  <div class="pg-doors">
-    <a class="pg-door" href="devlog/index.html" data-clean="devlog/">
-      <span class="pg-door-h">Orion-81 devlog</span>
-      <span class="pg-door-p">The new game: where it stands, a dated log of the work, the road ahead, an interactive progress chart and every automated test of its rules.</span>
-    </a>
-    <a class="pg-door" href="poc/index.html" data-clean="poc/">
-      <span class="pg-door-h">Orion POC (archived)</span>
-      <span class="pg-door-p">The earlier proof of concept, kept unchanged as it was published on 13 October 2026.</span>
-    </a>
+<section id="stats" class="fp-section" aria-label="The project in numbers">
+  <dl class="fp-stats">
+    <div class="fp-stat">
+      <dt class="fp-cap">automated tests of the game's rules</dt>
+      <dd class="fp-num"><span data-o81-stat="tests">1,028</span></dd>
+    </div>
+    <div class="fp-stat">
+      <dt class="fp-cap">milestones done</dt>
+      <dd class="fp-num"><span data-o81-stat="milestones_done">3</span> <span class="fp-of">of</span> <span data-o81-stat="milestones_total">19</span></dd>
+    </div>
+    <div class="fp-stat">
+      <dt class="fp-cap">work items done</dt>
+      <dd class="fp-num"><span data-o81-stat="items_done">99</span> <span class="fp-of">of</span> <span data-o81-stat="items_total">183</span></dd>
+    </div>
+    <div class="fp-stat">
+      <dt class="fp-cap">tokens of AI work to go, about <span data-o81-stat="weeks">11</span> weeks</dt>
+      <dd class="fp-num">~<span data-o81-stat="tokens_bn">77</span> bn</dd>
+    </div>
+  </dl>
+</section>
+
+<section id="chart" class="fp-section" aria-label="The interactive progress chart">
+  <a class="fp-feature" href="devlog/progress.html" data-clean="devlog/progress.html">
+    <span class="fp-feature-art" aria-hidden="true">
+      <i class="fp-bar fp-bar-1"></i><i class="fp-bar fp-bar-2"></i><i class="fp-bar fp-bar-3"></i><i class="fp-bar fp-bar-4"></i><i class="fp-bar fp-bar-5"></i><i class="fp-bar fp-bar-6"></i>
+    </span>
+    <span class="fp-feature-text">
+      <span class="fp-feature-kicker">Interactive progress chart</span>
+      <span class="fp-feature-h">Every branch, wave and work item since 14 October</span>
+      <span class="fp-feature-p">Zoom, filter and search the whole build, with the road ahead drawn as dashed estimates.</span>
+      <span class="fp-feature-go">Open the chart <span aria-hidden="true">&rarr;</span></span>
+    </span>
+  </a>
+</section>
+
+<section id="cards" class="fp-section" aria-label="About Orion-81">
+  <div class="fp-cards">
+    <article class="fp-card fp-card-wide" id="purpose" aria-labelledby="purpose-h">
+      <h2 id="purpose-h" class="fp-card-h">Why it exists</h2>
+      <div class="fp-card-cols">
+        <p>Artificial intelligence is changing how many kinds of work are done. The impacts of artificial intelligence on society bring real opportunities, and also change that some people feel sooner than others, software engineers and graphic designers among them.</p>
+        <p>Orion-81 is made with AI, openly, and directed by Andrius Bubliauskas. The idea behind it is that a project made this way can also play a small part in supporting people through that change. The plan is that the game's revenue will help support software engineers and graphic designers whose work has been affected by AI.</p>
+        <p>It is an early plan, not a promise of amounts. The game is not released, there is no revenue yet, and nothing has been paid. How the money will reach people is still to be worked out, and this site will say so when it is.</p>
+        <p id="sharing">As AI creates value, its benefits should be shared widely, including with the people whose work it changes most. Anthropic, whose Claude Code writes the code for this game, has described the same thought at a far larger scale: a public benefit fund, meant in part to support people through the economic impacts of AI. Orion-81 is a very small project beside that. It comes from the same belief, applied to one game and the people closest to it.</p>
+      </div>
+    </article>
+    <article class="fp-card" aria-labelledby="how-h">
+      <h2 id="how-h" class="fp-card-h">How it is made</h2>
+      <p>Orion-81 is directed by Andrius Bubliauskas with AI, openly. Claude Code by Anthropic writes the code, plans the work and reviews it; Andrius makes the decisions.</p>
+      <p>Every rule is written down in a spec and checked by automated tests, and the work is recorded in the devlog.</p>
+    </article>
+    <article class="fp-card" aria-labelledby="going-h">
+      <h2 id="going-h" class="fp-card-h">Where it is going</h2>
+      <p>Built so far: the rules core and the demo's rules. Next: ships as machines, game modes and balance, then the first flight on screen and the clean v0 demo.</p>
+      <p>Estimate of <span data-o81-stat="est_date">19 October 2026</span>: about <span data-o81-stat="tokens_bn">77</span> billion tokens of AI work to go, about <span data-o81-stat="weeks">11</span> weeks at the current pace.</p>
+    </article>
   </div>
 </section>
 
-<section id="purpose" aria-labelledby="purpose-h">
-  <h2 id="purpose-h">Why it exists</h2>
-  <p>Artificial intelligence is changing how many kinds of work are done. The impacts of artificial intelligence on society bring real opportunities, and also change that some people feel sooner than others, software engineers and graphic designers among them.</p>
-  <p>Orion-81 is made with AI, openly, and directed by Andrius Bubliauskas. The idea behind it is that a project made this way can also play a small part in supporting people through that change. The plan is that the game's revenue will help support software engineers and graphic designers whose work has been affected by AI.</p>
-  <p>It is an early plan, not a promise of amounts. The game is not released, there is no revenue yet, and nothing has been paid. How the money will reach people is still to be worked out, and this site will say so when it is.</p>
+<section id="doors" class="fp-section" aria-label="The archived proof of concept">
+  <a class="fp-door" href="poc/index.html" data-clean="poc/">
+    <span class="fp-door-h">Orion POC (archived)</span>
+    <span class="fp-door-p">The earlier proof of concept, kept unchanged as it was published on 13 October 2026.</span>
+    <span class="fp-door-go" aria-hidden="true">&rarr;</span>
+  </a>
 </section>
 
-<section id="sharing" aria-labelledby="sharing-h">
-  <h2 id="sharing-h">Sharing what AI gives</h2>
-  <p>The thought is a simple one. As AI creates value, its benefits should be shared widely, including with the people whose work it changes most. Anthropic, whose Claude Code writes the code for this game, has described the same thought at a far larger scale: a public benefit fund, meant in part to support people through the economic impacts of AI.</p>
-  <p>Orion-81 is a very small project beside that. It comes from the same belief, applied to one game and the people closest to it.</p>
-</section>
-
-<section id="reading" aria-labelledby="reading-h">
-  <h2 id="reading-h">Further reading</h2>
+<section id="reading" class="fp-section fp-reading" aria-labelledby="reading-h">
+  <h2 id="reading-h" class="fp-small-h">Further reading</h2>
   <p><a href="https://www.anthropic.com/news/public-benefit-fund" rel="noopener noreferrer">Anthropic: the Public Benefit Fund</a> (anthropic.com, opens another site).</p>
-  <p class="pg-notice">Orion-81 is independent and is not affiliated with, endorsed by or funded by Anthropic.</p>
+  <p class="fp-notice">Orion-81 is independent and is not affiliated with, endorsed by or funded by Anthropic.</p>
 </section>
 
 </main>
@@ -69,9 +116,11 @@
   <p>&copy; 2026 Andrius Bubliauskas. All rights reserved.</p>
   <p>Anthropic, Claude and Claude Code are trademarks of Anthropic, PBC. Orion-81 is not affiliated with, sponsored or endorsed by Anthropic.</p>
   <p>No trackers, no cookies, nothing loaded from other sites.</p>
-  <p>Site version 2.1.1, updated 20 October 2026.</p>
+  <p>Site version 2.2.0, updated 20 October 2026.</p>
 </footer>
+<script src="assets/data/progress-stats.js"></script>
 <script src="js/tabbar.js"></script>
+<script src="js/stats.js"></script>
 <script src="js/o81-selftest.js"></script>
 </body>
 </html>
