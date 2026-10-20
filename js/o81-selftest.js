@@ -40,12 +40,12 @@
     var order = Array.prototype.map.call(links, function (a) { return a.getAttribute('data-tab') + '=' + a.textContent.trim(); });
     var cur = Array.prototype.filter.call(links, function (a) { return a.getAttribute('aria-current') === 'page'; })
       .map(function (a) { return a.getAttribute('data-tab'); });
-    check('tab bar: four links, Home, Orion-81 devlog, Progress, Orion POC',
+    check('tab bar: five links, Home, Orion-81 devlog, Progress, Orion POC, Gallery',
       nav && nav.getAttribute('aria-label') === 'Site' &&
-      order.join('|') === 'home=Home|devlog=Orion-81 devlog|progress=Progress|poc=Orion POC', order);
+      order.join('|') === 'home=Home|devlog=Orion-81 devlog|progress=Progress|poc=Orion POC|gallery=Gallery', order);
     var hrefs = Array.prototype.map.call(links, function (a) { return a.getAttribute('href'); });
     check('tab bar: every link ends in .html (or is a clean address over http)',
-      hrefs.length === 4 && hrefs.every(function (h) { return /\.html$/.test(h) || /\/$/.test(h); }), hrefs);
+      hrefs.length === 5 && hrefs.every(function (h) { return /\.html$/.test(h) || /\/$/.test(h); }), hrefs);
     check('tab bar: current tab is ' + current, cur.length === 1 && cur[0] === current, cur);
     var bar = nav ? nav.getBoundingClientRect() : null;
     check('tab bar: one row, 44 px high', bar && Math.abs(bar.height - 44) < 1, bar ? bar.height : null);
@@ -156,6 +156,22 @@
     check('no horizontal overflow', o.ok, o.detail);
   }
 
+  function galleryPage() {
+    barCheck('gallery');
+    var imgs = document.querySelectorAll('.gl-thumb img');
+    check('nine pictures, each with a thumbnail that loaded', imgs.length === 9 &&
+      Array.prototype.every.call(imgs, function (i) { return i.complete && i.naturalWidth > 0; }), imgs.length);
+    var vids = document.querySelectorAll('.gl-clip video');
+    check('three clips with controls, muted, not autoplaying', vids.length === 3 && Array.prototype.every.call(vids, function (v) {
+      return v.controls && v.muted && !v.autoplay && !v.hasAttribute('autoplay') && v.getAttribute('poster'); }), vids.length);
+    var note = document.querySelector('.gl-note');
+    check('top note: footage from the latest Orion proof of concept; Orion-81 has no gameplay yet', !!note &&
+      note.textContent.indexOf('latest version of the Orion proof of concept') !== -1 &&
+      note.textContent.indexOf('Orion-81, the new game, has no gameplay to show yet') !== -1);
+    var o = noOverflow();
+    check('no horizontal overflow', o.ok, o.detail);
+  }
+
   function pocPage() {
     var nav = barCheck('poc');
     var note = nav ? nav.querySelector('.o81-tabs-note') : null;
@@ -177,7 +193,7 @@
   function run() {
     try {
       var pg = document.body.getAttribute('data-o81-page');
-      if (pg === 'poc') pocPage(); else if (pg === 'home') homePage(); else orionPage();
+      if (pg === 'poc') pocPage(); else if (pg === 'home') homePage(); else if (pg === 'gallery') galleryPage(); else orionPage();
     } catch (e) {
       check('self-test ran without an exception', false, String(e && e.message || e));
     }
