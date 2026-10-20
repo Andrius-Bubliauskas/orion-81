@@ -5,7 +5,7 @@ This folder is the whole orion-81.io website, version 2.1.0. A bar at the top of
 ## What it holds
 
 * **Home** (`index.html`): the front page and the one visitors land on. It says why Orion-81 exists (its revenue is meant to pay
-  software engineers and graphic designers who lost their work to AI), how that sits with the idea of sharing what AI gives with the
+  software engineers and graphic designers whose work has been affected by AI), how that sits with the idea of sharing what AI gives with the
   people it affects, and it has two doors: the Orion-81 devlog and the archived Orion POC.
 * **Orion-81 devlog** (`devlog/index.html`): the state of Orion-81, the game being made now. It holds a dated devlog, what the game
   will be, the milestone road with today's status, how it is made, and a searchable table of every automated test of the game's
