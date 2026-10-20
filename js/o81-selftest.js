@@ -72,11 +72,12 @@
     checkStats(4);
     var strip = document.querySelectorAll('.fp-stat');
     check('stat strip: four stats', strip.length === 4, strip.length);
-    var notice = document.querySelector('.pg-notice, .fp-notice');
-    check('notice: independent, not affiliated with, endorsed by or funded by Anthropic', !!notice &&
-      notice.textContent.indexOf('independent and is not affiliated with, endorsed by or funded by Anthropic') !== -1);
-    var ext = document.querySelectorAll('a[href^="https://www.anthropic.com/news/public-benefit-fund"]');
-    check('one further-reading link to the Anthropic page', ext.length === 1);
+    var body = document.body.textContent;
+    check('hero line: A step towards AI that benefits everyone.', !!document.querySelector('.fp-lead') &&
+      document.querySelector('.fp-lead').textContent.trim() === 'A step towards AI that benefits everyone.');
+    check('no revenue, money or payment wording on the front page', !/revenue|money|payment|paid|jobs?|livelihood/i.test(document.querySelector('main').textContent));
+    check('three neutral cards plus where it is going', document.querySelectorAll('.fp-card').length === 4, document.querySelectorAll('.fp-card').length);
+    check('the footer keeps the trademark and not-affiliated line', body.indexOf('Orion-81 is not affiliated with, sponsored or endorsed by Anthropic.') !== -1);
     var o = noOverflow();
     check('no horizontal overflow', o.ok, o.detail);
   }

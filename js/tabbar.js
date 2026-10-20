@@ -10,6 +10,7 @@
 
   var PASS = ['lang', 'maps', 'tier'];
   var MOVED = ['what', 'road', 'built', 'how', 'tests', 'poc-note'];
+  var HOME_OLD = ['purpose', 'sharing', 'reading']; // sections of earlier front pages: the link stays on the front page
   var page = document.body.getAttribute('data-o81-page') || '';
   var isPoc = page === 'poc';
   var web = location.protocol === 'http:' || location.protocol === 'https:';
@@ -30,7 +31,7 @@
 
   if (page === 'home') {
     var id = hashId();
-    if (hasPassParam() || (id && !document.getElementById(id))) {
+    if (hasPassParam() || (id && !document.getElementById(id) && HOME_OLD.indexOf(id) === -1)) {
       var base = (!hasPassParam() && MOVED.indexOf(id) !== -1) ? 'devlog/' : 'poc/';
       var target = new URL(web ? base : base + 'index.html', location.href);
       target.search = location.search;
