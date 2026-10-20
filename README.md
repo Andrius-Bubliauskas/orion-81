@@ -1,17 +1,20 @@
 # orion-81.io
 
-This folder is the whole orion-81.io website, version 2.0.0. It has two tabs, and a bar at the top of every page links them.
+This folder is the whole orion-81.io website, version 2.1.0. A bar at the top of every page links its three parts.
 
 ## What it holds
 
-* **Orion-81** (`index.html`): the primary page and the one visitors land on. It shows the state of Orion-81, the game being
-  made now: what it will be, the milestone road with today's status, how it is made, and a searchable table of every automated
-  test of the game's rules.
+* **Home** (`index.html`): the front page and the one visitors land on. It says why Orion-81 exists (its revenue is meant to pay
+  software engineers and graphic designers who lost their work to AI), how that sits with the idea of sharing what AI gives with the
+  people it affects, and it has two doors: the Orion-81 devlog and the archived Orion POC.
+* **Orion-81 devlog** (`devlog/index.html`): the state of Orion-81, the game being made now. It holds a dated devlog, what the game
+  will be, the milestone road with today's status, how it is made, and a searchable table of every automated test of the game's
+  rules. `devlog/progress.html` is the interactive progress chart, a public copy of the project tracker's time line.
 * **Orion POC** (`poc/index.html`): the earlier proof-of-concept site, kept byte for byte as it was published on 13 October 2026
   and not edited. The page shows it in a frame under the tab bar. Its statements are those of that date.
 
 Old links to the proof-of-concept site (for example a link to one of its sections, or one that chooses a language) are passed on
-to the Orion POC tab.
+to the Orion POC tab. Old links to sections of the earlier Orion-81 page (#road, #tests and so on) are passed on to the devlog.
 
 ## How to open it
 
@@ -21,12 +24,13 @@ to the Orion POC tab.
 ## Third parties
 
 The Orion POC tab loads three.js (MIT licence) and Google Fonts (SIL Open Font Licence) from public content delivery networks
-when it is viewed. The Orion-81 tab loads nothing from other sites. There are no trackers, no cookies and no forms.
+when it is viewed. The home page and the devlog load nothing from other sites. There are no trackers, no cookies and no forms.
+The home page links to one page on anthropic.com as further reading; the link loads nothing until it is followed.
 
 ## Trademarks
 
-Anthropic, Claude and Claude Code are trademarks of Anthropic, PBC. Orion-81 is not affiliated with, sponsored or endorsed by
-Anthropic.
+Anthropic, Claude and Claude Code are trademarks of Anthropic, PBC. Orion-81 is independent and is not affiliated with,
+sponsored, endorsed or funded by Anthropic.
 
 ## Rights
 

@@ -1,14 +1,17 @@
 /* (c) 2026 Andrius Bubliauskas. All rights reserved.
-   Tab bar behaviour for both new pages (classic script, no storage, no network requests).
-   - Orion-81 page: old links (?lang=, ?maps=, ?tier=, or a #hash that is not on this page) go on to the Orion POC tab.
-   - Orion POC page: the frame shows the frozen site with the page's own lang, maps and tier parameters and its hash.
-   - Over http(s) the two tab links use clean addresses; from the disk they keep naming index.html. */
+   Tab bar behaviour for the new pages (classic script, no storage, no network requests).
+   - Home page: old links go on to where they now live. A link with ?lang=, ?maps= or ?tier=, or a fragment (#something) that is on no
+     page of the new site (for example #ships), goes to the Orion POC tab. A fragment that used to be on the old Orion-81 page
+     (#what, #road, #built, #how, #tests, #poc-note) goes to the same place on the devlog page.
+   - Orion POC page: the frame shows the frozen site with the page's own lang, maps and tier parameters and its fragment.
+   - Over http(s) the tab links use clean addresses (their data-clean value); from the disk they keep naming index.html. */
 (function () {
   'use strict';
 
   var PASS = ['lang', 'maps', 'tier'];
-  var nav = document.querySelector('nav.o81-tabs');
-  var isPoc = document.body.classList.contains('o81-poc');
+  var MOVED = ['what', 'road', 'built', 'how', 'tests', 'poc-note'];
+  var page = document.body.getAttribute('data-o81-page') || '';
+  var isPoc = page === 'poc';
   var web = location.protocol === 'http:' || location.protocol === 'https:';
   var params = new URLSearchParams(location.search);
 
@@ -25,20 +28,17 @@
     try { return decodeURIComponent(h); } catch (e) { return h; }
   }
 
-  function tab(name) {
-    return nav ? nav.querySelector('a.o81-tab[data-tab="' + name + '"]') : null;
-  }
-
-  if (!isPoc) {
+  if (page === 'home') {
     var id = hashId();
     if (hasPassParam() || (id && !document.getElementById(id))) {
-      var target = new URL(web ? 'poc/' : 'poc/index.html', location.href);
+      var base = (!hasPassParam() && MOVED.indexOf(id) !== -1) ? 'devlog/' : 'poc/';
+      var target = new URL(web ? base : base + 'index.html', location.href);
       target.search = location.search;
       target.hash = location.hash;
       location.replace(target.href);
       return;
     }
-  } else {
+  } else if (isPoc) {
     var frame = document.querySelector('iframe.o81-poc-frame');
     var frameSrc = function () {
       var q = new URLSearchParams();
@@ -59,9 +59,9 @@
   }
 
   if (web) {
-    var home = tab('orion-81');
-    var poc = tab('poc');
-    if (home) home.setAttribute('href', isPoc ? '../' : './');
-    if (poc) poc.setAttribute('href', isPoc ? './' : 'poc/');
+    var links = document.querySelectorAll('a[data-clean]');
+    for (var j = 0; j < links.length; j++) {
+      links[j].setAttribute('href', links[j].getAttribute('data-clean'));
+    }
   }
 })();

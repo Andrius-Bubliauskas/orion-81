@@ -1,5 +1,5 @@
 /* (c) 2026 Andrius Bubliauskas. All rights reserved.
-   ?selftest for both new pages. Writes "SELFTEST PASS n/n" or "SELFTEST FAIL k/n" to the title
+   ?selftest for the new pages (home, devlog and Orion POC). Writes "SELFTEST PASS n/n" or "SELFTEST FAIL k/n" to the title
    and the details as JSON into <pre id="o81-selftest">. Does nothing without ?selftest. */
 (function () {
   'use strict';
@@ -40,23 +40,48 @@
     var order = Array.prototype.map.call(links, function (a) { return a.getAttribute('data-tab') + '=' + a.textContent.trim(); });
     var cur = Array.prototype.filter.call(links, function (a) { return a.getAttribute('aria-current') === 'page'; })
       .map(function (a) { return a.getAttribute('data-tab'); });
-    check('tab bar: two links, Orion-81 then Orion POC',
-      nav && nav.getAttribute('aria-label') === 'Site' && order.join('|') === 'orion-81=Orion-81|poc=Orion POC', order);
+    check('tab bar: three links, Home, Orion-81 devlog, Orion POC',
+      nav && nav.getAttribute('aria-label') === 'Site' &&
+      order.join('|') === 'home=Home|devlog=Orion-81 devlog|poc=Orion POC', order);
+    var hrefs = Array.prototype.map.call(links, function (a) { return a.getAttribute('href'); });
+    check('tab bar: every link ends in index.html (or is a clean address over http)',
+      hrefs.length === 3 && hrefs.every(function (h) { return /index\.html$/.test(h) || /\/$/.test(h); }), hrefs);
     check('tab bar: current tab is ' + current, cur.length === 1 && cur[0] === current, cur);
     var bar = nav ? nav.getBoundingClientRect() : null;
     check('tab bar: one row, 44 px high', bar && Math.abs(bar.height - 44) < 1, bar ? bar.height : null);
     return nav;
   }
 
+  function homePage() {
+    barCheck('home');
+    var doors = document.querySelectorAll('a.pg-door');
+    var names = Array.prototype.map.call(doors, function (a) { return a.querySelector('.pg-door-h').textContent.trim(); });
+    check('two doors: Orion-81 devlog and Orion POC (archived)',
+      names.join('|') === 'Orion-81 devlog|Orion POC (archived)', names);
+    var notice = document.querySelector('.pg-notice');
+    check('notice: independent, not affiliated with, endorsed by or funded by Anthropic', !!notice &&
+      notice.textContent.indexOf('independent and is not affiliated with, endorsed by or funded by Anthropic') !== -1);
+    var ext = document.querySelectorAll('a[href^="https://www.anthropic.com/news/public-benefit-fund"]');
+    check('one further-reading link to the Anthropic page', ext.length === 1);
+    var o = noOverflow();
+    check('no horizontal overflow', o.ok, o.detail);
+  }
+
   function orionPage() {
     var data = window.ORION81_TESTS;
     var T = window.O81_TABLE;
-    barCheck('orion-81');
+    barCheck('devlog');
+    var prog = document.querySelectorAll('a[href="progress.html"]');
+    check('link to the interactive progress chart', prog.length >= 1, prog.length);
+    var entries = document.querySelectorAll('.pg-entry');
+    check('devlog: dated entries, newest first', entries.length >= 5 &&
+      /20/.test(entries[0].querySelector('.pg-date').textContent) && /14 October/.test(entries[entries.length - 1].querySelector('.pg-date').textContent),
+      entries.length);
     check('data and table present', !!(data && T && T.rows));
     if (!data || !T || !T.rows) return;
     var total = data.meta.count;
     info.renderMs = T.renderMs;
-    check('834 rows', T.rows.length === 834 && total === 834 && data.tests.length === 834, T.rows.length);
+    check('every test is a row', T.rows.length === total && data.tests.length === total && total > 0, T.rows.length);
 
     var sum = data.areas.reduce(function (s, a) { return s + a.count; }, 0);
     check('area counts sum to the total', sum === total, sum);
@@ -66,7 +91,7 @@
       var shown = T.apply('', a.key);
       if (shown !== a.count || inData !== a.count) bad.push(a.key + ': ' + shown + '/' + inData + '/' + a.count);
     });
-    check('each area alone shows its count', bad.length === 0 && data.areas.length === 16, bad);
+    check('each area alone shows its count', bad.length === 0 && data.areas.length > 0, bad);
     check('area menu: all areas then each area', T.menu.options.length === data.areas.length + 1 &&
       T.menu.options[0].textContent === 'All areas (' + total + ')', T.menu.options.length);
 
@@ -90,7 +115,7 @@
     check('clearing restores every row', c === total && hiddenRows === 0 && T.empty.hidden &&
       T.count.textContent === total + ' of ' + total + ' shown', T.count.textContent);
 
-    check('5 probes listed', data.probes.length === 5 && data.meta.probes === 5 && T.probes.children.length === 5,
+    check('every probe listed', data.probes.length === data.meta.probes && T.probes.children.length === data.meta.probes,
       T.probes.children.length);
 
     var binds = document.querySelectorAll('[data-o81-bind]');
@@ -132,7 +157,8 @@
 
   function run() {
     try {
-      if (document.body.classList.contains('o81-poc')) pocPage(); else orionPage();
+      var pg = document.body.getAttribute('data-o81-page');
+      if (pg === 'poc') pocPage(); else if (pg === 'home') homePage(); else orionPage();
     } catch (e) {
       check('self-test ran without an exception', false, String(e && e.message || e));
     }
