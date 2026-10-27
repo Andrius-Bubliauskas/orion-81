@@ -32,7 +32,7 @@
   <h1 id="top-h" class="pg-wordmark">Orion-81</h1>
   <p class="pg-lead">Orion-81 is a space combat game with six degrees of freedom: you move and turn freely along every axis. You pilot a single heavy ship and point its nose with the mouse. The pace is unhurried, yet the controls answer at once: every input takes effect from the next 8 millisecond step, and a big ship simply takes longer to come round.</p>
   <p>It has a purpose beyond play. Its revenue is meant to help support software engineers and graphic designers whose work has been affected by artificial intelligence.</p>
-  <p class="pg-status-line"><strong>In development.</strong> Built so far: the rules core (M2) and the demo's rules (M2.1). Ships as machines (M2.2) is under way and paused at a checkpoint, 20 October 2026.</p>
+  <p class="pg-status-line"><strong>In development.</strong> Built so far: the rules core (M2), the demo's rules (M2.1) and ships as machines (M2.2, done on 26 October 2026). Game modes and balance (M2.3) and the engine-neutral first-flight layer (M3a) are under way.</p>
 </section>
 
 <section id="glance" aria-labelledby="glance-h">
@@ -59,6 +59,14 @@
   <h2 id="devlog-h">Devlog</h2>
   <p>What happened, newest first. All dates are in October 2026. The <a href="progress.html">interactive progress chart</a> shows the same work on a time line, with the road ahead as dashed estimates.</p>
   <ol class="pg-log">
+    <li class="pg-entry">
+      <span class="pg-date">26 October</span>
+      <h3 class="pg-entry-h">M2.2 done; M3a and M2.3 under way</h3>
+      <p>M2.2, ships as machines, was closed and accepted on 26 October and merged into the main line as version 0.2.2. It adds damage that spreads from part to part and the damage control to stop it, aiming at a ship's subsystems, ships breaking apart into tumbling debris, salvage, and power modules (engines, shields and weapon mounts), with commands to pick a ship's sub-targets. The suite now holds 1,396 automated tests. Two different compilers give identical results, all four build setups build cleanly, and the whole suite still runs in under a second. The copy scans are clean.</p>
+      <p>Four of the 19 milestones are done: M0, M2, M2.1 and M2.2 (the road counts M3a and M3b as two).</p>
+      <p>Two milestones are now under way side by side. M3a is the engine-neutral presentation layer: cameras, the lens, input, the session, the host and a replay tool. M2.3 is modes, balance and sub-system combat: play styles, team objectives, capture the flag, assigned ships, mount dispersion, shield bubbles, swarm tactics and a balance harness. Each starts by checking its plan against the finished M2.2 code.</p>
+      <p>A new page shows how the work was organised: <a href="agent-provenance.html">how the Claude agents built it</a>, the Agent Provenance Graph, under the Progress tab.</p>
+    </li>
     <li class="pg-entry">
       <span class="pg-date">18 to 20 October</span>
       <h3 class="pg-entry-h">M2.2, ships as machines: four waves done, paused at a checkpoint</h3>
@@ -120,18 +128,18 @@
       <h3 class="pg-step-h">M2.1: the demo's rules</h3>
       <p>The rules every mode shares, single-player waves and drones, and computer pilots for fighters and mid-size ships.</p>
     </li>
-    <li class="pg-step is-now">
-      <span class="pg-status">Being built now, paused at a checkpoint on 20 October 2026</span>
+    <li class="pg-step is-done">
+      <span class="pg-status">Done, 26 October 2026, in the main line</span>
       <h3 class="pg-step-h">M2.2: ships as machines</h3>
-      <p>Damage that spreads from part to part and damage control to stop it, aiming at a ship's subsystems, ships breaking apart into tumbling debris, and salvage. The power modules (engines, shields and weapon mounts) are added to it. Waves 1 to 4 are done and the power modules are under way.</p>
+      <p>Damage that spreads from part to part and damage control to stop it, aiming at a ship's subsystems, ships breaking apart into tumbling debris, and salvage. The power modules (engines, shields and weapon mounts) are added to it.</p>
     </li>
-    <li class="pg-step is-next">
-      <span class="pg-status">Next, planned on 18 October 2026</span>
+    <li class="pg-step is-now">
+      <span class="pg-status">Under way, planned on 18 October 2026</span>
       <h3 class="pg-step-h">M2.3: modes, balance and sub-system combat</h3>
       <p>Play styles and rules for each class of ship in each mode, team objectives, capture the flag rules, how an assigned ship is drawn, shield bubbles, swarm tactics and a tool that plays many matches to check the balance.</p>
     </li>
-    <li class="pg-step is-later">
-      <span class="pg-status">After M2.2</span>
+    <li class="pg-step is-now">
+      <span class="pg-status">Under way, beside M2.3</span>
       <h3 class="pg-step-h">M3a: first flight, the part that needs no engine</h3>
       <p>Cameras, controls kept as data, pause, menus and settings, and a tool that plays back a recorded match.</p>
     </li>
@@ -156,9 +164,8 @@
 
 <section id="ahead" aria-labelledby="ahead-h">
   <h2 id="ahead-h">Road ahead and the AI effort to get there</h2>
-  <p>The rest of the road, in order. The first three steps need no game engine and can go ahead now. Engine work starts once the engine question is settled.</p>
+  <p>The rest of the road, in order. The first two steps need no game engine and can go ahead now. Engine work starts once the engine question is settled.</p>
   <ol class="pg-list pg-ahead">
-    <li><strong>The rest of M2.2.</strong> Finish and merge the ship-damage waves, add the power modules, then the written specs and the close. No engine needed.</li>
     <li><strong>M2.3, beside M3a.</strong> M2.3 is game modes, balance and sub-system combat; M3a is cameras, controls, menus and a replay tool. No engine needed.</li>
     <li><strong>M2.4.</strong> Air, orbit and descent. No engine needed.</li>
     <li><strong>M3b.</strong> First flight in a game engine. Needs the engine.</li>
@@ -171,8 +178,8 @@
 
 <section id="built" aria-labelledby="built-h">
   <h2 id="built-h">What exists today</h2>
-  <p>The rules core, written in C++. It covers flight; the five weapon families (lasers, rotary cannons, rockets, railguns and point defence); turrets and automatic mounts; damage that travels through each ship's graph of modules; and the world step, which can record a replay and take a fingerprint of the game state, so the same inputs always give the same result. On top of it sit the demo's rules: the sides, respawns, pickups and score, single-player waves, drones and computer pilots, and four difficulty levels.</p>
-  <p>The rules give identical results when built with two different compilers. They are checked by <span data-o81-bind="count">1028</span> automated tests, and the whole suite runs in under one second.</p>
+  <p>The rules core, written in C++. It covers flight; the five weapon families (lasers, rotary cannons, rockets, railguns and point defence); turrets and automatic mounts; damage that travels through each ship's graph of modules; and the world step, which can record a replay and take a fingerprint of the game state, so the same inputs always give the same result. On top of it sit the demo's rules: the sides, respawns, pickups and score, single-player waves, drones and computer pilots, and four difficulty levels. Ships are machines now: damage spreads from part to part, damage control can stop it, a pilot can aim at a ship's subsystems, wrecks break into tumbling debris that can be salvaged, and engines, shields and weapon mounts are power modules.</p>
+  <p>The rules give identical results when built with two different compilers. They are checked by <span data-o81-bind="count">1396</span> automated tests, and the whole suite runs in under one second.</p>
   <p>There is nothing to play or watch yet. The first playable build is M4.</p>
 </section>
 
@@ -190,7 +197,7 @@
 
 <section id="tests" aria-labelledby="tests-h">
   <h2 id="tests-h">Every test</h2>
-  <p>Each automated test checks one rule of the specs against its numbers. A test's name reads "spec reference: what it checks", so a test marked weapons 8.5 checks section 8.5 of the weapons spec. Search for any word, or choose one of the <span data-o81-bind="areas">20</span> areas.</p>
+  <p>Each automated test checks one rule of the specs against its numbers. A test's name reads "spec reference: what it checks", so a test marked weapons 8.5 checks section 8.5 of the weapons spec. Search for any word, or choose one of the <span data-o81-bind="areas">27</span> areas.</p>
   <div id="o81-tests" class="o81-tests"><noscript><p>The searchable table needs JavaScript. It lists every automated test of the game's rules.</p></noscript></div>
 </section>
 
@@ -204,7 +211,7 @@
   <p>&copy; 2026 Andrius Bubliauskas. All rights reserved.</p>
   <p>Anthropic, Claude and Claude Code are trademarks of Anthropic, PBC. Orion-81 is not affiliated with, sponsored or endorsed by Anthropic.</p>
   <p>No trackers, no cookies, nothing loaded from other sites.</p>
-  <p>Site version 2.3.0, updated 20 October 2026.</p>
+  <p>Site version 2.4.0, updated 26 October 2026.</p>
 </footer>
 <script src="../assets/data/test-index.js"></script>
 <script src="../assets/data/progress-stats.js"></script>

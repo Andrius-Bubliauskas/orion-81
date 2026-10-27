@@ -94,7 +94,7 @@
     checkStats(10);
     var entries = document.querySelectorAll('.pg-entry');
     check('devlog: dated entries, newest first', entries.length >= 5 &&
-      /20/.test(entries[0].querySelector('.pg-date').textContent) && /14 October/.test(entries[entries.length - 1].querySelector('.pg-date').textContent),
+      /^\d+( to \d+)? October/.test(entries[0].querySelector('.pg-date').textContent.trim()) && /14 October/.test(entries[entries.length - 1].querySelector('.pg-date').textContent),
       entries.length);
     check('data and table present', !!(data && T && T.rows));
     if (!data || !T || !T.rows) return;
