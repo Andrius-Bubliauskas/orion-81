@@ -100,18 +100,30 @@ body {
   }
 }
 
-/* The Orion POC page: the bar and one frame filling the rest of the viewport. */
-html:has(body.o81-poc),
-body.o81-poc {
+/* The Orion POC page: the tab bar, the subtab bar and one frame filling the rest of the viewport (a column that takes the whole window). */
+html:has(body.o81-poc) {
   height: 100%;
   overflow: hidden;
 }
 
+body.o81-poc {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+body.o81-poc .o81-tabs,
+body.o81-poc .o81-subtabs {
+  flex: none;
+}
+
 .o81-poc-frame {
   display: block;
+  flex: 1 1 0;
+  min-height: 0;
   width: 100%;
-  height: calc(100vh - 44px);
-  height: calc(100dvh - 44px);
   margin: 0;
   border: 0;
   background: var(--o81-bg);

@@ -1,5 +1,5 @@
 /* (c) 2026 Andrius Bubliauskas. All rights reserved.
-   The Progress subtab bar (.o81-subtabs, .o81-subtab): a second, smaller row under the site tab bar. Needs tabbar.css first. */
+   The subtab bar (.o81-subtabs, .o81-subtab), used on the Progress pages and on the Orion POC pages: a second, smaller row under the site tab bar. Needs tabbar.css first. */
 
 .o81-subtabs {
   display: flex;

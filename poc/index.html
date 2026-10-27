@@ -1,6 +1,6 @@
 <!doctype html>
-<!-- (c) 2026 Andrius Bubliauskas. All rights reserved. The Orion POC tab: the tab bar and the frozen v1.1.0 site in a frame. -->
-<html lang="en">
+<!-- (c) 2026 Andrius Bubliauskas. All rights reserved. The Orion POC tab: the tab bar, the subtab bar (Proof of concept and Gallery) and the frozen v1.1.0 site in a frame. -->
+<html lang="en-GB" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,6 +11,7 @@
 <link rel="icon" type="image/png" sizes="180x180" href="../assets/img/logo/favicon-180.png">
 <link rel="apple-touch-icon" href="../assets/img/logo/favicon-180.png">
 <link rel="stylesheet" href="../css/tabbar.css">
+<link rel="stylesheet" href="../css/subtabs.css">
 </head>
 <body class="o81-poc" data-o81-page="poc">
 <nav class="o81-tabs" aria-label="Site">
@@ -18,8 +19,11 @@
   <a class="o81-tab" data-tab="devlog" data-clean="../devlog/" href="../devlog/index.html">Orion-81 devlog</a>
   <a class="o81-tab" data-tab="progress" data-clean="../devlog/progress.html" href="../devlog/progress.html">Progress</a>
   <a class="o81-tab" data-tab="poc" data-clean="./" href="index.html" aria-current="page">Orion POC</a>
-  <a class="o81-tab" data-tab="gallery" data-clean="../gallery/" href="../gallery/index.html">Gallery</a>
   <span class="o81-tabs-note">Archived proof of concept, kept unchanged as published on 13 October 2026.</span>
+</nav>
+<nav class="o81-subtabs" aria-label="Orion POC views">
+  <a class="o81-subtab" data-subtab="poc" data-clean="./" href="index.html" aria-current="page">Proof of concept</a>
+  <a class="o81-subtab" data-subtab="gallery" data-clean="gallery/" href="gallery/index.html">Gallery</a>
 </nav>
 <iframe class="o81-poc-frame" src="v1.1.0/index.html" title="Orion proof of concept, archived site, version 1.1.0"></iframe>
 <script src="../js/tabbar.js"></script>

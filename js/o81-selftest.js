@@ -40,15 +40,32 @@
     var order = Array.prototype.map.call(links, function (a) { return a.getAttribute('data-tab') + '=' + a.textContent.trim(); });
     var cur = Array.prototype.filter.call(links, function (a) { return a.getAttribute('aria-current') === 'page'; })
       .map(function (a) { return a.getAttribute('data-tab'); });
-    check('tab bar: five links, Home, Orion-81 devlog, Progress, Orion POC, Gallery',
+    check('tab bar: four links, Home, Orion-81 devlog, Progress, Orion POC',
       nav && nav.getAttribute('aria-label') === 'Site' &&
-      order.join('|') === 'home=Home|devlog=Orion-81 devlog|progress=Progress|poc=Orion POC|gallery=Gallery', order);
+      order.join('|') === 'home=Home|devlog=Orion-81 devlog|progress=Progress|poc=Orion POC', order);
     var hrefs = Array.prototype.map.call(links, function (a) { return a.getAttribute('href'); });
     check('tab bar: every link ends in .html (or is a clean address over http)',
-      hrefs.length === 5 && hrefs.every(function (h) { return /\.html$/.test(h) || /\/$/.test(h); }), hrefs);
+      hrefs.length === 4 && hrefs.every(function (h) { return /\.html$/.test(h) || /\/$/.test(h); }), hrefs);
     check('tab bar: current tab is ' + current, cur.length === 1 && cur[0] === current, cur);
     var bar = nav ? nav.getBoundingClientRect() : null;
     check('tab bar: one row, 44 px high', bar && Math.abs(bar.height - 44) < 1, bar ? bar.height : null);
+    return nav;
+  }
+
+  function pocSubBar(current) {
+    var nav = document.querySelector('nav.o81-subtabs');
+    var links = nav ? nav.querySelectorAll('a.o81-subtab') : [];
+    var order = Array.prototype.map.call(links, function (a) { return a.getAttribute('data-subtab') + '=' + a.textContent.trim(); });
+    var cur = Array.prototype.filter.call(links, function (a) { return a.getAttribute('aria-current') === 'page'; })
+      .map(function (a) { return a.getAttribute('data-subtab'); });
+    check('subtab bar: Proof of concept, Gallery',
+      nav && nav.getAttribute('aria-label') === 'Orion POC views' && order.join('|') === 'poc=Proof of concept|gallery=Gallery', order);
+    var hrefs = Array.prototype.map.call(links, function (a) { return a.getAttribute('href'); });
+    check('subtab bar: every link ends in .html (or is a clean address over http)', hrefs.length === 2 && hrefs.every(function (h) { return /\.html$/.test(h) || /\/$/.test(h); }), hrefs);
+    check('subtab bar: current subtab is ' + current, cur.length === 1 && cur[0] === current, cur);
+    var tabs = document.querySelector('nav.o81-tabs');
+    var a = tabs ? tabs.getBoundingClientRect() : null, b = nav ? nav.getBoundingClientRect() : null;
+    check('subtab bar: directly under the tab bar', !!a && !!b && Math.abs(b.top - a.bottom) <= 1 && b.height >= 35, b ? { top: b.top, height: b.height, tabsBottom: a && a.bottom } : null);
     return nav;
   }
 
@@ -157,7 +174,8 @@
   }
 
   function galleryPage() {
-    barCheck('gallery');
+    barCheck('poc');
+    pocSubBar('gallery');
     var imgs = document.querySelectorAll('.gl-thumb img');
     check('nine pictures, each with a thumbnail that loaded', imgs.length === 9 &&
       Array.prototype.every.call(imgs, function (i) { return i.complete && i.naturalWidth > 0; }), imgs.length);
@@ -174,6 +192,7 @@
 
   function pocPage() {
     var nav = barCheck('poc');
+    var sub = pocSubBar('poc');
     var note = nav ? nav.querySelector('.o81-tabs-note') : null;
     check('archive note in the bar', !!note && note.textContent.indexOf('13 October 2026') !== -1);
     var frame = document.querySelector('iframe.o81-poc-frame');
@@ -181,9 +200,9 @@
     check('frame shows v1.1.0/index.html', /v1\.1\.0\/index\.html$/.test(src), src);
     if (frame) {
       var r = frame.getBoundingClientRect();
-      var top = nav ? nav.getBoundingClientRect().bottom : 0;
+      var top = sub ? sub.getBoundingClientRect().bottom : (nav ? nav.getBoundingClientRect().bottom : 0);
       var d = { top: r.top, bottom: r.bottom, width: r.width, barBottom: top, vw: window.innerWidth, vh: window.innerHeight };
-      check('frame fills the viewport under the bar', Math.abs(r.top - top) <= 1 && Math.abs(r.bottom - window.innerHeight) <= 1 &&
+      check('frame fills the viewport under both bars', Math.abs(r.top - top) <= 1 && Math.abs(r.bottom - window.innerHeight) <= 1 &&
         Math.abs(r.width - window.innerWidth) <= 1, d);
     }
     var o = noOverflow();

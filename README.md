@@ -1,6 +1,6 @@
 # orion-81.io
 
-This folder is the whole orion-81.io website, version 2.1.0. A bar at the top of every page links its three parts.
+This folder is the whole orion-81.io website, version 2.5.0. A bar at the top of every page links its four parts.
 
 ## What it holds
 
@@ -10,11 +10,13 @@ This folder is the whole orion-81.io website, version 2.1.0. A bar at the top of
 * **Orion-81 devlog** (`devlog/index.html`): the state of Orion-81, the game being made now. It holds a dated devlog, what the game
   will be, the milestone road with today's status, how it is made, and a searchable table of every automated test of the game's
   rules. `devlog/progress.html` is the interactive progress chart, a public copy of the project tracker's time line.
+* **Progress** (`devlog/progress.html`): the progress chart, with a second bar for its agent-provenance view.
 * **Orion POC** (`poc/index.html`): the earlier proof-of-concept site, kept byte for byte as it was published on 13 October 2026
-  and not edited. The page shows it in a frame under the tab bar. Its statements are those of that date.
+  and not edited. The page shows it in a frame under the tab bar and a subtab bar. Its statements are those of that date. The second
+  subtab, **Gallery** (`poc/gallery/index.html`), holds the pictures and clips of that proof of concept.
 
 Old links to the proof-of-concept site (for example a link to one of its sections, or one that chooses a language) are passed on
-to the Orion POC tab. Old links to sections of the earlier Orion-81 page (#road, #tests and so on) are passed on to the devlog.
+to the Orion POC tab, and the old Gallery address (`gallery/index.html`) passes on to `poc/gallery/index.html`. Old links to sections of the earlier Orion-81 page (#road, #tests and so on) are passed on to the devlog.
 
 ## How to open it
 
