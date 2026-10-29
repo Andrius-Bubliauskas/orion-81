@@ -1,5 +1,5 @@
 /* (c) 2026 Andrius Bubliauskas. All rights reserved.
-   ?selftest for the new pages (home, devlog and Orion POC). Writes "SELFTEST PASS n/n" or "SELFTEST FAIL k/n" to the title
+   ?selftest for the new pages (home, devlog, Orchestration and Orion POC). Writes "SELFTEST PASS n/n" or "SELFTEST FAIL k/n" to the title
    and the details as JSON into <pre id="o81-selftest">. Does nothing without ?selftest. */
 (function () {
   'use strict';
@@ -15,13 +15,22 @@
     checks.push(c);
   }
 
+  // a wide table may scroll inside its own box (overflow-x auto or scroll on an ancestor): that is not a sideways scroll of the page
+  function inScroller(el) {
+    for (var p = el.parentElement; p && p !== document.body; p = p.parentElement) {
+      var ox = window.getComputedStyle(p).overflowX;
+      if (ox === 'auto' || ox === 'scroll') return true;
+    }
+    return false;
+  }
+
   function noOverflow() {
     var w = document.documentElement.getBoundingClientRect().width;
     var wideNode = null;
     var all = document.body.querySelectorAll('*');
     for (var i = 0; i < all.length && !wideNode; i++) {
       var r = all[i].getBoundingClientRect();
-      if (r.width && r.right > window.innerWidth + 0.5) wideNode = all[i];
+      if (r.width && r.right > window.innerWidth + 0.5 && !inScroller(all[i])) wideNode = all[i];
     }
     var x0 = window.scrollX, y0 = window.pageYOffset;
     window.scrollTo(100000, y0);
@@ -40,12 +49,12 @@
     var order = Array.prototype.map.call(links, function (a) { return a.getAttribute('data-tab') + '=' + a.textContent.trim(); });
     var cur = Array.prototype.filter.call(links, function (a) { return a.getAttribute('aria-current') === 'page'; })
       .map(function (a) { return a.getAttribute('data-tab'); });
-    check('tab bar: four links, Home, Orion-81 devlog, Progress, Orion POC',
+    check('tab bar: five links, Home, Orion-81 devlog, Progress, Orchestration, Orion POC',
       nav && nav.getAttribute('aria-label') === 'Site' &&
-      order.join('|') === 'home=Home|devlog=Orion-81 devlog|progress=Progress|poc=Orion POC', order);
+      order.join('|') === 'home=Home|devlog=Orion-81 devlog|progress=Progress|orchestration=Orchestration|poc=Orion POC', order);
     var hrefs = Array.prototype.map.call(links, function (a) { return a.getAttribute('href'); });
     check('tab bar: every link ends in .html (or is a clean address over http)',
-      hrefs.length === 4 && hrefs.every(function (h) { return /\.html$/.test(h) || /\/$/.test(h); }), hrefs);
+      hrefs.length === 5 && hrefs.every(function (h) { return /\.html$/.test(h) || /\/$/.test(h); }), hrefs);
     check('tab bar: current tab is ' + current, cur.length === 1 && cur[0] === current, cur);
     var bar = nav ? nav.getBoundingClientRect() : null;
     check('tab bar: one row, 44 px high', bar && Math.abs(bar.height - 44) < 1, bar ? bar.height : null);
@@ -173,6 +182,24 @@
     check('no horizontal overflow', o.ok, o.detail);
   }
 
+  function orchestrationPage() {
+    barCheck('orchestration');
+    var h1 = document.querySelectorAll('main h1');
+    check('one heading 1, Orchestration', h1.length === 1 && h1[0].textContent.trim() === 'Orchestration', h1.length);
+    var def = document.querySelector('.og-definition');
+    check('the definition opens the page', !!def && /^Orchestration, here, means several developers, each directing their own AI agents, working towards one goal/.test(def.textContent.trim()));
+    var heads = Array.prototype.map.call(document.querySelectorAll('main h2'), function (h) { return h.textContent.trim(); });
+    check('four sections in order', heads.join('|') === 'Where Orion-81 stands, and how one orchestrator runs it|The road, and how it could split into two lanes|Two developers, one project|The one-line version', heads);
+    check('the proposal label appears three times', document.querySelectorAll('.og-tag').length === 3, document.querySelectorAll('.og-tag').length);
+    check('seven loop steps, four stages, six rules', document.querySelectorAll('.og-step').length === 7 &&
+      document.querySelectorAll('#chunks ~ ol.og-grid').length >= 1 && document.querySelectorAll('#rules ~ ol.og-grid > li').length === 6, null);
+    check('six tables, each inside a keyboard-reachable box', document.querySelectorAll('.og-table-wrap[tabindex="0"] > table.og-table').length === 6 && document.querySelectorAll('.og-table').length === 6,
+      document.querySelectorAll('.og-table').length);
+    check('no script, link or image loaded from another site', !document.querySelector('[src^="http"],[href^="http"],img'));
+    var o = noOverflow();
+    check('no horizontal overflow', o.ok, o.detail);
+  }
+
   function galleryPage() {
     barCheck('poc');
     pocSubBar('gallery');
@@ -212,7 +239,7 @@
   function run() {
     try {
       var pg = document.body.getAttribute('data-o81-page');
-      if (pg === 'poc') pocPage(); else if (pg === 'home') homePage(); else if (pg === 'gallery') galleryPage(); else orionPage();
+      if (pg === 'poc') pocPage(); else if (pg === 'home') homePage(); else if (pg === 'gallery') galleryPage(); else if (pg === 'orchestration') orchestrationPage(); else orionPage();
     } catch (e) {
       check('self-test ran without an exception', false, String(e && e.message || e));
     }

@@ -100,6 +100,24 @@ body {
   }
 }
 
+/* Version 2.7.0: five tabs. On the narrowest phones the tab text and padding shrink a little so all five fit in one row. */
+@media (max-width: 419.98px) {
+  .o81-tab {
+    padding: 2px 5px 0;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 359.98px) {
+  .o81-tabs {
+    padding: 0 4px;
+  }
+  .o81-tab {
+    padding: 2px 4px 0;
+    font-size: 11px;
+  }
+}
+
 /* The Orion POC page: the tab bar, the subtab bar and one frame filling the rest of the viewport (a column that takes the whole window). */
 html:has(body.o81-poc) {
   height: 100%;

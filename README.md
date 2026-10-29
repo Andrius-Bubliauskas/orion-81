@@ -1,6 +1,6 @@
 # orion-81.io
 
-This folder is the whole orion-81.io website, version 2.6.0. A bar at the top of every page links its four parts.
+This folder is the whole orion-81.io website, version 2.7.0. A bar at the top of every page links its five parts.
 
 ## What it holds
 
@@ -11,6 +11,10 @@ This folder is the whole orion-81.io website, version 2.6.0. A bar at the top of
   will be, the milestone road with today's status, how it is made, and a searchable table of every automated test of the game's
   rules. `devlog/progress.html` is the interactive progress chart, a public copy of the project tracker's time line.
 * **Progress** (`devlog/progress.html`): the progress chart, with a second bar for its agent-provenance view.
+* **Orchestration** (`orchestration/index.html`): how several developers, each directing their own AI agents, can work towards one
+  goal through one shared record. It defines the word, shows how Orion-81 is run today by one developer and one orchestrator, and
+  sets out a proposal, for discussion, for two developers sharing the project. It is adapted from a presentation made with Claude
+  for Andrius on 29 October 2026.
 * **Orion POC** (`poc/index.html`): the earlier proof-of-concept site, kept byte for byte as it was published on 13 October 2026
   and not edited. The page shows it in a frame under the tab bar and a subtab bar. Its statements are those of that date. The second
   subtab, **Gallery** (`poc/gallery/index.html`), holds the pictures and clips of that proof of concept.
@@ -26,7 +30,7 @@ to the Orion POC tab, and the old Gallery address (`gallery/index.html`) passes 
 ## Third parties
 
 The Orion POC tab loads three.js (MIT licence) and Google Fonts (SIL Open Font Licence) from public content delivery networks
-when it is viewed. The home page and the devlog load nothing from other sites. There are no trackers, no cookies and no forms.
+when it is viewed. The home page, the devlog and the Orchestration page load nothing from other sites. There are no trackers, no cookies and no forms.
 The home page links to one page on anthropic.com as further reading; the link loads nothing until it is followed.
 
 ## Trademarks

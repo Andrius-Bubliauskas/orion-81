@@ -1,0 +1,261 @@
+/* The Orchestration page (orchestration/index.html): layout for the steps, cards, lanes and tables only.
+   (c) 2026 Andrius Bubliauskas. All rights reserved.
+   Loads after css/o81.css and uses its --o81-* colour tokens and --o81-font. No images, no web fonts, no animation. */
+
+.og-main h1 {
+  margin: 0 0 20px;
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+}
+
+.og-definition {
+  margin: 0 0 16px;
+  padding: 14px 18px;
+  border: 1px solid var(--o81-line);
+  border-left: 4px solid var(--o81-accent);
+  border-radius: 6px;
+  background: var(--o81-panel);
+  font-size: 1.1875rem;
+}
+
+.pg-main .og-definition {
+  max-width: none;
+}
+
+.og-kicker {
+  margin: 0 0 4px;
+  color: var(--o81-accent);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.og-main h3.og-h3 {
+  margin: 32px 0 6px;
+  font-size: 1.25rem;
+}
+
+.og-main h3.og-h3:first-of-type {
+  margin-top: 8px;
+}
+
+.og-sub {
+  margin: 0 0 14px;
+  color: var(--o81-muted);
+}
+
+/* The proposal label */
+.og-tag {
+  display: inline-block;
+  margin: 0 0 6px;
+  padding: 1px 8px;
+  border: 1px solid var(--o81-now);
+  border-radius: 3px;
+  color: var(--o81-now);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.og-note {
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border: 1px solid var(--o81-line);
+  border-left: 4px solid var(--o81-now);
+  border-radius: 4px;
+  background: var(--o81-panel);
+}
+
+.pg-main .og-note {
+  max-width: none;
+}
+
+.og-note p {
+  margin: 0;
+}
+
+/* Grids of cards */
+.og-grid {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.og-cols-2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+.og-cols-3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+.og-cols-4 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }
+.og-cols-7 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); }
+
+.pg-main .og-grid > li {
+  max-width: none;
+  margin: 0;
+}
+
+.og-card {
+  box-sizing: border-box;
+  padding: 14px 16px;
+  border: 1px solid var(--o81-line);
+  border-radius: 8px;
+  background: var(--o81-panel);
+}
+
+.og-card-h {
+  display: block;
+  margin: 0 0 4px;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.og-card-p {
+  display: block;
+  margin: 0;
+  color: var(--o81-muted);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.og-card-more {
+  display: block;
+  margin: 8px 0 0;
+  color: var(--o81-fg);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+/* The working loop: planner steps in blue, executor steps in sand, and the role written out on every card */
+.og-step {
+  border-top: 4px solid var(--o81-accent);
+}
+
+.og-step.is-executor {
+  border-top-color: var(--o81-now);
+}
+
+.og-step-n {
+  display: block;
+  color: var(--o81-muted);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.og-step-who {
+  display: block;
+  margin: 0;
+  color: var(--o81-muted);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+/* Roadmap groups */
+.og-group {
+  border-top: 4px solid var(--o81-next);
+}
+
+.og-group.is-done { border-top-color: var(--o81-done); }
+.og-group.is-now { border-top-color: var(--o81-now); }
+.og-group.is-wait { border-top-color: var(--o81-muted); }
+
+.og-group ul {
+  margin: 8px 0 0;
+  padding-left: 1.1em;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.og-group li {
+  margin: 0 0 4px;
+}
+
+/* Tables: left aligned, wrapping, and scrolling inside their own box when narrow */
+.og-table-wrap {
+  max-width: 100%;
+  margin: 0 0 12px;
+  overflow-x: auto;
+}
+
+.og-table-wrap:focus-visible {
+  outline: 2px solid var(--o81-accent);
+  outline-offset: 2px;
+}
+
+.og-table {
+  width: 100%;
+  min-width: 34rem;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.og-table caption {
+  padding: 0 0 6px;
+  color: var(--o81-muted);
+  font-size: 0.875rem;
+  text-align: left;
+}
+
+.og-table th,
+.og-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--o81-line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.og-table thead th {
+  border-bottom: 2px solid var(--o81-line);
+  color: var(--o81-muted);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.og-table tbody th {
+  font-weight: 700;
+}
+
+.og-table td.og-time {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.og-table.og-handshake .og-mid {
+  background: var(--o81-panel);
+  color: var(--o81-muted);
+}
+
+.og-main .pg-stats {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+}
+
+/* The one-line version */
+.og-oneline {
+  margin: 0 0 16px;
+  padding: 16px 18px;
+  border: 1px solid var(--o81-line);
+  border-left: 4px solid var(--o81-accent);
+  border-radius: 6px;
+  background: var(--o81-panel);
+  font-size: clamp(1.25rem, 3.4vw, 1.75rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.pg-main .og-oneline {
+  max-width: none;
+}
+
+@media (max-width: 600px) {
+  .og-main h1 { font-size: 2rem; }
+  .og-definition { font-size: 1.0625rem; }
+  .og-table { min-width: 0; font-size: 0.8125rem; }
+  .og-table th,
+  .og-table td { padding: 6px 6px; }
+  .og-table thead th { letter-spacing: 0; }
+}

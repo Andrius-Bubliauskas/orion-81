@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orion-81 orchestration</title>
+<meta name="description" content="Orchestration: how several developers, each directing their own AI agents, can work towards one goal on one project. How Orion-81 is run today, and a proposal for two developers.">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/img/logo/favicon-32.png">
+<link rel="icon" type="image/png" sizes="180x180" href="../assets/img/logo/favicon-180.png">
+<link rel="apple-touch-icon" href="../assets/img/logo/favicon-180.png">
+<!-- (c) 2026 Andrius Bubliauskas. All rights reserved. -->
+<link rel="stylesheet" href="../css/tabbar.css">
+<link rel="stylesheet" href="../css/o81.css">
+<link rel="stylesheet" href="../css/orchestration.css">
+</head>
+<body data-o81-page="orchestration">
+<nav class="o81-tabs" aria-label="Site">
+  <a class="o81-tab" data-tab="home" data-clean="../" href="../index.html">Home</a>
+  <a class="o81-tab" data-tab="devlog" data-clean="../devlog/" href="../devlog/index.html">Orion-81 devlog</a>
+  <a class="o81-tab" data-tab="progress" data-clean="../devlog/progress.html" href="../devlog/progress.html">Progress</a>
+  <a class="o81-tab" data-tab="orchestration" data-clean="./" href="index.html" aria-current="page">Orchestration</a>
+  <a class="o81-tab" data-tab="poc" data-clean="../poc/" href="../poc/index.html">Orion POC</a>
+</nav>
+<main class="pg-main og-main">
+
+<section id="top" class="pg-hero" aria-labelledby="top-h">
+  <h1 id="top-h">Orchestration</h1>
+  <p class="og-definition pg-lead">Orchestration, here, means several developers, each directing their own AI agents, working towards one goal: they plan the work, split it, build it in parallel and merge it, through one shared record.</p>
+  <p>Today, one developer, Andrius, directs one orchestrator: a Claude session that plans the work, sends out agents to do it and checks what they report. That part is how Orion-81 is made, and it works. How two developers could share the project in the same way is a proposal for discussion, not current practice. Each section below says which it is.</p>
+</section>
+
+<section id="today-section" aria-labelledby="today-section-h">
+  <h2 id="today-section-h">Where Orion-81 stands, and how one orchestrator runs it</h2>
+
+  <h3 class="og-h3" id="stands">Orion-81 on 29 October</h3>
+  <ul class="pg-stats">
+    <li class="pg-stat"><span class="pg-stat-num">5 of 19</span><span class="pg-stat-cap">milestones merged into the main line: M0, M2, M2.1, M2.2 and M3a</span></li>
+    <li class="pg-stat"><span class="pg-stat-num">1,396</span><span class="pg-stat-cap">automated tests of the rules on the main line</span></li>
+    <li class="pg-stat"><span class="pg-stat-num">239</span><span class="pg-stat-cap">automated tests of the presentation layer on the main line</span></li>
+    <li class="pg-stat"><span class="pg-stat-num">228</span><span class="pg-stat-cap">tracker work items, each with an owner, the files it owns and a dated log</span></li>
+  </ul>
+  <p>What set the pace in the week to 29 October was the weekly usage allowance of one account. A second developer would bring a second orchestrator and its own capacity.</p>
+
+  <h3 class="og-h3" id="today">Today: one orchestrator runs the project</h3>
+  <ol class="og-grid og-cols-3">
+    <li class="og-card"><span class="og-card-h">1. Andrius, the owner</span><span class="og-card-p">Decides, signs the specs and answers the questions.</span></li>
+    <li class="og-card"><span class="og-card-h">2. The orchestrator (Claude Opus 5.5)</span><span class="og-card-p">Plans, verifies every claim and routes the questions.</span><span class="og-card-more">On 28 October three planner sessions worked under it, one per milestone: the M2.3 planner, the M2.4 planner and the M3 planner. Each sent out its own agents.</span></li>
+    <li class="og-card"><span class="og-card-h">3. Agents in workflows, sent out in parallel</span><span class="og-card-p">Claude Opus 5.5 plans and reviews. Claude Sonnet 5.5 builds and tests.</span></li>
+  </ol>
+  <h3 class="og-h3" id="record">The shared record</h3>
+  <ul class="og-grid og-cols-4">
+    <li class="og-card"><span class="og-card-h">Git</span><span class="og-card-p">The main line, plus one integration branch per milestone.</span></li>
+    <li class="og-card"><span class="og-card-h">Tracker</span><span class="og-card-p">Epics, work items and Andrius's question pages.</span></li>
+    <li class="og-card"><span class="og-card-h">Specs</span><span class="og-card-p">Signed in batches, each file pinned by its checksum.</span></li>
+    <li class="og-card"><span class="og-card-h">Audit trail</span><span class="og-card-p">Checksums, transcripts and recordings.</span></li>
+  </ul>
+
+  <h3 class="og-h3" id="loop">The working loop</h3>
+  <p class="og-sub">Every batch of work runs the same seven steps.</p>
+  <ol class="og-grid og-cols-7">
+    <li class="og-card og-step"><span class="og-step-n">Step 1</span><span class="og-card-h">Plan</span><span class="og-step-who">Planner: items, owners, checks</span></li>
+    <li class="og-card og-step is-executor"><span class="og-step-n">Step 2</span><span class="og-card-h">Execute</span><span class="og-step-who">Executor: in parallel</span></li>
+    <li class="og-card og-step is-executor"><span class="og-step-n">Step 3</span><span class="og-card-h">Integrate</span><span class="og-step-who">Executor: merge, build, time the tests</span></li>
+    <li class="og-card og-step"><span class="og-step-n">Step 4</span><span class="og-card-h">Review</span><span class="og-step-who">Planner: find and judge</span></li>
+    <li class="og-card og-step is-executor"><span class="og-step-n">Step 5</span><span class="og-card-h">Fix</span><span class="og-step-who">Executor: each finding</span></li>
+    <li class="og-card og-step is-executor"><span class="og-step-n">Step 6</span><span class="og-card-h">Verify</span><span class="og-step-who">Executor: run the checks</span></li>
+    <li class="og-card og-step"><span class="og-step-n">Step 7</span><span class="og-card-h">Accept</span><span class="og-step-who">Planner: sign off, close</span></li>
+  </ol>
+  <p>Blue cards are planner work (Claude Opus 5.5). Amber cards are executor work (Claude Sonnet 5.5). Steps 5 and 6 repeat until the review is clean.</p>
+  <p>Example, 28 October: M2.3's part M was built by an executor, reviewed by two planner-model reviewers, fixed in two rounds and re-checked. It was then merged and its test time checked against the limit Andrius set.</p>
+
+  <h3 class="og-h3" id="chunks">Spec-driven chunks</h3>
+  <p class="og-sub">From Andrius's idea to the main line in four stages.</p>
+  <ol class="og-grid og-cols-4">
+    <li class="og-card"><span class="og-card-h">1. Spec</span><span class="og-card-p">Clean-room writers turn Andrius's ideas into spec text. Lint, isolated scans and sanitisers check it. Andrius signs.</span><span class="og-card-more">Passes on: signed specs, each file pinned by its checksum.</span></li>
+    <li class="og-card"><span class="og-card-h">2. Plan</span><span class="og-card-p">A planner cross-checks the plan against the code it builds on: frozen contracts, work items, file scopes and a test-time budget.</span><span class="og-card-more">Passes on: the cross-check and its tracker items.</span></li>
+    <li class="og-card"><span class="og-card-h">3. Build</span><span class="og-card-p">Waves of items on the milestone's own integration branch. Each item owns its files. Review, fix, re-check.</span><span class="og-card-more">Passes on: a merged, timed integration branch.</span></li>
+    <li class="og-card"><span class="og-card-h">4. Land</span><span class="og-card-p">The close: four builds from clean, lint, provenance scans and a planner review. Then the merge into the main line, on Andrius's word.</span><span class="og-card-more">Passes on: a new main line and a version number.</span></li>
+  </ol>
+  <p>M2.3, end to end: spec batches A2 and B signed on 27 October and ratified by Andrius the next day, then twelve revisions of the cross-checked plan, then parts C and M and wave 4 merged. Its last spec batch, its close and its merge are still to come.</p>
+</section>
+
+<section id="road-section" aria-labelledby="road-section-h">
+  <h2 id="road-section-h">The road, and how it could split into two lanes</h2>
+
+  <h3 class="og-h3" id="roadmap">The roadmap: nineteen milestones, five of them in the main line</h3>
+  <div class="og-grid og-cols-4">
+    <div class="og-card og-group is-done">
+      <span class="og-card-h">Done, in the main line</span>
+      <ul>
+        <li>M0 walking skeleton</li>
+        <li>M2 rules core</li>
+        <li>M2.1 the demo's rules</li>
+        <li>M2.2 ships as machines</li>
+        <li>M3a cameras, controls, host, replay</li>
+      </ul>
+    </div>
+    <div class="og-card og-group is-now">
+      <span class="og-card-h">In progress</span>
+      <ul>
+        <li>M2.3 modes, balance, sub-system combat: code complete</li>
+        <li>M2.4 air, orbit and descent: planned</li>
+      </ul>
+    </div>
+    <div class="og-card og-group is-wait">
+      <span class="og-card-h">Waiting</span>
+      <ul>
+        <li>M3b the engine: waits until the engine question is settled</li>
+      </ul>
+    </div>
+    <div class="og-card og-group">
+      <span class="og-card-h">Ahead</span>
+      <ul>
+        <li>M4 the clean v0 demo</li>
+        <li>M5 LAN multiplayer</li>
+        <li>M6 the look</li>
+        <li>M6.1 capture the flag</li>
+        <li>M7 the full fleet</li>
+        <li>M8 loadout and hangar</li>
+        <li>M8.1 assigned-ship co-op</li>
+        <li>M9 team battle</li>
+        <li>M10 more worlds</li>
+        <li>M10.1 invasion and defence</li>
+        <li>M11 economy and unlocks</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="og-h3" id="lanes">The roadmap, dissected: most milestones split into two halves</h3>
+  <p class="og-tag">Proposal for discussion</p>
+  <p class="og-sub">Lane A owns the rules core, with its tests and balance tools. Lane B owns the player-facing layer, the replay tool and the engine adapter.</p>
+  <div class="og-table-wrap" tabindex="0" role="region" aria-label="The two lanes, milestone by milestone">
+    <table class="og-table">
+      <thead>
+        <tr><th scope="col">Milestone</th><th scope="col">Lane A: rules half</th><th scope="col">Lane B: player-facing half</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">M2.4 air and orbit</th><td>Air, airframe kinds, zones, heat, corridor</td><td>Nothing until M6 styles its read-outs</td></tr>
+        <tr><th scope="row">M3b the engine</th><td>No new rules; keeps the M3a host contract</td><td>Engine project, adapter, first flight</td></tr>
+        <tr><th scope="row">M4 the v0 demo</th><td>8 hulls, lasers, rockets, drones, arena</td><td>HUD read-outs and a packaged build</td></tr>
+        <tr><th scope="row">M5 LAN play</th><td>Match records, objectives, fair-play rules</td><td>Replication, host, join and lobby flow</td></tr>
+        <tr><th scope="row">M7 full fleet</th><td>16 hulls, capitals, carriers, bays, wings</td><td>Hull art by airframe kind, turret seats</td></tr>
+        <tr><th scope="row">M10.1 invasion</th><td>Invasion rules, station and defence grid (moved here from M2.4)</td><td>Live orbit, corridor and city zones</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>Split by milestone</strong> has already happened here. This month M2.3 was built beside M3a on its own branch. M3a merged first, and M2.3 follows.</p>
+  <p><strong>Split within a milestone</strong> is the proposal. Lane A builds the rules half while lane B builds the other half, against the same frozen host contract.</p>
+
+  <h3 class="og-h3" id="day">One day, three milestones in parallel: 28 October</h3>
+  <p class="og-sub">This is not a proposal. It happened. Times are approximate, in UTC: merges from the git history, the other steps from the project's tracker log.</p>
+  <div class="og-table-wrap" tabindex="0" role="region" aria-label="What happened on 28 October">
+    <table class="og-table">
+      <thead>
+        <tr><th scope="col">UTC (about)</th><th scope="col">Who</th><th scope="col">What happened</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="og-time">08:57</td><td>M3 planner session</td><td>M3a's follow-up fixes merged into the main line</td></tr>
+        <tr><td class="og-time">09:13</td><td>M2.3 planner session</td><td>Part C merged into M2.3's own branch</td></tr>
+        <tr><td class="og-time">09:17</td><td>M2.3 planner session</td><td>Handshake: M2.3 accepts the new spec checksums of batch C, M2.4's spec batch</td></tr>
+        <tr><td class="og-time">09:18</td><td>M2.4 planner session</td><td>Handshake: batch C installed, while M2.3's agents kept building</td></tr>
+        <tr><td class="og-time">12:46</td><td>M2.4 planner session</td><td>Andrius's answer: the invasion rules move to M10.1</td></tr>
+        <tr><td class="og-time">13:31</td><td>M2.3 planner session</td><td>Part M merged, within the test-time limit Andrius had just raised</td></tr>
+        <tr><td class="og-time">22:09</td><td>M2.3 planner session</td><td>Wave 4 merged: M2.3's code complete</td></tr>
+        <tr><td class="og-time">All day</td><td>The orchestrator</td><td>Verified each merge with git and checksums; had every question page checked</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The handshake in that table is the pattern two orchestrators would use every day: one side asks, the other accepts in the shared record, then the change lands.</p>
+</section>
+
+<section id="two-section" aria-labelledby="two-section-h">
+  <h2 id="two-section-h">Two developers, one project</h2>
+  <p class="og-tag">Proposal for discussion</p>
+  <p>Everything in this section describes how two developers, each with an orchestrator, could share Orion-81. It is not how the project runs today. Where a mechanism already works, the table says where.</p>
+
+  <h3 class="og-h3" id="handshake">The handshake: two orchestrators meet only at the shared record</h3>
+  <p class="og-sub">X and Y stand for two milestones.</p>
+  <div class="og-table-wrap" tabindex="0" role="region" aria-label="The handshake between two developers">
+    <table class="og-table og-handshake">
+      <thead>
+        <tr><th scope="col">Developer A</th><th scope="col">Shared record</th><th scope="col">Developer B</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1. Plan X: cross-check, frozen contract, file scopes</td><td class="og-mid">X's contract, both sides' file scopes, an id block each</td><td>1. Plan Y on other files, against X's contract</td></tr>
+        <tr><td>2. Build X: agents in waves on X's branch</td><td class="og-mid">Both branches pushed; items move on the board</td><td>2. Build Y: agents in waves on Y's branch</td></tr>
+        <tr><td>3. Close X: four builds, scans, planner review</td><td class="og-mid">Merge request for X, with its test and review results</td><td>3. Review X with a fresh Claude Opus 5.5 reviewer</td></tr>
+        <tr><td>4. On Andrius's word, X merges into the main line</td><td class="og-mid">The main line moves; the new spec checksums are accepted</td><td>4. Re-check Y against the new main line</td></tr>
+        <tr><td>5. Review Y, then start the next milestone</td><td class="og-mid">One merge into the main line at a time</td><td>5. Close Y; on Andrius's word, Y merges</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="og-h3" id="mechanisms">The shared record: seven mechanisms, all already working here</h3>
+  <div class="og-table-wrap" tabindex="0" role="region" aria-label="The seven mechanisms of the shared record">
+    <table class="og-table">
+      <thead>
+        <tr><th scope="col">Mechanism</th><th scope="col">How it works</th><th scope="col">Proven in this project</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Id blocks</th><td>Each side creates items in its own range of numbers</td><td>The M2.4 planner worked in its own block of item numbers</td></tr>
+        <tr><th scope="row">File ownership</th><td>Every item names the files it owns</td><td>Every work item already lists the files it owns</td></tr>
+        <tr><th scope="row">Frozen contracts</th><td>Fixed in a cross-check; changed only by a planner item</td><td>M3a stayed pinned to M2.2 while M2.3 was built beside it</td></tr>
+        <tr><th scope="row">Spec checksums</th><td>Builders stop on unaccepted spec checksums</td><td>Batch C landed once M2.3 accepted its checksums</td></tr>
+        <tr><th scope="row">Branches</th><td>One per milestone, merged into the main line in order</td><td>M3a merged first; M2.3 is next</td></tr>
+        <tr><th scope="row">Checked notes</th><td>A session's note is checked before it counts</td><td>Every merge on 28 October was re-checked in git</td></tr>
+        <tr><th scope="row">Quiet markers</th><td>A timing run or a build leaves a marker file while it runs, and the others wait for it to finish</td><td>M2.3's timing runs and builds on 28 October waited for each other's markers</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="og-h3" id="rules">Rules of engagement: six rules for working side by side</h3>
+  <ol class="og-grid og-cols-3">
+    <li class="og-card"><span class="og-card-h">1. One owner per area</span><span class="og-card-p">A file has one writer at a time. Every tracker item names its files.</span></li>
+    <li class="og-card"><span class="og-card-h">2. Contracts move by item</span><span class="og-card-p">Interfaces are frozen in the cross-check. Changing one is a planner item that both sides see.</span></li>
+    <li class="og-card"><span class="og-card-h">3. One merge at a time</span><span class="og-card-p">Milestones land in the main line in the planned order, each with its full test and review results and Andrius's word.</span></li>
+    <li class="og-card"><span class="og-card-h">4. Re-check first</span><span class="og-card-p">Before building, each side cross-checks its plan against the latest main line.</span></li>
+    <li class="og-card"><span class="og-card-h">5. Review each other</span><span class="og-card-p">At every close, the other side's fresh planner-model reviewer is the independent read.</span></li>
+    <li class="og-card"><span class="og-card-h">6. One reference clock</span><span class="og-card-p">Test times are binding on one machine only. Every log time comes from the system clock.</span></li>
+  </ol>
+  <p>Andrius's questions: one queue for both sides, each question with an explainer page checked before it reaches him.</p>
+
+  <h3 class="og-h3" id="split">A possible split: the next stretch with two developers</h3>
+  <p class="og-tag">Proposal for discussion</p>
+  <div class="og-table-wrap" tabindex="0" role="region" aria-label="A possible split between two developers">
+    <table class="og-table">
+      <thead>
+        <tr><th scope="col">Phase</th><th scope="col">Developer A: rules core</th><th scope="col">Developer B: player-facing and engine</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Now</th><td>M2.3's spec batch, close and merge</td><td>Onboarding; independent review of M2.3's close; plan M4 ahead</td></tr>
+        <tr><th scope="row">After M2.3 merges</th><td>M2.4, waves 0 to 4</td><td>M4's player-facing half in the presentation layer: the HUD read-outs</td></tr>
+        <tr><th scope="row">After the engine question is settled</th><td>M4's rules half: hulls, lasers, rockets, drones, arena</td><td>M3b: engine project, adapter, first flight; then M4's build</td></tr>
+        <tr><th scope="row">Later</th><td>The rules of M7, M9, M10.1 and M11</td><td>M5 replication, M6 look, M6.1 slice, M8 hangar</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>Why this order.</strong> Lane A keeps the rules core moving while the engine question is open. Lane B starts on the presentation layer, which does not depend on the engine.</p>
+  <p><strong>What stays the same.</strong> Each phase still starts with its planner's cross-check, and Andrius still signs every spec and merge.</p>
+
+  <h3 class="og-h3" id="onboarding">Bringing someone on: a first week that teaches the whole loop</h3>
+  <div class="og-grid og-cols-2">
+    <div class="og-card">
+      <span class="og-card-h">Day one</span>
+      <ul class="pg-list">
+        <li>Access to the game repository and the project folder</li>
+        <li>The project's instruction files and the model policy: Claude Opus 5.5 plans and reviews, Claude Sonnet 5.5 builds and tests</li>
+        <li>The clean-room rules: which folders are off limits, and no engine work until the engine question is settled</li>
+        <li>Sessions are recorded by the project hooks, after a privacy check</li>
+        <li>Each developer works from their own Claude account</li>
+      </ul>
+    </div>
+    <div class="og-card">
+      <span class="og-card-h">First week</span>
+      <ul class="pg-list">
+        <li>Run one independent review: M2.3's close is real work with low risk</li>
+        <li>Take an id block and a lane of areas, recorded in the tracker</li>
+        <li>Plan their first milestone half, starting with its cross-check</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="og-h3" id="risks">What could go wrong: six risks, each with a safeguard</h3>
+  <div class="og-table-wrap" tabindex="0" role="region" aria-label="Six risks and their safeguards">
+    <table class="og-table">
+      <thead>
+        <tr><th scope="col">Risk</th><th scope="col">Safeguard, and where it already shows</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Two writers, one file</th><td>File ownership on every item, and one merge into the main line at a time</td></tr>
+        <tr><th scope="row">A contract moves underneath</th><td>Frozen contracts, and the re-check against the main line before each milestone starts</td></tr>
+        <tr><th scope="row">Test-time budgets collide</th><td>A test-time ceiling per milestone, set by Andrius, so the later milestones keep room</td></tr>
+        <tr><th scope="row">Andrius becomes the bottleneck</th><td>One batched question queue, with a checked page for each question</td></tr>
+        <tr><th scope="row">Outside text slips in</th><td>Clean-room roles kept apart, with lint and provenance scans at every close</td></tr>
+        <tr><th scope="row">Capacity runs out</th><td>Work pauses at clean checkpoints, as the M2.3 spec batch did on 29 October</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="one-line" aria-labelledby="one-line-h">
+  <h2 id="one-line-h">The one-line version</h2>
+  <p class="og-oneline">Split by contract. Build in parallel. Merge in order. Review each other.</p>
+  <p>The mechanisms this needs already exist in the tracker, the specs and the branches. A second developer would add a second orchestrator, a second lane and a second pair of eyes.</p>
+  <p class="pg-quiet">This page is adapted from a presentation, "Two orchestrators, one game", made with Claude for Andrius on 29 October 2026. Its examples come from the project's own tracker and git history.</p>
+</section>
+
+</main>
+<footer class="pg-footer">
+  <p>&copy; 2026 Andrius Bubliauskas. All rights reserved.</p>
+  <p>Anthropic, Claude and Claude Code are trademarks of Anthropic, PBC. Orion-81 is not affiliated with, sponsored or endorsed by Anthropic.</p>
+  <p>No trackers, no cookies, nothing loaded from other sites.</p>
+  <p>Site version 2.7.0, updated 29 October 2026.</p>
+</footer>
+<script src="../js/tabbar.js"></script>
+<script src="../js/o81-selftest.js"></script>
+</body>
+</html>
