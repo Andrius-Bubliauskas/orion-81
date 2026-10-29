@@ -1,12 +1,12 @@
 /* (c) 2026 Andrius Bubliauskas. All rights reserved.
    Generated from the project tracker and the test index. Totals only. Do not edit by hand. */
 window.ORION81_PROGRESS = {
-  "generated": "26 October 2026",
+  "generated": "29 October 2026",
   "tests": 1396,
-  "commits": 283,
-  "items_done": 110,
-  "items_total": 194,
-  "milestones_done": 4,
+  "commits": 451,
+  "items_done": 164,
+  "items_total": 228,
+  "milestones_done": 5,
   "milestones_total": 19,
   "estimate": {
     "date": "19 October 2026",

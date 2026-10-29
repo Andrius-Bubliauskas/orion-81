@@ -1,6 +1,6 @@
 # orion-81.io
 
-This folder is the whole orion-81.io website, version 2.5.0. A bar at the top of every page links its four parts.
+This folder is the whole orion-81.io website, version 2.6.0. A bar at the top of every page links its four parts.
 
 ## What it holds
 
