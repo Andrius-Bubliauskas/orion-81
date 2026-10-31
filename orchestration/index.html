@@ -78,13 +78,13 @@
     <li class="og-card"><span class="og-card-h">3. Build</span><span class="og-card-p">Waves of items on the milestone's own integration branch. Each item owns its files. Review, fix, re-check.</span><span class="og-card-more">Passes on: a merged, timed integration branch.</span></li>
     <li class="og-card"><span class="og-card-h">4. Land</span><span class="og-card-p">The close: four builds from clean, lint, provenance scans and a planner review. Then the merge into the main line, on Andrius's word.</span><span class="og-card-more">Passes on: a new main line and a version number.</span></li>
   </ol>
-  <p>M2.3, end to end: spec batches A2 and B signed on 27 October and ratified by Andrius the next day, then twelve revisions of the cross-checked plan, then parts C and M and wave 4 merged. Its last spec batch, its close and its merge are still to come.</p>
+  <p>M2.3, end to end: spec batches A2 and B signed on 27 October and ratified by Andrius the next day, then twelve revisions of the cross-checked plan, then parts C and M and wave 4 merged. It was closed and merged into the main line on 31 October.</p>
 </section>
 
 <section id="road-section" aria-labelledby="road-section-h">
   <h2 id="road-section-h">The road, and how it could split into two lanes</h2>
 
-  <h3 class="og-h3" id="roadmap">The roadmap: nineteen milestones, five of them in the main line</h3>
+  <h3 class="og-h3" id="roadmap">The roadmap: nineteen milestones, six of them in the main line</h3>
   <div class="og-grid og-cols-4">
     <div class="og-card og-group is-done">
       <span class="og-card-h">Done, in the main line</span>
@@ -94,13 +94,14 @@
         <li>M2.1 the demo's rules</li>
         <li>M2.2 ships as machines</li>
         <li>M3a cameras, controls, host, replay</li>
+        <li>M2.3 modes, balance, sub-system combat</li>
       </ul>
     </div>
     <div class="og-card og-group is-now">
       <span class="og-card-h">In progress</span>
       <ul>
-        <li>M2.3 modes, balance, sub-system combat: code complete</li>
-        <li>M2.4 air, orbit and descent: planned</li>
+        <li>M2.4 air, orbit and descent: being built</li>
+        <li>M4a, the engine-neutral half of M4: started</li>
       </ul>
     </div>
     <div class="og-card og-group is-wait">
@@ -145,7 +146,7 @@
       </tbody>
     </table>
   </div>
-  <p><strong>Split by milestone</strong> has already happened here. This month M2.3 was built beside M3a on its own branch. M3a merged first, and M2.3 follows.</p>
+  <p><strong>Split by milestone</strong> has already happened here. This month M2.3 was built beside M3a on its own branch. M3a merged first, and M2.3 followed on 31 October.</p>
   <p><strong>Split within a milestone</strong> is the proposal. Lane A builds the rules half while lane B builds the other half, against the same frozen host contract.</p>
 
   <h3 class="og-h3" id="day">One day, three milestones in parallel: 28 October</h3>
@@ -203,7 +204,7 @@
         <tr><th scope="row">File ownership</th><td>Every item names the files it owns</td><td>Every work item already lists the files it owns</td></tr>
         <tr><th scope="row">Frozen contracts</th><td>Fixed in a cross-check; changed only by a planner item</td><td>M3a stayed pinned to M2.2 while M2.3 was built beside it</td></tr>
         <tr><th scope="row">Spec checksums</th><td>Builders stop on unaccepted spec checksums</td><td>Batch C landed once M2.3 accepted its checksums</td></tr>
-        <tr><th scope="row">Branches</th><td>One per milestone, merged into the main line in order</td><td>M3a merged first; M2.3 is next</td></tr>
+        <tr><th scope="row">Branches</th><td>One per milestone, merged into the main line in order</td><td>M3a merged first; M2.3 followed</td></tr>
         <tr><th scope="row">Checked notes</th><td>A session's note is checked before it counts</td><td>Every merge on 28 October was re-checked in git</td></tr>
         <tr><th scope="row">Quiet markers</th><td>A timing run or a build leaves a marker file while it runs, and the others wait for it to finish</td><td>M2.3's timing runs and builds on 28 October waited for each other's markers</td></tr>
       </tbody>
@@ -291,7 +292,7 @@
   <p>&copy; 2026 Andrius Bubliauskas. All rights reserved.</p>
   <p>Anthropic, Claude and Claude Code are trademarks of Anthropic, PBC. Orion-81 is not affiliated with, sponsored or endorsed by Anthropic.</p>
   <p>No trackers, no cookies, nothing loaded from other sites.</p>
-  <p>Site version 2.8.1, updated 31 October 2026.</p>
+  <p>Site version 2.8.2, updated 31 October 2026.</p>
 </footer>
 <script src="../js/tabbar.js"></script>
 <script src="../js/o81-selftest.js"></script>

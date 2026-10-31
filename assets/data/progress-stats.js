@@ -3,9 +3,9 @@
 window.ORION81_PROGRESS = {
   "generated": "31 October 2026",
   "tests": 1396,
-  "commits": 492,
+  "commits": 501,
   "items_done": 201,
-  "items_total": 271,
+  "items_total": 275,
   "milestones_done": 6,
   "milestones_total": 19,
   "estimate": {
